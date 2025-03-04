@@ -38,18 +38,14 @@ const SignupPage = () => {
 
           {/* 이메일 + 인증번호 전송 */}
           <label className="block text-sm font-semibold">이메일</label>
-          <div className="flex space-x-2">
-            <CustomInput type="email" placeholder="example@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} 
+          <CustomInput type="email" placeholder="example@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} 
                 button={<CustomButton label="인증번호확인" onClick={handleCheckEmail} size="small" variant="secondary" />}
-            />
-          </div>
+          />
 
           {/* 인증번호 입력 + 확인 */}
-          <div className="flex space-x-2">
             <CustomInput type="text" placeholder="인증번호를 입력하세요." value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} 
                 button={<CustomButton label="인증번호확인" onClick={handleCheckVerificationCode} size="small" variant="primary" />}    
             />
-          </div>
 
           {/* 닉네임 */}
           <label className="block text-sm font-semibold">
