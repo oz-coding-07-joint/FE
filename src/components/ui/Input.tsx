@@ -55,7 +55,7 @@ export default function CustomInput({
       />
 
       {button && (
-        <div className="absolute right-6 top-1/2 transform -translate-y-1/2">
+        <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
           <CustomButton {...button.props} />
         </div>
       )}

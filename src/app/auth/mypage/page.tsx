@@ -46,7 +46,7 @@ const MyPage = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#1b2b4b]">
-      <div className="bg-white w-[450px] p-8 rounded-md shadow-md">
+      <div className="bg-white w-[600px] py-8 px-20 rounded-md shadow-md">
         <h2 className="text-2xl font-bold text-center mb-6">
           {isPasswordChangeMode ? "비밀번호 변경" : "회원정보 수정"}
         </h2>

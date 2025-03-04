@@ -28,7 +28,7 @@ const SignupPage = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#1b2b4b]">
-      <div className="bg-white w-[450px] p-8 rounded-md shadow-md">
+      <div className="bg-white w-[600px] py-10 px-14 rounded-md shadow-md">
         <h2 className="text-2xl font-bold text-center mb-6">회원가입</h2>
 
         <form className="space-y-4">
