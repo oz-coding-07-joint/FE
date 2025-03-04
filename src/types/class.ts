@@ -44,3 +44,11 @@ export interface SelectBoxProps {
     label: string;
   }[];
 }
+
+export interface DetailContainerProps {
+    children: React.ReactNode;
+    leftTab?: React.ReactNode;
+    rightTab?: React.ReactNode;
+    width?: string;
+    height?: string;
+}

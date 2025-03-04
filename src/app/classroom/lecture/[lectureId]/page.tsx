@@ -1,26 +1,39 @@
+'use client'
+
+import DetailContainer from '@/components/classroom/DetailContainer';
 import SelectBox from '@/components/classroom/SelectBox';
-import React from 'react';
+import React, { useState } from 'react';
+
+const options = [
+  { value: '1', label: 'Option 1' },
+  { value: '2', label: 'Option 2' },
+  { value: '3', label: 'Option 3' },
+];
 
 const LecturePage = () => {
-  const options = [
-    { value: '1', label: 'Option 1' },
-    { value: '2', label: 'Option 2' },
-    { value: '3', label: 'Option 3' },
-  ];
+  const [activeTab, setActiveTab] = useState<'lecture' | 'materials'>('lecture');
 
   return (
     <div className='bg-[#F9F9F9]'>
       <h1>title</h1>
-      <div className='bg-white rounded-md w-[390px] h-[800px] shadow-md overflow-hidden'>
-        <div className='bg-[#F5F9FF] w-[390px] h-[60px] flex justify-around items-center'>
-          <button className='h-max'>수업목록</button>
-          <div className='w-px h-[30px] bg-gray-400'></div>
-          <button className='h-max'>학습자료</button>
-        </div>
+      <DetailContainer
+        leftTab={
+          <button className={`h-max ${activeTab === 'lecture' ? 'font-bold text-[#192845]' : 'text-[#666666]'}`}
+          onClick={() => setActiveTab('lecture')}
+          >수업목록</button>
+        }
+        rightTab={
+          <button className={`h-max ${activeTab === 'materials' ? 'font-bold text-[#192845]' : 'text-[#666666]'}`}
+          onClick={() => setActiveTab('materials')}
+          >학습자료</button>
+        }
+        width='390px'
+        height='800px'
+      >
         <div className='flex justify-center m-[20px]'>
           <SelectBox options={options} />
         </div>
-      </div>
+      </DetailContainer>
     </div>
   )
 };
