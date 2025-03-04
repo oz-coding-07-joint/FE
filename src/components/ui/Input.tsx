@@ -9,7 +9,7 @@ interface CustomInputProps {
   width?: string;
   height?: string;
   disabled?: boolean;
-  validateInput?: (value: string) => string | null;
+  validateInput?: (value: string) => string | undefined;
   buttonComponent?: React.ReactElement<typeof CustomButton>;
 }
 
@@ -24,7 +24,7 @@ export default function CustomInput({
   validateInput,
   buttonComponent,
 }: CustomInputProps) {
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | undefined>(undefined);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
@@ -32,7 +32,7 @@ export default function CustomInput({
 
     if (validateInput) {
       const errorMessage = validateInput(newValue);
-      setError(errorMessage || null);
+      setError(errorMessage || undefined);
     }
   };
 
