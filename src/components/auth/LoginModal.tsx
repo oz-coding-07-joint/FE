@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import Modal from "../ui/Modal";
-import CustomButton from "../ui/Button";
-import CustomInput from "../ui/Input";
+import Button from "../ui/Button";
+import Input from "../ui/Input";
 
 type LoginModalProps = {
   isOpen: boolean;
@@ -45,7 +45,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
 
       {/* 이메일 입력 */}
       <label className="text-sm font-semibold">이메일</label>
-      <CustomInput
+      <Input
         type="email"
         placeholder="이메일을 입력하세요."
         value={email}
@@ -56,7 +56,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
 
       {/* 비밀번호 입력 */}
       <label className="text-sm font-semibold">비밀번호</label>
-      <CustomInput
+      <Input
         type="password"
         placeholder="비밀번호를 입력하세요."
         value={password}
@@ -66,7 +66,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
       {error.password && <p className="text-red-500 text-sm mb-3">{error.password}</p>}
 
       {/* 로그인 버튼 */}
-      <CustomButton label="LOGIN" size="full" variant="primary" onClick={handleLogin} />
+      <Button label="LOGIN" size="full" variant="primary" onClick={handleLogin} />
 
       {/* 회원가입 링크 */}
       <p className="text-center text-sm mt-3">

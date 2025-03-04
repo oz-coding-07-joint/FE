@@ -6,7 +6,7 @@ interface CustomButtonProps {
   disabled?: boolean;
 }
 
-export default function CustomButton({
+export default function Button({
   label,
   onClick,
   size = "medium",

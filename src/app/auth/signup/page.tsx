@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import CustomButton from "@/components/ui/Button";
-import CustomInput from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
 
 const SignupPage = () => {
   const [email, setEmail] = useState("");
@@ -34,36 +34,36 @@ const SignupPage = () => {
         <form className="space-y-4">
           {/* 이름 */}
           <label className="block text-sm font-semibold">이름</label>
-          <CustomInput type="text" placeholder="이름을 입력하세요." value={name} onChange={(e) => setName(e.target.value)} />
+          <Input type="text" placeholder="이름을 입력하세요." value={name} onChange={(e) => setName(e.target.value)} />
 
           {/* 이메일 + 인증번호 전송 */}
           <label className="block text-sm font-semibold">이메일</label>
-          <CustomInput type="email" placeholder="example@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} 
-                button={<CustomButton label="인증번호확인" onClick={handleCheckEmail} size="small" variant="secondary" />}
+          <Input type="email" placeholder="example@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} 
+                button={<Button label="인증번호확인" onClick={handleCheckEmail} size="small" variant="secondary" />}
           />
 
           {/* 인증번호 입력 + 확인 */}
-            <CustomInput type="text" placeholder="인증번호를 입력하세요." value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} 
-                button={<CustomButton label="인증번호확인" onClick={handleCheckVerificationCode} size="small" variant="primary" />}    
+            <Input type="text" placeholder="인증번호를 입력하세요." value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} 
+                button={<Button label="인증번호확인" onClick={handleCheckVerificationCode} size="small" variant="primary" />}    
             />
 
           {/* 닉네임 */}
           <label className="block text-sm font-semibold">
             닉네임 <span className="text-xs text-gray-500">*가입 후 수정이 불가하오니 신중하게 지어주세요.</span>
           </label>
-          <CustomInput type="text" placeholder="닉네임을 입력하세요." value={nickname} onChange={(e) => setNickname(e.target.value)} />
+          <Input type="text" placeholder="닉네임을 입력하세요." value={nickname} onChange={(e) => setNickname(e.target.value)} />
 
           {/* 비밀번호 */}
           <label className="block text-sm font-semibold">비밀번호</label>
-          <CustomInput type="password" placeholder="비밀번호를 입력하세요." value={password} onChange={(e) => setPassword(e.target.value)} />
+          <Input type="password" placeholder="비밀번호를 입력하세요." value={password} onChange={(e) => setPassword(e.target.value)} />
 
           {/* 비밀번호 확인 */}
           <label className="block text-sm font-semibold">비밀번호 확인</label>
-          <CustomInput type="password" placeholder="비밀번호를 다시 입력하세요." value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+          <Input type="password" placeholder="비밀번호를 다시 입력하세요." value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
 
           {/* 전화번호 */}
           <label className="block text-sm font-semibold">전화번호</label>
-          <CustomInput type="text" placeholder="010-1234-5678" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+          <Input type="text" placeholder="010-1234-5678" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
 
           {/* 개인정보 동의 */}
           <div className="flex items-center space-x-2 mt-2">
@@ -73,7 +73,7 @@ const SignupPage = () => {
           </div>
 
           {/* 회원가입 버튼 */}
-          <CustomButton label="회원가입" size="full" variant="primary" onClick={handleSignUp} />
+          <Button label="회원가입" size="full" variant="primary" onClick={handleSignUp} />
         </form>
 
       </div>

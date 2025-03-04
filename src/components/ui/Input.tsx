@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CustomButton from "./Button";
+import Button from "./Button";
 
 interface CustomInputProps {
   type: "text" | "email" | "password" | "number";
@@ -10,10 +10,10 @@ interface CustomInputProps {
   height?: string;
   disabled?: boolean;
   validateInput?: (value: string) => string | undefined;
-  button?: React.ReactElement<typeof CustomButton>;
+  button?: React.ReactElement<typeof Button>;
 }
 
-export default function CustomInput({
+export default function Input({
   type = "text",
   placeholder,
   value,
@@ -45,18 +45,18 @@ export default function CustomInput({
         onChange={handleChange}
         disabled={disabled}
         style={{ width, height }}
-        className={`px-[10px] text-[#666666] placeholder-[#aaaaaa] border rounded-[3px] focus:outline-none focus:ring-2 ${
+        className={`px-2.5 text-[#666666] placeholder-[#aaaaaa] border rounded-[3px] focus:outline-none focus:ring-2 ${
           disabled
             ? "bg-[#f1f1f1] text-[#aaaaaa] border-[#ddd] cursor-not-allowed opacity-50"
             : error
             ? "border-[#239AC4] bg-[#F2FBFE] focus:ring-[#239AC4]"
             : "border-[#ddd] focus:ring-[#239AC4]"
-        } ${button ? "pr-[80px]" : ""}`}
+        } ${button ? "pr-20" : ""}`}
       />
 
       {button && (
         <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
-          <CustomButton {...button.props} />
+          <Button {...button.props} />
         </div>
       )}
 
