@@ -3,6 +3,7 @@
 import { ChapterItemList } from '@/components/classroom/ChapterItemList';
 import DetailContainer from '@/components/classroom/DetailContainer';
 import SelectBox from '@/components/classroom/SelectBox';
+import clsx from 'clsx';
 import React, { useState } from 'react';
 
 const options = [
@@ -25,23 +26,26 @@ const materialItems = [
 const LecturePage = () => {
   const [activeTab, setActiveTab] = useState<'lecture' | 'materials'>('lecture');
 
+  const tabClassName = (tab: 'lecture' | 'materials') =>
+    clsx('h-max', activeTab === tab ? 'font-bold text-[#192845]' : 'text-[#666666]')
+
   return (
     <div className='bg-[#F9F9F9]'>
       <h1>title</h1>
       <div className='flex justify-around'>
         <DetailContainer
           leftTab={
-            <button className={`h-max ${activeTab === 'lecture' ? 'font-bold text-[#192845]' : 'text-[#666666]'}`}
+            <button className={tabClassName('lecture')}
               onClick={() => setActiveTab('lecture')}
             >수업목록</button>
           }
           rightTab={
-            <button className={`h-max ${activeTab === 'materials' ? 'font-bold text-[#192845]' : 'text-[#666666]'}`}
+            <button className={tabClassName('materials')}
               onClick={() => setActiveTab('materials')}
             >학습자료</button>
           }
-          width='24rem'
-          height='50rem'
+          width='w-sm'
+          height='h-[50rem]'
         >
           <div className='flex justify-center m-[1rem]'>
             <SelectBox options={options} />
