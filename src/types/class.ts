@@ -25,8 +25,15 @@ export interface Lecture {
 export interface Chapter {
   id: number;
   title: string;
-  lectureId: number;
-  materialUrl: string;
+  lectureId?: number;
+  materialUrl?: string;
+}
+
+export interface ChapterItem {
+    id: number;
+    isWatched: boolean;
+    duration: string;
+    title: string;
 }
 
 export interface Review {
@@ -52,3 +59,4 @@ export interface DetailContainerProps {
     width?: string;
     height?: string;
 }
+
