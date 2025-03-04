@@ -5,7 +5,7 @@ interface CustomInputProps {
   type: "text" | "email" | "password" | "number";
   placeholder?: string;
   value: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   width?: string;
   height?: string;
   disabled?: boolean;

@@ -10,7 +10,7 @@ const MyPage = () => {
   // 기존 회원정보 수정 상태
   const [email, setEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
-  const [nickname] = useState("");
+  const [nickname, setNickname] = useState("");
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
 
@@ -83,7 +83,7 @@ const MyPage = () => {
             />
 
             <label className="block text-sm font-semibold">닉네임</label>
-            <CustomInput type="text" placeholder="닉네임을 입력하세요." value={nickname} disabled={true} />
+            <CustomInput type="text" placeholder="닉네임을 입력하세요." value={nickname} disabled={true} onChange={(e) => setNickname(e.target.value)} />
 
             <label className="block text-sm font-semibold">전화번호</label>
             <CustomInput type="text" placeholder="010-1234-5678" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
