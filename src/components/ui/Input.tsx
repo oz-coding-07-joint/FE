@@ -10,7 +10,7 @@ interface CustomInputProps {
   height?: string;
   disabled?: boolean;
   validateInput?: (value: string) => string | undefined;
-  buttonComponent?: React.ReactElement<typeof CustomButton>;
+  button?: React.ReactElement<typeof CustomButton>;
 }
 
 export default function CustomInput({
@@ -22,7 +22,7 @@ export default function CustomInput({
   height = "50px",
   disabled = false,
   validateInput,
-  buttonComponent,
+  button,
 }: CustomInputProps) {
   const [error, setError] = useState<string | undefined>(undefined);
 
@@ -51,12 +51,12 @@ export default function CustomInput({
             : error
             ? "border-[#239AC4] bg-[#F2FBFE] focus:ring-[#239AC4]"
             : "border-[#ddd] focus:ring-[#239AC4]"
-        } ${buttonComponent ? "pr-[80px]" : ""}`}
+        } ${button ? "pr-[80px]" : ""}`}
       />
 
-      {buttonComponent && (
+      {button && (
         <div className="absolute right-6 top-1/2 transform -translate-y-1/2">
-          <CustomButton {...buttonComponent.props} />
+          <CustomButton {...button.props} />
         </div>
       )}
 
