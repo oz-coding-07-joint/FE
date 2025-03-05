@@ -1,4 +1,5 @@
 import Image from "next/image";
+
 import Logoimg from "../../assets/images/logo.png";
 import Teacher from "../../assets/images/teacher.jpg";
 // import mainImg from "../../assets/images/main.jpg";
@@ -118,6 +119,7 @@ export default function MainPage() {
                 alt="Logo"
                 className="w-[400px] h-[500px] flex items-start "
               />
+
             </div>
           </div>
         </div>

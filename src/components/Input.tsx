@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "./Button";
 
 interface CustomInputProps {
@@ -6,11 +6,10 @@ interface CustomInputProps {
   placeholder?: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  width?: string;
-  height?: string;
   disabled?: boolean;
   validateInput?: (value: string) => string | undefined;
   button?: React.ReactElement<typeof Button>;
+  error?: string; //부모 컴포넌트에서 전달하는 에러 메시지
 }
 
 export default function Input({
@@ -18,13 +17,16 @@ export default function Input({
   placeholder,
   value,
   onChange,
-  width = "100%",
-  height = "50px",
   disabled = false,
   validateInput,
   button,
+  error: externalError,
 }: CustomInputProps) {
-  const [error, setError] = useState<string | undefined>(undefined);
+  const [internalError, setInternalError] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    setInternalError(externalError);
+  }, [externalError]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
@@ -32,7 +34,7 @@ export default function Input({
 
     if (validateInput) {
       const errorMessage = validateInput(newValue);
-      setError(errorMessage || undefined);
+      setInternalError(errorMessage || undefined);
     }
   };
 
@@ -44,13 +46,12 @@ export default function Input({
         value={value}
         onChange={handleChange}
         disabled={disabled}
-        style={{ width, height }}
-        className={`px-2.5 text-[#666666] placeholder-[#aaaaaa] border rounded-[3px] focus:outline-none focus:ring-2 ${
+        className={`w-full h-12 px-2.5 text-muted-400 placeholder-muted-300 border rounded-s focus:outline-none focus:ring-2 ${
           disabled
-            ? "bg-[#f1f1f1] text-[#aaaaaa] border-[#ddd] cursor-not-allowed opacity-50"
-            : error
-            ? "border-[#239AC4] bg-[#F2FBFE] focus:ring-[#239AC4]"
-            : "border-[#ddd] focus:ring-[#239AC4]"
+            ? "bg-[#f1f1f1] text-muted-300 border-muted-200 cursor-not-allowed opacity-50"
+            : internalError
+            ? "border-secondary-500 bg-secondary-100 focus:ring-2"
+            : "border-muted-200 focus:ring-2"
         } ${button ? "pr-20" : ""}`}
       />
 
@@ -60,8 +61,7 @@ export default function Input({
         </div>
       )}
 
-      {error && <p className="mt-1 text-[#239AC4] text-[11pt]">{error}</p>}
+      {internalError && <p className="mt-1 text-secondary-500 text-xs">{internalError}</p>}
     </div>
   );
 }
-

@@ -21,9 +21,16 @@ const config: Config = {
           700: "#2E67C7",
           800: "#284980",
           900: "#192845",
-        }, //블루(메인)
-        secondary: { 100: "#F2FBFE", 500: "#239AC4" }, //그린(보조)
-        accent: { 200: "#FFD92C", 300: "#F6B500", 400: "#F6A818" }, //옐로우(강조)
+        secondary: {
+          100: "#F2FBFE",
+          500: "#239AC4",
+        }, // 그린(보조)
+
+        accent: {
+          200: "#FFD92C",
+          400: "#F6A818",
+        }, // 옐로우(강조)
+
         muted: {
           100: "#f1f1f1",
           200: "#dddddd",
@@ -31,7 +38,7 @@ const config: Config = {
           400: "#666666",
           500: "#444444",
           600: "#222222",
-        }, //그레이
+        }, // 그레이
       },
       fontFamily: {
         Pretendard: ["var(--font-pretendard)", "sans-serif"],
@@ -41,4 +48,5 @@ const config: Config = {
   },
   plugins: [],
 };
+
 export default config;
