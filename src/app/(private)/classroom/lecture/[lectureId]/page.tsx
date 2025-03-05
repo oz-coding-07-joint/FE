@@ -6,14 +6,6 @@ import SelectBox from '@/app/(private)/_components/ui/SelectBox';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 
-export interface SelectBoxProps {
-  options: {
-    value: string;
-    label: string;
-  }[];
-}
-
-
 const options = [
   { id: 1, title: 'Option 1' },
   { id: 2, title: 'Option 2' },

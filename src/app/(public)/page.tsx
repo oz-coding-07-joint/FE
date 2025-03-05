@@ -1,6 +1,6 @@
 import Image from "next/image";
-import Logoimg from "../assets/logo.png";
-import Teacher from "../assets/teacher.jpg";
+import Logoimg from "../../assets/images/logo.png";
+// import Teacher from "../assets/teacher.jpg";
 
 export default function MainPage() {
   return (
@@ -25,7 +25,7 @@ export default function MainPage() {
 
       {/* main */}
       <div
-        className="bg-[url(../assets/main.jpg)] bg-cover bg-no-repeat bg-center h-[1080px]
+        className="bg-[url(/assets/images/main.jpg)] bg-cover bg-no-repeat bg-center h-[1080px]
        flex justify-center items-center"
       >
         <div className="flex flex-col gap-16 items-center">
@@ -83,7 +83,7 @@ export default function MainPage() {
               <span className="font-normal">클래식 화성학</span>
             </div>
             <div
-              className="flex flex-col bg-cover bg-[url(../assets/teacher.jpg)]
+              className="flex flex-col bg-cover bg-[url(/assets/images/teacher.jpg)]
           w-[400px] h-[500px] bg-center ml-4"
             >
               {/* <Image

@@ -1,7 +1,9 @@
 import { Chapter } from '@/types/video';
 import React from 'react';
 
-const SelectBox = ({ options }: {options: Chapter[]}) => {
+type options = Pick<Chapter, 'id' | 'title'>
+
+const SelectBox = ({ options }: {options: options[]}) => {
   return (
     <div className='border border-[#DDDDDD] rounded-md w-[22rem] h-[3rem] flex justify-center'>
       <select className='w-[5rem]'>
