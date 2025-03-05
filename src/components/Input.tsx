@@ -45,12 +45,12 @@ export default function Input({
         onChange={handleChange}
         disabled={disabled}
         style={{ width, height }}
-        className={`px-2.5 text-[#666666] placeholder-[#aaaaaa] border rounded-[3px] focus:outline-none focus:ring-2 ${
+        className={`px-2.5 text-muted-400 placeholder-muted-300 border rounded-xs focus:outline-none focus:ring-2 ${
           disabled
-            ? "bg-[#f1f1f1] text-[#aaaaaa] border-[#ddd] cursor-not-allowed opacity-50"
+            ? "bg-[#f1f1f1] text-muted-300 border-muted-200 cursor-not-allowed opacity-50"
             : error
-            ? "border-[#239AC4] bg-[#F2FBFE] focus:ring-[#239AC4]"
-            : "border-[#ddd] focus:ring-[#239AC4]"
+            ? "border-secondary-500 bg-secondary-100 focus:ring-2"
+            : "border-muted-200 focus:ring-secondary-500"
         } ${button ? "pr-20" : ""}`}
       />
 
