@@ -1,5 +1,6 @@
 'use client'
 
+import VideoPlayer from '@/app/(private)/_components/lecture/VideoPlayer';
 import { ChapterItemList } from '@/app/(private)/_components/ui/ChapterItemList';
 import DetailContainer from '@/app/(private)/_components/ui/DetailContainer';
 import SelectBox from '@/app/(private)/_components/ui/SelectBox';
@@ -25,9 +26,16 @@ const materialItems = [
 
 const LecturePage = () => {
   const [activeTab, setActiveTab] = useState<'lecture' | 'materials'>('lecture');
+  const [duration, setDuration] = useState<number>(0);
 
   const tabClassName = (tab: 'lecture' | 'materials') =>
     clsx('h-max', activeTab === tab ? 'font-bold text-primary-900' : 'text-muted-400')
+
+  const handleDuration = (duration : number) => {
+    if(duration && duration > 0 ) {
+      setDuration(duration);
+    }
+  }
 
   return (
     <div className='bg-white'>
@@ -52,7 +60,7 @@ const LecturePage = () => {
           </div>
           <div className='flex justify-center'>
             {activeTab === 'lecture' ? (
-              <ChapterItemList chapterItems={chapterItems} />
+              <ChapterItemList chapterItems={chapterItems} duration={duration}/>
             ) : (
               <div>
                 {materialItems.map((item) => (
@@ -64,7 +72,8 @@ const LecturePage = () => {
             )}
           </div>
         </DetailContainer>
-        <div className='bg-white w-[1210px] rounded-md shadow-md'>video
+        <div className='bg-white w-[1210px] rounded-md shadow-md'>
+          <VideoPlayer onDuration={handleDuration} />
         </div>
       </div>
     </div>
