@@ -60,7 +60,7 @@ export default function Input({
         </div>
       )}
 
-      {error && <p className="mt-1 text-[#239AC4] text-[11pt]">{error}</p>}
+      {error && <p className="mt-1 text-secondary-500 text-xs">{error}</p>}
     </div>
   );
 }
