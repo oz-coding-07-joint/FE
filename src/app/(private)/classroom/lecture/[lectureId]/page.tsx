@@ -13,7 +13,7 @@ const options = [
 ];
 
 const chapterItems = [
-  { id: 1, isCompleted: false, progress: '00:05:00', title: 'chapter item name' },
+  { id: 1, isCompleted: true, progress: '00:05:00', title: 'chapter item name' },
   { id: 2, isCompleted: false, progress: '00:05:00', title: 'chapter item name2' },
 ]
 
@@ -64,7 +64,8 @@ const LecturePage = () => {
             )}
           </div>
         </DetailContainer>
-        <div className='bg-white w-[1210px]'>video</div>
+        <div className='bg-white w-[1210px] rounded-md shadow-md'>video
+        </div>
       </div>
     </div>
   )
