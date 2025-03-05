@@ -1,18 +1,11 @@
 'use client'
 
+import VideoPlayer from '@/app/(private)/_components/lecture/VideoPlayer';
 import { ChapterItemList } from '@/app/(private)/_components/ui/ChapterItemList';
 import DetailContainer from '@/app/(private)/_components/ui/DetailContainer';
 import SelectBox from '@/app/(private)/_components/ui/SelectBox';
 import clsx from 'clsx';
 import React, { useState } from 'react';
-
-export interface SelectBoxProps {
-  options: {
-    value: string;
-    label: string;
-  }[];
-}
-
 
 const options = [
   { id: 1, title: 'Option 1' },
@@ -21,8 +14,8 @@ const options = [
 ];
 
 const chapterItems = [
-  { id: 1, isWatched: false, duration: '00:05:00', title: 'chapter item name' },
-  { id: 2, isWatched: false, duration: '00:05:00', title: 'chapter item name2' },
+  { id: 1, isCompleted: true, progress: '00:05:00', title: 'chapter item name' },
+  { id: 2, isCompleted: false, progress: '00:05:00', title: 'chapter item name2' },
 ]
 
 const materialItems = [
@@ -33,12 +26,19 @@ const materialItems = [
 
 const LecturePage = () => {
   const [activeTab, setActiveTab] = useState<'lecture' | 'materials'>('lecture');
+  const [duration, setDuration] = useState<number>(0);
 
   const tabClassName = (tab: 'lecture' | 'materials') =>
-    clsx('h-max', activeTab === tab ? 'font-bold text-[#192845]' : 'text-[#666666]')
+    clsx('h-max', activeTab === tab ? 'font-bold text-primary-900' : 'text-muted-400')
+
+  const handleDuration = (duration : number) => {
+    if(duration && duration > 0 ) {
+      setDuration(duration);
+    }
+  }
 
   return (
-    <div className='bg-[#F9F9F9]'>
+    <div className='bg-white'>
       <h1>title</h1>
       <div className='flex justify-around'>
         <DetailContainer
@@ -53,14 +53,14 @@ const LecturePage = () => {
             >학습자료</button>
           }
           width='w-sm'
-          height='h-[50rem]'
+          height='h-[800px]'
         >
           <div className='flex justify-center m-[1rem]'>
             <SelectBox options={options} />
           </div>
           <div className='flex justify-center'>
             {activeTab === 'lecture' ? (
-              <ChapterItemList chapterItems={chapterItems} />
+              <ChapterItemList chapterItems={chapterItems} duration={duration}/>
             ) : (
               <div>
                 {materialItems.map((item) => (
@@ -72,7 +72,9 @@ const LecturePage = () => {
             )}
           </div>
         </DetailContainer>
-        <div className='bg-white w-[76rem]'>video</div>
+        <div className='bg-white w-[1210px] rounded-md shadow-md'>
+          <VideoPlayer onDuration={handleDuration} />
+        </div>
       </div>
     </div>
   )

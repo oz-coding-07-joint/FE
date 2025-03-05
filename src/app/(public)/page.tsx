@@ -119,7 +119,6 @@ export default function MainPage() {
                 alt="Logo"
                 className="w-[400px] h-[500px] flex items-start "
               />
-
             </div>
           </div>
         </div>
