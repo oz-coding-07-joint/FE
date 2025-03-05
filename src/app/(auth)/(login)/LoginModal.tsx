@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Modal from "../../../components/Modal";
-import Button from "../../../components/Button";
-import Input from "../../../components/Input";
+import Modal from "@/components/Modal";
+import Button from "@/components/Button";
+import Input from "@/components/Input";
 
 type LoginModalProps = {
   isOpen: boolean;
@@ -70,8 +70,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
 
       {/* 회원가입 링크 */}
       <p className="text-center text-sm mt-3">
-        계정이 없으신가요?{" "}
-        <a href="/signup" className="text-blue-500 font-semibold">회원가입</a>
+        <a href="/signup" className="text-muted-300 underline font-semibold">회원가입</a>
       </p>
 
       {/* SNS 로그인 구분선 */}
