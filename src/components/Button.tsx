@@ -23,7 +23,7 @@ export default function Button({
 
   // 버튼 스타일 설정
   const variantClasses = {
-    primary: "bg-primary text-white",
+    primary: "bg-primary-900 text-white",
     secondary: "bg-muted-500 text-white",
     outline: "bg-white border border-muted-200 text-muted-400",
   };
@@ -32,10 +32,10 @@ export default function Button({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`w-auto rounded-[3px] text-center transition duration-200 ${
+      className={`w-auto rounded-s text-center transition duration-200 ${
         sizeClasses[size]
       } ${variantClasses[variant]} ${
-        disabled ? "opacity-50 cursor-not-allowed" : ""
+        disabled ? "opacity-70 cursor-not-allowed" : ""
       }`}
     >
       {label}
