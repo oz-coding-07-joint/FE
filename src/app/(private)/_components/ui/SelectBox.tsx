@@ -1,5 +1,5 @@
+import { Chapter } from '@/types/video';
 import React from 'react';
-import { Chapter } from '@/types/class';
 
 const SelectBox = ({ options }: {options: Chapter[]}) => {
   return (

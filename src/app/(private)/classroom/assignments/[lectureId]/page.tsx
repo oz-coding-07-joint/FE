@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import AssignmentDetails from '@/components/classroom/AssignmentDetails';
-import AssignmentCommentList from '@/components/classroom/AssignmentCommentList';
-import AssignmentCommentForm from '@/components/classroom/AssignmentCommentForm';
+import AssignmentDetails from '@/app/(private)/_components/ui/AssignmentDetails';
+import AssignmentCommentList from '@/app/(private)/_components/ui/AssignmentCommentList';
+import AssignmentCommentForm from '@/app/(private)/_components/ui/AssignmentCommentForm';
 import { Assignment, AssignmentComment } from '@/types/assignment';
 
 const AssignmentPage = () => {
@@ -26,12 +26,11 @@ const AssignmentPage = () => {
     const fetchedComments: AssignmentComment[] = [
       {
         id: 1,
-        userId: 2,
-        assignmentId: 1,
+        userNickname: '홍길동',
         parentId: undefined,
         fileUrl: '',
         content: 'Great assignment!',
-        createdAt: Date.now() - 100000,
+        createdAt: new Date(),
       },
     ];
 
