@@ -1,62 +1,66 @@
-export interface Class {
-  id: number;
-  title: string;
-  price?: number;
-  totalDuration?: number;
-  maxStudent?: number;
-}
-
 export interface Instructor {
   id: number;
-  userId: number;
   experience: string;
+}
+
+interface SLecture {
+  id: number;
+  title: string;
+  thumbnail_url: string;
+  progress_rate: number;
+  introduction: string;//강의소개
+  learning_objectives: string;//학습목표
+  instructor: Instructor;
 }
 
 export interface Lecture {
   id: number;
   title: string;
   thumbnailUrl: string;
-  classId: number;
-  instructorId: number;
+  progressRate: number;
   introduction: string; //강의소개
   learningObjectives: string; //학습목표
+  instructor: Instructor;
 }
 
-export interface Chapter {
+export function transformLecture(lecture:SLecture):Lecture {
+  return {
+    id: lecture.id,
+    title: lecture.title,
+    thumbnailUrl: lecture.thumbnail_url,
+    progressRate: lecture.progress_rate,
+    introduction: lecture.introduction,
+    learningObjectives: lecture.learning_objectives,
+    instructor: {
+      id: lecture.instructor.id,
+      experience: lecture.instructor.experience,
+    },
+  };
+}
+
+interface SReview {
   id: number;
-  title: string;
-  lectureId?: number;
-  materialUrl?: string;
-}
-
-export interface ChapterItem {
-    id: number;
-    isWatched: boolean;
-    duration: string;
-    title: string;
-}
+  student_nickname?: string;
+  lecture_title?: string;
+  star: number;
+  content: string;
+} 
 
 export interface Review {
   id: number;
-  userId: number;
-  userNickname: string;
-  lectureId: number;
+  userNickname?: string;
+  lectureTitle?: string;
   star: number;
   content: string;
 }
 
-export interface SelectBoxProps {
-  options: {
-    value: string;
-    label: string;
-  }[];
-}
-
-export interface DetailContainerProps {
-    children: React.ReactNode;
-    leftTab?: React.ReactNode;
-    rightTab?: React.ReactNode;
-    width?: string;
-    height?: string;
+export function transformReview(review: SReview): Review {
+  return {
+    id: review.id,
+    userNickname: review.student_nickname,
+    lectureTitle: review.lecture_title,
+    star: review.star,
+    content: review.content,
+  };
 }
 

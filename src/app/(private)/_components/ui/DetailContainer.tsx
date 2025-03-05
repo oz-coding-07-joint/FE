@@ -1,6 +1,13 @@
-import { DetailContainerProps } from '@/types/class';
 import clsx from 'clsx';
 import React from 'react';
+
+export interface DetailContainerProps {
+  children: React.ReactNode;
+  leftTab?: React.ReactNode;
+  rightTab?: React.ReactNode;
+  width?: string;
+  height?: string;
+}
 
 const DetailContainer = ({children, leftTab, rightTab, width, height}: DetailContainerProps) => {
   return (
