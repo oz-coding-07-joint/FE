@@ -26,6 +26,7 @@ export interface Chapter {
 
 interface SVideo {
     id: number;
+    title?: string;
     video_url?: string;
     progress?: string;
     is_completed?: boolean;
@@ -33,6 +34,7 @@ interface SVideo {
 
 export interface Video {
     id: number;
+    title?: string;
     videoUrl?: string;
     progress?: string;
     isCompleted?: boolean;
@@ -41,6 +43,7 @@ export interface Video {
 export function transformVideo(video: SVideo): Video {
     return {
         id: video.id,
+        title: video.title,
         videoUrl: video.video_url,
         progress: video.progress,
         isCompleted: video.is_completed,
