@@ -1,7 +1,9 @@
-import { ChapterItem } from "@/types/class";
+import { Video } from "@/types/video";
 import { useState } from "react";
 
-export const ChapterItemList = ({ chapterItems }: { chapterItems: ChapterItem[] }) => {
+type chapterItems = Pick<Video, 'id' | 'isCompleted' | 'title' | 'progress'>
+
+export const ChapterItemList = ({ chapterItems }: { chapterItems: chapterItems[] }) => {
   const [selectedId, setSelectedId] = useState<number>(1);
 
   const handleClick = (id: number) => {
@@ -15,8 +17,8 @@ export const ChapterItemList = ({ chapterItems }: { chapterItems: ChapterItem[] 
         onClick={() => handleClick(item.id)}
         className={`border-b-2 w-[22rem] h-[5rem] flex flex-col justify-center cursor-pointer`}>
           <div className="flex items-center">
-            <input type='checkbox' checked={item.isWatched} />
-            <span className="ml-[0.3rem] text-base">{item.duration}</span>
+            <input type='checkbox' checked={item.isCompleted} />
+            <span className="ml-[0.3rem] text-base">{item.progress}</span>
           </div>
           <div className={`text-lg ${selectedId === item.id ? 'font-bold' : ''}`}>{item.title}</div>
         </div>

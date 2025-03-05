@@ -27,10 +27,10 @@ const LecturePage = () => {
   const [activeTab, setActiveTab] = useState<'lecture' | 'materials'>('lecture');
 
   const tabClassName = (tab: 'lecture' | 'materials') =>
-    clsx('h-max', activeTab === tab ? 'font-bold text-[#192845]' : 'text-[#666666]')
+    clsx('h-max', activeTab === tab ? 'font-bold text-primary-900' : 'text-muted-400')
 
   return (
-    <div className='bg-[#F9F9F9]'>
+    <div className='bg-white'>
       <h1>title</h1>
       <div className='flex justify-around'>
         <DetailContainer
