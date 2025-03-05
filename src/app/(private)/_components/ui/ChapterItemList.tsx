@@ -15,10 +15,10 @@ export const ChapterItemList = ({ chapterItems }: { chapterItems: chapterItems[]
       {chapterItems.map((item) => (
         <div key={item.id} 
         onClick={() => handleClick(item.id)}
-        className={`border-b-2 w-[22rem] h-[5rem] flex flex-col justify-center cursor-pointer`}>
+        className={`border-b-2 w-[350px] h-[84px] flex flex-col justify-center cursor-pointer`}>
           <div className="flex items-center">
             <input type='checkbox' checked={item.isCompleted} />
-            <span className="ml-[0.3rem] text-base">{item.progress}</span>
+            <span className="ml-[5px] text-base">{item.progress}</span>
           </div>
           <div className={`text-lg ${selectedId === item.id ? 'font-bold' : ''}`}>{item.title}</div>
         </div>

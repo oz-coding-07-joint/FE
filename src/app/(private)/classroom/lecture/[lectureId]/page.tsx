@@ -13,8 +13,8 @@ const options = [
 ];
 
 const chapterItems = [
-  { id: 1, isWatched: false, duration: '00:05:00', title: 'chapter item name' },
-  { id: 2, isWatched: false, duration: '00:05:00', title: 'chapter item name2' },
+  { id: 1, isCompleted: false, progress: '00:05:00', title: 'chapter item name' },
+  { id: 2, isCompleted: false, progress: '00:05:00', title: 'chapter item name2' },
 ]
 
 const materialItems = [
@@ -45,7 +45,7 @@ const LecturePage = () => {
             >학습자료</button>
           }
           width='w-sm'
-          height='h-[50rem]'
+          height='h-[800px]'
         >
           <div className='flex justify-center m-[1rem]'>
             <SelectBox options={options} />
@@ -64,7 +64,7 @@ const LecturePage = () => {
             )}
           </div>
         </DetailContainer>
-        <div className='bg-white w-[76rem]'>video</div>
+        <div className='bg-white w-[1210px]'>video</div>
       </div>
     </div>
   )
