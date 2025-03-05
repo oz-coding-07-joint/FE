@@ -9,9 +9,11 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        background: "var(--background)",
+        foreground: "var(--foreground)",
         primary: {
-          100: "#DEEFFB",
-          200: "#C5D2F8",
+          100: "#DEEFB",
+          200: "#C52F8",
           300: "#9CD0F4",
           400: "#6EB4EC",
           500: "#4C97E5",
@@ -19,8 +21,6 @@ const config: Config = {
           700: "#2E67C7",
           800: "#284980",
           900: "#192845",
-        }, // 블루(메인)
-
         secondary: {
           100: "#F2FBFE",
           500: "#239AC4",
@@ -43,6 +43,7 @@ const config: Config = {
       fontFamily: {
         Pretendard: ["var(--font-pretendard)", "sans-serif"],
       },
+      backgroundImage: { mainImage: "url('../assets/images/main.jpg')" },
     },
   },
   plugins: [],

@@ -1,3 +1,9 @@
-export default function PublicLayout({ children }: { children: React.ReactNode }) {
-    return <>{children}</>;
-  }
+import React from "react";
+
+export default function MainLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return <div>{children}</div>;
+}
