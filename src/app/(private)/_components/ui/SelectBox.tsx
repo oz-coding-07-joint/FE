@@ -5,7 +5,7 @@ type options = Pick<Chapter, 'id' | 'title'>
 
 const SelectBox = ({ options }: {options: options[]}) => {
   return (
-    <div className='border border-muted-200 rounded-md w-[350px] h-[50px] flex justify-center'>
+    <div className='border border-muted-200 rounded-md w-[310px] h-[50px] flex justify-center min-w-0'>
       <select className='w-full border-x-8 border-white'>
         {options.map((option, index) => (
           <option key={index} value={option.id}>

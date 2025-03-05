@@ -26,19 +26,12 @@ const materialItems = [
 
 const LecturePage = () => {
   const [activeTab, setActiveTab] = useState<'lecture' | 'materials'>('lecture');
-  const [duration, setDuration] = useState<number>(0);
 
   const tabClassName = (tab: 'lecture' | 'materials') =>
     clsx('h-max', activeTab === tab ? 'font-bold text-primary-900' : 'text-muted-400')
 
-  const handleDuration = (duration : number) => {
-    if(duration && duration > 0 ) {
-      setDuration(duration);
-    }
-  }
-
   return (
-    <div className='bg-white'>
+    <div className='bg-white min-h-screen'>
       <h1>title</h1>
       <div className='flex justify-around'>
         <DetailContainer
@@ -52,7 +45,7 @@ const LecturePage = () => {
               onClick={() => setActiveTab('materials')}
             >학습자료</button>
           }
-          width='w-sm'
+          width='w-[30vw] max-w-[320px]'
           height='h-[800px]'
         >
           <div className='flex justify-center m-[1rem]'>
@@ -60,7 +53,7 @@ const LecturePage = () => {
           </div>
           <div className='flex justify-center'>
             {activeTab === 'lecture' ? (
-              <ChapterItemList chapterItems={chapterItems} duration={duration}/>
+              <ChapterItemList chapterItems={chapterItems} />
             ) : (
               <div>
                 {materialItems.map((item) => (
@@ -72,8 +65,19 @@ const LecturePage = () => {
             )}
           </div>
         </DetailContainer>
-        <div className='bg-white w-[1210px] rounded-md shadow-md'>
-          <VideoPlayer onDuration={handleDuration} />
+        <div className='bg-white w-[60vw] rounded-md shadow-md flex flex-col items-center gap-[10px]'>
+          <VideoPlayer />
+          {chapterItems.map((item) => (
+            item.isCompleted && (
+              <div className='w-[55vw] flex justify-end'>
+                <button
+                  key={item.id}
+                  className="w-[120px] h-[40px] rounded-sm bg-primary-900 text-white"
+                >과제 하러가기
+                </button>
+              </div>
+            )
+          ))}
         </div>
       </div>
     </div>
