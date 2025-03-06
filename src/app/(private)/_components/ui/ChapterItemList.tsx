@@ -4,6 +4,7 @@ import { useState } from "react";
 
 type ChapterItems = Required<Pick<Video, 'id' | 'isCompleted' | 'title' | 'progress' | 'videoUrl'>>
 
+
 export const ChapterItemList = ({ chapterItems, onClick }: {chapterItems: ChapterItems[]; onClick: (chapter: ChapterItems) => void} ) => {
   const [selectedId, setSelectedId] = useState<number>(1);
 

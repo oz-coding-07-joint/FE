@@ -8,12 +8,6 @@ import SelectBox from '@/app/(private)/_components/ui/SelectBox';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 
-const options = [
-  { id: 1, title: 'Option 1' },
-  { id: 2, title: 'Option 2' },
-  { id: 3, title: 'Option 3' },
-];
-
 const chapterItems = [
   { id: 1, isCompleted: true, progress: '00:05:00', title: 'chapter item name1', videoUrl: 'https://youtu.be/z50DbJcrEsY?si=rJkoF6nGNXzMlTkx' },
   { id: 2, isCompleted: false, progress: '00:05:00', title: 'chapter item name2', videoUrl: 'https://youtu.be/2k55bh3-ZWk?si=9QCYGMlRMNMmV9pJ' },
@@ -45,7 +39,7 @@ const LecturePage = () => {
           height='h-[800px]'
         >
           <div className='flex justify-center m-[1rem]'>
-            <SelectBox options={options} />
+            <SelectBox />
           </div>
           <div className='flex justify-center'>
             {activeTab === 'lecture' ? (
