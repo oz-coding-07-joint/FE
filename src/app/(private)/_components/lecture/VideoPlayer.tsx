@@ -1,3 +1,4 @@
+import { Video } from '@/types/video';
 import dynamic from 'next/dynamic';
 import React from 'react';
 
@@ -5,14 +6,16 @@ const ReactPlayer = dynamic(() => import('react-player'), {
   ssr: false,
 });
 
-const VideoPlayer = () => {
+type VideoPlayerProps = Pick<Video, 'videoUrl'>
+
+const VideoPlayer = ({videoUrl}: VideoPlayerProps) => {
 
   return (
-    <div>
+    <div className='mt-6'>
       <ReactPlayer
-        url={'https://youtu.be/z50DbJcrEsY?si=rJkoF6nGNXzMlTkx'}
+        url={videoUrl}
         controls={true}
-        width={'55vw'}
+        width={'57vw'}
         height={646}
       />
     </div>

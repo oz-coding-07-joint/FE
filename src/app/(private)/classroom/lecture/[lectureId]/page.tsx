@@ -14,8 +14,8 @@ const options = [
 ];
 
 const chapterItems = [
-  { id: 1, isCompleted: true, progress: '00:05:00', title: 'chapter item name' },
-  { id: 2, isCompleted: false, progress: '00:05:00', title: 'chapter item name2' },
+  { id: 1, isCompleted: true, progress: '00:05:00', title: 'chapter item name1', videoUrl: 'https://youtu.be/z50DbJcrEsY?si=rJkoF6nGNXzMlTkx'},
+  { id: 2, isCompleted: false, progress: '00:05:00', title: 'chapter item name2', videoUrl: 'https://youtu.be/2k55bh3-ZWk?si=9QCYGMlRMNMmV9pJ' },
 ]
 
 const materialItems = [
@@ -26,6 +26,7 @@ const materialItems = [
 
 const LecturePage = () => {
   const [activeTab, setActiveTab] = useState<'lecture' | 'materials'>('lecture');
+  const [selectedChapterItem, setSelectedChapterItem] = useState(chapterItems[0])
 
   const tabClassName = (tab: 'lecture' | 'materials') =>
     clsx('h-max', activeTab === tab ? 'font-bold text-primary-900' : 'text-muted-400')
@@ -53,7 +54,7 @@ const LecturePage = () => {
           </div>
           <div className='flex justify-center'>
             {activeTab === 'lecture' ? (
-              <ChapterItemList chapterItems={chapterItems} />
+              <ChapterItemList chapterItems={chapterItems} onClick={(chapter) => setSelectedChapterItem(chapter)}/>
             ) : (
               <div>
                 {materialItems.map((item) => (
@@ -66,7 +67,7 @@ const LecturePage = () => {
           </div>
         </DetailContainer>
         <div className='bg-white w-[60vw] rounded-md shadow-md flex flex-col items-center gap-[10px]'>
-          <VideoPlayer />
+          <VideoPlayer videoUrl={selectedChapterItem.videoUrl} />
           {chapterItems.map((item) => (
             item.isCompleted && (
               <div className='w-[55vw] flex justify-end'>
