@@ -1,5 +1,6 @@
 'use client'
 
+import MaterialList from '@/app/(private)/_components/lecture/MaterialList';
 import VideoPlayer from '@/app/(private)/_components/lecture/VideoPlayer';
 import { ChapterItemList } from '@/app/(private)/_components/ui/ChapterItemList';
 import DetailContainer from '@/app/(private)/_components/ui/DetailContainer';
@@ -16,12 +17,6 @@ const options = [
 const chapterItems = [
   { id: 1, isCompleted: true, progress: '00:05:00', title: 'chapter item name1', videoUrl: 'https://youtu.be/z50DbJcrEsY?si=rJkoF6nGNXzMlTkx' },
   { id: 2, isCompleted: false, progress: '00:05:00', title: 'chapter item name2', videoUrl: 'https://youtu.be/2k55bh3-ZWk?si=9QCYGMlRMNMmV9pJ' },
-]
-
-const materialItems = [
-  { id: 1, title: 'material 1' },
-  { id: 2, title: 'material 2' },
-  { id: 3, title: 'material 3' },
 ]
 
 const LecturePage = () => {
@@ -56,12 +51,8 @@ const LecturePage = () => {
             {activeTab === 'lecture' ? (
               <ChapterItemList chapterItems={chapterItems} onClick={(chapter) => setSelectedChapterItem(chapter)} />
             ) : (
-              <div>
-                {materialItems.map((item) => (
-                  <div key={item.id}>
-                    {item.title}
-                  </div>
-                ))}
+              <div className='w-full px-6'>
+                <MaterialList />
               </div>
             )}
           </div>
