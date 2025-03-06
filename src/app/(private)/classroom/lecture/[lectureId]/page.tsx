@@ -14,7 +14,7 @@ const options = [
 ];
 
 const chapterItems = [
-  { id: 1, isCompleted: true, progress: '00:05:00', title: 'chapter item name1', videoUrl: 'https://youtu.be/z50DbJcrEsY?si=rJkoF6nGNXzMlTkx'},
+  { id: 1, isCompleted: true, progress: '00:05:00', title: 'chapter item name1', videoUrl: 'https://youtu.be/z50DbJcrEsY?si=rJkoF6nGNXzMlTkx' },
   { id: 2, isCompleted: false, progress: '00:05:00', title: 'chapter item name2', videoUrl: 'https://youtu.be/2k55bh3-ZWk?si=9QCYGMlRMNMmV9pJ' },
 ]
 
@@ -54,7 +54,7 @@ const LecturePage = () => {
           </div>
           <div className='flex justify-center'>
             {activeTab === 'lecture' ? (
-              <ChapterItemList chapterItems={chapterItems} onClick={(chapter) => setSelectedChapterItem(chapter)}/>
+              <ChapterItemList chapterItems={chapterItems} onClick={(chapter) => setSelectedChapterItem(chapter)} />
             ) : (
               <div>
                 {materialItems.map((item) => (
@@ -68,17 +68,14 @@ const LecturePage = () => {
         </DetailContainer>
         <div className='bg-white w-[60vw] rounded-md shadow-md flex flex-col items-center gap-[10px]'>
           <VideoPlayer videoUrl={selectedChapterItem.videoUrl} />
-          {chapterItems.map((item) => (
-            item.isCompleted && (
-              <div className='w-[55vw] flex justify-end'>
-                <button
-                  key={item.id}
-                  className="w-[120px] h-[40px] rounded-sm bg-primary-900 text-white"
-                >과제 하러가기
-                </button>
-              </div>
-            )
-          ))}
+          {selectedChapterItem.isCompleted && (
+            <div className='w-[55vw] flex justify-end'>
+              <button
+                className="w-[120px] h-[40px] rounded-sm bg-primary-900 text-white"
+              >과제 하러가기
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
