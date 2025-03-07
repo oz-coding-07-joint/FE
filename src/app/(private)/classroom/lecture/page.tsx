@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -32,7 +33,7 @@ export default function LecturePage() {
         {lectures.map((lecture) => (
           <div key={lecture.id} className="border rounded-lg p-4 shadow-md bg-gray-50">
             <img
-              src={lecture.thumbnailUrl}
+              src={lecture.thumbnailUrl || "../../../../assets/images/no-img.png"} 
               alt={lecture.title}
               className="w-full h-48 object-cover rounded-md"
             />
