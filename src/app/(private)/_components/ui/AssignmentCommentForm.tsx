@@ -6,7 +6,7 @@ interface AssignmentCommentFormProps {
   onSubmit: (comment: AssignmentComment) => void;
 }
 
-const AssignmentCommentForm: React.FC<AssignmentCommentFormProps> = ({ assignmentId, onSubmit }) => {
+const AssignmentCommentForm: React.FC<AssignmentCommentFormProps> = ({ onSubmit }) => {
   const [content, setContent] = useState('');
   const [file, setFile] = useState<File | null>(null);
 
@@ -24,12 +24,11 @@ const AssignmentCommentForm: React.FC<AssignmentCommentFormProps> = ({ assignmen
 
     const newComment: AssignmentComment = {
       id: Date.now(), // 간단히 ID를 timestamp로 처리 (실제 시스템에서는 서버에서 할당)
-      userId: 1, // 여기서는 예시로 userId를 1로 설정
-      assignmentId,
+      userNickname: '홍길동', // 여기서는 예시로 userId를 1로 설정
       parentId: undefined, // 기본값은 undefined (피드백이 아니므로)
       fileUrl: file ? URL.createObjectURL(file) : '', // 파일이 있을 경우 URL 생성
       content,
-      createdAt: Date.now(),
+      createdAt: new Date,
     };
 
     onSubmit(newComment);
