@@ -49,12 +49,12 @@ export default function LecturePage() {
               <p className="text-gray-500 text-sm mt-1">
                 {lecture.progressRate}% 강좌 완료
               </p>
-              <div className="flex justify-between mt-4">
-                <button className="bg-muted-400 text-white px-4 py-2 rounded hover:bg-muted-500">
+              <div className="flex gap-3 mt-4">
+                <button className="bg-white border border-gray-300 text-gray-600 px-3 py-1 rounded">
                   수업 정보 보기
                 </button>
-                <button className="bg-primary-600 text-white px-4 py-2 rounded hover:bg-primary-700">
-                  수업 보기
+                <button className="bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700">
+                  수업 후기 작성
                 </button>
               </div>
             </div>
