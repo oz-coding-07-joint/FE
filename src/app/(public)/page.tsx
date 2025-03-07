@@ -153,20 +153,21 @@ export default function MainPage() {
           </div>
           <div className="w-[500px] text-white flex flex-col">
             <span>교육과정 안내</span>
-            <label>
-              <select
-                name="class-name"
-                className="w-[500px] h-[50px] text-[#666666] pl-5 rounded-lg border-white bf-none"
-              >
-                <option value="화성학의 기초">화성학의 기초</option>
-              </select>
-            </label>
+            {/* <label> */}
+            <select
+              name="class-name"
+              className="w-[500px] h-[50px] text-[#666666] pl-5 rounded-lg border-white bf-none appearance-none"
+            >
+              <option value="화성학의 기초">화성학의 기초</option>
+              <option value="고급 화성학">고급 화성학</option>
+            </select>
+            {/* </label> */}
             <div className="border border-solid font-thin w-[500px0] h-52 mt-8 p-4">
               <span>강의 과정 뜨는곳</span>
             </div>
             <div className="mt-8 flex justify-center">
               <button
-                className="text-center w-[500px] h-12
+                className="text-center w-[500px] h-12 bg-white
               rounded-xl bg-yellow text-black "
               >
                 강의 자세히 보러가기
