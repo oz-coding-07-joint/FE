@@ -25,18 +25,21 @@ export default function Input({
   const [internalError, setInternalError] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    setInternalError(externalError);
+    if (externalError) {
+      setInternalError(externalError);
+    }
   }, [externalError]);
-
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     onChange(e);
-
+  
     if (validateInput) {
       const errorMessage = validateInput(newValue);
-      setInternalError(errorMessage || undefined);
+      setInternalError(errorMessage || externalError || undefined);
     }
   };
+  
 
   return (
     <div className="relative w-full">
@@ -46,14 +49,15 @@ export default function Input({
         value={value}
         onChange={handleChange}
         disabled={disabled}
-        className={`w-full h-12 px-2.5 text-muted-400 placeholder-muted-300 border rounded-s focus:outline-none focus:ring-2 ${
+        className={`w-full h-12 px-2.5 text-muted-400 placeholder-muted-300 border rounded-sm focus:outline-none focus:ring-2 ${
           disabled
             ? "bg-[#f1f1f1] text-muted-300 border-muted-200 cursor-not-allowed opacity-50"
             : internalError
-            ? "border-secondary-500 bg-secondary-100 focus:ring-2"
-            : "border-muted-200 focus:ring-2"
+            ? "border-secondary-500 bg-secondary-100 focus:ring-secondary-500"
+            : "border-muted-200 focus:ring-primary-500"
         } ${button ? "pr-20" : ""}`}
       />
+
 
       {button && (
         <div className="absolute right-2 top-1/2 transform -translate-y-1/2">

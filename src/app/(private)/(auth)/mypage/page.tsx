@@ -46,24 +46,30 @@ const MyPage = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <div className="bg-white w-[600px] py-8 px-20 rounded-md shadow-md">
-        <h2 className="text-2xl font-bold text-center mb-6">
+      <div className="bg-white w-[600px] py-10 px-14 rounded-md shadow-md">
+      <h2 className="text-4xl font-bold text-center mb-6 text-muted-600">
           {isPasswordChangeMode ? "비밀번호 변경" : "회원정보 수정"}
         </h2>
 
         {isPasswordChangeMode ? (
           // 비밀번호 변경 폼
           <form className="space-y-4">
-            <label className="block text-sm font-semibold">현재 비밀번호</label>
-            <Input type="password" placeholder="현재 비밀번호 입력하세요." value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} />
+            <div className="space-y-1">
+              <label className="block text-sm font-semibold">현재 비밀번호</label>
+              <Input type="password" placeholder="현재 비밀번호 입력하세요." value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} />
+            </div>
 
-            <label className="block text-sm font-semibold">새 비밀번호</label>
-            <Input type="password" placeholder="새 비밀번호 입력하세요." value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+            <div className="space-y-1">
+              <label className="block text-sm font-semibold">새 비밀번호</label>
+              <Input type="password" placeholder="새 비밀번호 입력하세요." value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+            </div>
 
-            <label className="block text-sm font-semibold">새 비밀번호 확인</label>
-            <Input type="password" placeholder="새 비밀번호를 한번 더 입력하세요." value={confirmNewPassword} onChange={(e) => setConfirmNewPassword(e.target.value)} />
+            <div className="space-y-1">
+              <label className="block text-sm font-semibold">새 비밀번호 확인</label>
+              <Input type="password" placeholder="새 비밀번호를 한번 더 입력하세요." value={confirmNewPassword} onChange={(e) => setConfirmNewPassword(e.target.value)} />
+            </div>
 
-            <div className="flex justify-between">
+            <div className="flex gap-1.5 justify-center">
               <Button label="취소" size="medium" variant="outline" onClick={togglePasswordChangeMode} />
               <Button label="비밀번호 변경" size="medium" variant="primary" onClick={handleChangePassword} />
             </div>
@@ -71,26 +77,34 @@ const MyPage = () => {
         ) : (
           // 기존 회원정보 수정 폼
           <form className="space-y-4">
-            <label className="block text-sm font-semibold">이름</label>
-            <Input type="text" placeholder="이름을 입력하세요." value={name} onChange={(e) => setName(e.target.value)} />
+            <div className="space-y-1">
+              <label className="block text-sm font-semibold">이름</label>
+              <Input type="text" placeholder="이름을 입력하세요." value={name} onChange={(e) => setName(e.target.value)} />
+            </div>
 
-            <label className="block text-sm font-semibold">이메일</label>
-            <Input type="email" placeholder="example@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} 
-                button={<Button label="인증번호확인" onClick={handleCheckEmail} size="small" variant="secondary" />}
-          />
-            <Input type="text" placeholder="인증번호를 입력하세요." value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} 
-                button={<Button label="인증번호확인" onClick={handleCheckVerificationCode} size="small" variant="primary" />}    
+            <div className="space-y-1">
+              <label className="block text-sm font-semibold">이메일</label>
+              <Input type="email" placeholder="example@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} 
+                  button={<Button label="인증번호확인" onClick={handleCheckEmail} size="small" variant="secondary" />}
             />
+              <Input type="text" placeholder="인증번호를 입력하세요." value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} 
+                  button={<Button label="인증번호확인" onClick={handleCheckVerificationCode} size="small" variant="primary" />}    
+              />
+            </div>
 
-            <label className="block text-sm font-semibold">닉네임</label>
-            <Input type="text" placeholder="닉네임을 입력하세요." value={nickname} disabled={true} onChange={(e) => setNickname(e.target.value)} />
+            <div className="space-y-1">
+              <label className="block text-sm font-semibold">닉네임</label>
+              <Input type="text" placeholder="닉네임을 입력하세요." value={nickname} disabled={true} onChange={(e) => setNickname(e.target.value)} />
+            </div>
 
-            <label className="block text-sm font-semibold">전화번호</label>
-            <Input type="text" placeholder="010-1234-5678" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+            <div className="space-y-1">
+              <label className="block text-sm font-semibold">전화번호</label>
+              <Input type="text" placeholder="010-1234-5678" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+            </div>
 
-            <div className="flex justify-between">
+            <div className="flex gap-1.5 justify-center">
               <Button label="비밀번호 변경하기" size="medium" variant="secondary" onClick={togglePasswordChangeMode} />
-              <Button label="회원정보 변경하기" size="medium" variant="primary" onClick={handleChangeUserInfo} />
+              <Button label="변경하기" size="medium" variant="primary" onClick={handleChangeUserInfo} />
             </div>
           </form>
         )}
