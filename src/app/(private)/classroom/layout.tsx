@@ -1,6 +1,6 @@
 import React from 'react';
-import Sidebar from '../_components/ui/Sidebar';
-import Header from '../_components/Header';
+import Sidebar from '../_components/layout/Sidebar';
+import Header from '../_components/layout/Header';
 
 export default function ClassroomLayout({
   children,
@@ -11,8 +11,8 @@ export default function ClassroomLayout({
     <div className='flex min-h-screen'>
       <Sidebar />
       <div className='flex-1'>
+        <Header />
         <main >
-          <Header />
           {children}
         </main>
       </div>
