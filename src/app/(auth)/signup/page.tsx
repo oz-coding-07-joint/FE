@@ -85,19 +85,19 @@ const SignupPage = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-primary-900">
       <div className="bg-white w-[600px] py-10 px-14 rounded-md shadow-md">
-        <h2 className="text-2xl font-bold text-center mb-6">회원가입</h2>
+        <h2 className="text-4xl font-bold text-center mb-6 text-muted-600">회원가입</h2>
 
-        <form className="space-y-6">
+        <form className="space-y-4">
           {/* 이름 */}
           <div className="space-y-1">
-            <label className="block text-sm font-semibold">이름</label>
+            <label className="block text-sm text-muted-600">이름</label>
             <Input type="text" placeholder="이름을 입력하세요." value={name} onChange={(e) => handleChange("name", e.target.value)} />
             {errors.name && <p className="text-secondary-500 text-xs">{errors.name}</p>}
           </div>
 
           {/* 이메일 */}
           <div className="space-y-1">
-            <label className="block text-sm font-semibold">이메일</label>
+            <label className="block text-sm text-muted-600">이메일</label>
             <Input
               type="email"
               placeholder="example@gmail.com"
@@ -117,27 +117,27 @@ const SignupPage = () => {
 
           {/* 닉네임 */}
           <div className="space-y-1">
-            <label className="block text-sm font-semibold">닉네임</label>
+            <label className="block text-sm text-muted-600">닉네임</label>
             <Input type="text" placeholder="닉네임을 입력하세요." value={nickname} onChange={(e) => setNickname(e.target.value)} />
           </div>
 
           {/* 비밀번호 */}
           <div className="space-y-1">
-            <label className="block text-sm font-semibold">비밀번호</label>
+            <label className="block text-sm text-muted-600">비밀번호</label>
             <Input type="password" placeholder="비밀번호를 입력하세요." value={password} onChange={(e) => handleChange("password", e.target.value)} />
             {errors.password && <p className="text-secondary-500 text-xs">{errors.password}</p>}
           </div>
 
           {/* 비밀번호확인 */}
           <div className="space-y-1">
-            <label className="block text-sm font-semibold">비밀번호 확인</label>
+            <label className="block text-sm text-muted-600">비밀번호 확인</label>
             <Input type="password" placeholder="비밀번호를 다시 입력하세요." value={confirmPassword} onChange={(e) => handleChange("confirmPassword", e.target.value)} />
             {errors.confirmPassword && <p className="text-secondary-500 text-xs">{errors.confirmPassword}</p>}
           </div>
 
           {/* 전화번호 */}
           <div className="space-y-1">
-            <label className="block text-sm font-semibold">전화번호</label>
+            <label className="block text-sm text-muted-600">전화번호</label>
             <Input type="text" placeholder="01012345678" value={phoneNumber} onChange={(e) => handleChange("phoneNumber", e.target.value)} />
             {errors.phoneNumber && <p className="text-secondary-500 text-xs">{errors.phoneNumber}</p>}
           </div>
