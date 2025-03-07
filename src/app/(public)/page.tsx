@@ -1,25 +1,11 @@
 import Image from "next/image";
 
-import Logoimg from "../../assets/images/logo.png";
 import Teacher from "../../assets/images/teacher.jpg";
 // import mainImg from "../../assets/images/main.jpg";
 
 export default function MainPage() {
   return (
     <div className="bg-primary-900 w-dvw flex flex-col text-xl font-bold">
-      {/* header - layout로 빠지는게 좋음*/}
-      <div
-        className="bg-[#131723] w-dvw h-24 text-center fixed shadow-white shadow-sm flex items-center justify-between bg-opacity-90
-      text-white pl-10 z-10"
-      >
-        <Image src={Logoimg} alt="Logo" className="w-32 flex items-start " />
-
-        <div className="flex gap-3 pr-10">
-          <span>강의소개</span>
-          <span>강의실</span>
-          <span>로그인</span>
-        </div>
-      </div>
 
       {/* main */}
       <div className="relative h-[1080px] flex justify-center items-center ">
