@@ -49,7 +49,7 @@ export default function Input({
         value={value}
         onChange={handleChange}
         disabled={disabled}
-        className={`w-full h-12 px-2.5 text-muted-400 placeholder-muted-300 border rounded-s focus:outline-none focus:ring-2 ${
+        className={`w-full h-12 px-2.5 text-muted-400 placeholder-muted-300 border rounded-sm focus:outline-none focus:ring-2 ${
           disabled
             ? "bg-[#f1f1f1] text-muted-300 border-muted-200 cursor-not-allowed opacity-50"
             : internalError

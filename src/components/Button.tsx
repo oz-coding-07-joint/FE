@@ -32,7 +32,7 @@ export default function Button({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`w-auto rounded-s text-center transition duration-200 ${
+      className={`w-auto rounded-sm text-center transition duration-200 ${
         sizeClasses[size]
       } ${variantClasses[variant]} ${
         disabled ? "opacity-70 cursor-not-allowed" : ""
