@@ -1,6 +1,6 @@
-type ThrottleFuction<T extends (...args: any[]) => void> = (...args: Parameters<T>) => void;
+type ThrottleFunction<T extends (...args: unknown[]) => void> = (...args: Parameters<T>) => void;
 
-export const throttle = <T extends (...args: any[]) => void>(func: T, limit: number): ThrottleFuction<T> => {
+export const throttle = <T extends (...args: unknown[]) => void>(func: T, limit: number): ThrottleFunction<T> => {
   let lastFunc: number | undefined;
   let lastRan: number | undefined;
 
