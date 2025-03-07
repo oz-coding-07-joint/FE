@@ -1,8 +1,11 @@
-export const throttle = <T extends (...args: any[]) => void>(func: T, limit: number): T => {
-  let lastFunc: number | undefined;
+export const throttle = <A extends unknown[], R>(
+  func: (...args: A) => R,
+  limit: number
+): ((...args: A) => void) => {
+  let lastFunc: ReturnType<typeof setTimeout> | undefined;
   let lastRan: number | undefined;
 
-  return ((...args: Parameters<T>) => {
+  return (...args: A) => {
     if(!lastRan) {
       func(...args);
       lastRan = Date.now();
@@ -10,12 +13,12 @@ export const throttle = <T extends (...args: any[]) => void>(func: T, limit: num
       if(lastFunc) {
         clearTimeout(lastFunc);
       }
-      lastFunc = window.setTimeout(() => {
+      lastFunc = setTimeout(() => {
         if(lastRan !== undefined && (Date.now() - lastRan) >= limit) {
           func(...args);
           lastRan = Date.now();
         }
       }, limit - (Date.now() - lastRan!));
     }
-  }) as T;
+  }
 }

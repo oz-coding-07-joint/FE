@@ -9,14 +9,21 @@ const ReactPlayer = dynamic(() => import('react-player'), {
 
 type VideoPlayerProps = Pick<Video, 'videoUrl'>
 
+type ProgressState = {
+  played: number;
+  playedSeconds: number;
+  loaded: number;
+  loadedSeconds: number;
+};
+
 const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
   const [progress, setProgress] = useState(0);
 
   const handleProgress = useCallback(
-    throttle((state: { playedSeconds: number }) => {
+    throttle((state: ProgressState) => {
       setProgress(state.playedSeconds)
     }, 5000), []
-  )
+  );
 
   const handlePause = () => {
     console.log('영상 멈춤', progress)
