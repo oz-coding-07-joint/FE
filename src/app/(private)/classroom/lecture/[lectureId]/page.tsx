@@ -55,7 +55,7 @@ const LecturePage = () => {
         <div className='bg-white w-full max-w-6xl rounded-md shadow-md flex flex-col items-center gap-[10px]'>
           <VideoPlayer videoUrl={selectedChapterItem.videoUrl} />
           {selectedChapterItem.isCompleted && (
-            <div className='w-[57vw] flex justify-end'>
+            <div className='w-[95%] flex justify-end'>
               <Button label='과제하러가기' />
             </div>
           )}
