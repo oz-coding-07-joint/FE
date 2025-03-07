@@ -11,7 +11,7 @@ type VideoPlayerProps = Pick<Video, 'videoUrl'>
 const VideoPlayer = ({videoUrl}: VideoPlayerProps) => {
 
   return (
-    <div className='w-full aspect-video mt-5'>
+    <div className='w-[95%] aspect-video mt-5'>
       <ReactPlayer
         url={videoUrl}
         controls={true}
