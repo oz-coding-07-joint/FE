@@ -1,30 +1,22 @@
+import { Video } from '@/types/video';
 import dynamic from 'next/dynamic';
-import React, { useState } from 'react';
-
-interface VideoPlayerProps {
-  onDuration: (duration: number) => void;
-}
+import React from 'react';
 
 const ReactPlayer = dynamic(() => import('react-player'), {
   ssr: false,
 });
 
-const VideoPlayer = ({onDuration}: VideoPlayerProps) => {
+type VideoPlayerProps = Pick<Video, 'videoUrl'>
 
-  const handleDuration = (duration: number) => {
-    if (duration && duration > 0) {
-      onDuration(duration); // 부모 컴포넌트로 duration 전달
-    }
-  };
+const VideoPlayer = ({videoUrl}: VideoPlayerProps) => {
 
   return (
-    <div>
+    <div className='w-full aspect-video mt-5'>
       <ReactPlayer
-        url={'https://youtu.be/z50DbJcrEsY?si=rJkoF6nGNXzMlTkx'}
+        url={videoUrl}
         controls={true}
-        width={1169}
-        height={646}
-        onDuration={handleDuration}
+        width='100%'
+        height='100%'
       />
     </div>
   );
