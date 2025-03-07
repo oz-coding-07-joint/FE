@@ -1,22 +1,27 @@
-import { ChapterItem } from "@/types/class";
+import { Video } from "@/types/video";
+import { CheckCircle, Circle } from "phosphor-react";
 import { useState } from "react";
 
-export const ChapterItemList = ({ chapterItems }: { chapterItems: ChapterItem[] }) => {
+type ChapterItems = Required<Pick<Video, 'id' | 'isCompleted' | 'title' | 'progress' | 'videoUrl'>>
+
+
+export const ChapterItemList = ({ chapterItems, onClick }: {chapterItems: ChapterItems[]; onClick: (chapter: ChapterItems) => void} ) => {
   const [selectedId, setSelectedId] = useState<number>(1);
 
-  const handleClick = (id: number) => {
-    setSelectedId(id);
+  const handleClick = (chapterItems: ChapterItems) => {
+    setSelectedId(chapterItems.id);
+    onClick(chapterItems);
   }
 
   return (
     <div>
       {chapterItems.map((item) => (
-        <div key={item.id} 
-        onClick={() => handleClick(item.id)}
-        className={`border-b-2 w-[22rem] h-[5rem] flex flex-col justify-center cursor-pointer`}>
+        <div key={item.id}
+          onClick={() => handleClick(item)}
+          className={`border-b-2 w-[300px] h-[84px] flex flex-col justify-center cursor-pointer min-w-0`}>
           <div className="flex items-center">
-            <input type='checkbox' checked={item.isWatched} />
-            <span className="ml-[0.3rem] text-base">{item.duration}</span>
+            {item.isCompleted ? <CheckCircle size={16} color="#666666" weight="fill" /> : <Circle size={16} color="#666666" />}
+            <span className="ml-[5px] text-base">{item.progress}</span>
           </div>
           <div className={`text-lg ${selectedId === item.id ? 'font-bold' : ''}`}>{item.title}</div>
         </div>
@@ -24,3 +29,4 @@ export const ChapterItemList = ({ chapterItems }: { chapterItems: ChapterItem[] 
     </div>
   )
 }
+

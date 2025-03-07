@@ -6,7 +6,7 @@ interface Props {
   params: { lectureId: string };
 }
 
-const AssignmentPage = async ({ params }: Props) => {
+const AssignmentsListPage = async ({ params }: Props) => {
   const assignments = await fetchAssignments(Number(params.lectureId));
 
   return (
@@ -18,4 +18,4 @@ const AssignmentPage = async ({ params }: Props) => {
   );
 };
 
-export default AssignmentPage;
+export default AssignmentsListPage;

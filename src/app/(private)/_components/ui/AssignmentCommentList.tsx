@@ -8,7 +8,7 @@ const AssignmentCommentList: React.FC<AssignmentCommentListProps> = ({ comments 
   const renderComment = (comment: AssignmentComment) => (
     <div key={comment.id} className="mb-4 p-4 border rounded-md">
       <div className="flex justify-between">
-        <span className="font-bold">User {comment.userId}</span>
+        <span className="font-bold">User {comment.userNickname}</span>
         <span className="text-gray-500">{new Date(comment.createdAt).toLocaleString()}</span>
       </div>
       <p className="mt-2">{comment.content}</p>

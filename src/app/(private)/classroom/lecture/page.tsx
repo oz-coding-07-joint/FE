@@ -2,7 +2,7 @@ import React from "react";
 import { fetchLectures } from "@/api/lectureApi";
 import LectureCard from "./lectureCard";
 
-const LecturePage = async () => {
+const LectureListPage = async () => {
   const lectures = await fetchLectures();
 
   return (
@@ -14,4 +14,4 @@ const LecturePage = async () => {
   );
 };
 
-export default LecturePage;
+export default LectureListPage;
