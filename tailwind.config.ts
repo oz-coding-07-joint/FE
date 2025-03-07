@@ -28,6 +28,7 @@ const config: Config = {
 
           accent: {
             200: "#FFD92C",
+            300: "#F6B500",
             400: "#F6A818",
           }, // 옐로우(강조)
 
