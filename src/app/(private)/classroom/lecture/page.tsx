@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchLectures } from "@/api/lecture";
+import { fetchLectures } from "@/api/lectureApi";
 import { Lecture } from "@/types/class";
 
 export default function LecturePage() {

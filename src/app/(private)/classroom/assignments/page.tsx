@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchAssignments } from "@/api/assignment";
+import { fetchAssignments } from "@/api/assignmentApi";
 import { Assignment } from "@/types/assignment";
 
 export default function AssignmentsPage() {
