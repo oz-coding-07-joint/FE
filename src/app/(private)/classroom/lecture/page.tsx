@@ -5,9 +5,7 @@ import { fetchLectures } from "@/api/lectureApi";
 import { Lecture } from "@/types/class";
 
 export default function LecturePage() {
-  //함수 정의 후 Lecture 타입의 배열로 초기화, 초기값은 배열
   const [lectures, setLectures] = useState<Lecture[]>([]);
-  // 함수 선언. boolean타입 명시 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -28,7 +26,7 @@ export default function LecturePage() {
   if (isLoading) return <div className="text-center text-foreground">Loading...</div>;
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="p-4">
       <h1 className="text-2xl font-bold text-foreground mb-4">강의 목록</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {lectures.map((lecture) => (
