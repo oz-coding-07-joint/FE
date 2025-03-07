@@ -1,9 +1,7 @@
-// 강의 관련 API 요청 함수
-
 import axios from "axios";
-import { Lecture, transformLecture } from "@/types/class";
+import { Lecture } from "@/types/class";
 
 export async function fetchLectures(): Promise<Lecture[]> {
-  const response = await axios.get("/api/lectures");
-  return response.data.map(transformLecture);
+  const response = await axios.get("/api/lectures"); // 백엔드 엔드포인트 가정
+  return response.data; // 백엔드에서 바로 Lecture 타입 데이터 반환 가정
 }
