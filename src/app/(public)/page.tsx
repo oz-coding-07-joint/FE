@@ -160,7 +160,7 @@ export default function MainPage() {
               <option value="화성학의 기초">화성학의 기초</option>
               <option value="고급 화성학">고급 화성학</option>
             </select>
-            {/* </label> */}
+            {/* </label>__ */}
             <div className="border border-solid font-thin w-[500px0] h-52 mt-8 p-4">
               <span>강의 과정 뜨는곳</span>
             </div>
