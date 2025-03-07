@@ -5,7 +5,9 @@ import { fetchLectures } from "@/api/lectureApi";
 import { Lecture } from "@/types/class";
 
 export default function LecturePage() {
+  //함수 정의 후 Lecture 타입의 배열로 초기화, 초기값은 배열
   const [lectures, setLectures] = useState<Lecture[]>([]);
+  // 함수 선언. boolean타입 명시 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
