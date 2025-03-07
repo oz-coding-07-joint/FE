@@ -33,7 +33,7 @@ export default function AssignmentsPage() {
         {assignments.map((assignment) => (
           <div key={assignment.id} className="border rounded-lg p-4 shadow-md bg-gray-50">
             <img
-              src={assignment.fileUrl || "../../../../assets/images/no-img.png"}
+              src={assignment.fileUrl || "@/assets/images/no-img.png"}
               alt={assignment.title}
               className="w-full h-48 object-cover rounded-md"
             />

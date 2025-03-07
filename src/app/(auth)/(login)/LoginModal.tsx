@@ -4,7 +4,7 @@ import { useState } from "react";
 import Modal from "@/components/Modal";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import KakaoLogo from "../../../assets/icons/kakao_icon.svg";
+import KakaoLogo from "@/assets/icons/kakao_icon.svg";
 import Image from "next/image";
 
 type LoginModalProps = {
