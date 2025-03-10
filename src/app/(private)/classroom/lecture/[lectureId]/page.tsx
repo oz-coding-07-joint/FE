@@ -14,7 +14,7 @@ const chapterItems = [
   { id: 2, isCompleted: false, progress: '00:05:00', title: 'chapter item name2', videoUrl: 'https://youtu.be/2k55bh3-ZWk?si=9QCYGMlRMNMmV9pJ' },
 ]
 
-const LecturePage = () => {
+const LectureDetailPage = () => {
   const [activeTab, setActiveTab] = useState<'lecture' | 'materials'>('lecture');
   const [selectedChapterItem, setSelectedChapterItem] = useState(chapterItems[0])
 
@@ -65,4 +65,4 @@ const LecturePage = () => {
   )
 };
 
-export default LecturePage;
+export default LectureDetailPage;
