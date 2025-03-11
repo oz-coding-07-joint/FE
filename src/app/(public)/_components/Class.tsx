@@ -1,7 +1,13 @@
+"use client";
 import Image from "next/image";
 import Classimg from "../../../assets/images/classimg.jpg";
+import { useState } from "react";
+import { ChevronDownIcon } from "@heroicons/react/24/solid";
 
 export default function Class() {
+  const [selectedCourse, setSelectedCourse] = useState<string>("화성학의 기초");
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   return (
     <div className="h-[1080px] flex flex-col justify-center items-center gap-5">
       <span className="text-white text-4xl mb-10">온라인 음악교육 클래스</span>
@@ -29,22 +35,63 @@ export default function Class() {
         </div>
         <div className="w-[500px] text-white flex flex-col">
           <span>교육과정 안내</span>
-          {/* <label> */}
-          <select
-            name="class-name"
-            className="w-[350px] lg:w-[500px] h-[50px] text-[#666666] pl-5 rounded-lg border-white bf-none appearance-none"
-          >
-            <option value="화성학의 기초">화성학의 기초</option>
-            <option value="고급 화성학">고급 화성학</option>
-          </select>
-          {/* </label>__ */}
+          <div className="relative w=[350px]">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="w-full h-[50px] text-muted-400 pl-5 pr-10 rounded-lg border border-white bg-white text-left flex justify-between items-center font-semibold"
+            >
+              {selectedCourse}
+              <ChevronDownIcon
+                className={`w-6 h-6 text-gray-700 transform transition-transform ${
+                  isOpen ? "rotate-180" : "rotate-0"
+                }`}
+              />
+            </button>
+            {/* 드롭다운 리스트 */}
+            {isOpen && (
+              <ul className="absolute left-0 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg overflow-hidden transition-opacity opacity-100 z-10 text-muted-400 font-semibold">
+                <li
+                  className="px-5 py-3 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => {
+                    setSelectedCourse("화성학의 기초");
+                    setIsOpen(false);
+                  }}
+                >
+                  화성학의 기초
+                </li>
+                <li
+                  className="px-5 py-3 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => {
+                    setSelectedCourse("고급 화성학");
+                    setIsOpen(false);
+                  }}
+                >
+                  고급 화성학
+                </li>
+              </ul>
+            )}
+          </div>
+
+          {/* <select
+              name="class-name"
+              value={selectedCourse}
+              onChange={(e) => setSelectedCourse(e.target.value)}
+              className="w-[350px] lg:w-[500px] h-[50px] text-[#666666] pl-5 rounded-lg border-white bg-none appearance-none after:content-['▼'] after:absolute after:right-5"
+            >
+              <option value="화성학의 기초">화성학의 기초</option>
+              <option value="고급 화성학">고급 화성학</option>
+            </select> */}
+          {/* Heroicons 화살표 아이콘 */}
+          {/* <ChevronDownIcon className="absolute right-4 top-1/2 w-6 h-6 text-black transform -translate-y-1/2 pointer-events-none" />
+          </div> */}
+
           <div className="border border-solid font-thin w-[350px] lg:w-[500px] h-52 mt-8 p-4">
-            <span>강의 과정 뜨는곳</span>
+            <span className="font-medium">선택된 과정 : {selectedCourse}</span>
           </div>
           <div className="mt-8 flex justify-center">
             <button
               className="text-center w-[350px] lg:w-[500px] h-12 bg-white
-              rounded-xl bg-yellow text-black "
+              rounded-xl bg-yellow text-black hover:bg-primary-800 hover:text-white"
             >
               강의 자세히 보러가기
             </button>
