@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "@/components/Modal";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import KakaoLogo from "@/assets/icons/kakao_icon.svg";
 import Image from "next/image";
+import { useLogin } from "@/hooks/useAuth";
+import { getUserinfo } from "@/api/authApi";
 
 type LoginModalProps = {
   isOpen: boolean;
@@ -15,7 +17,17 @@ type LoginModalProps = {
 const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<{ email?: string; password?: string }>({});
+  const [error, setError] = useState<{ email?: string; password?: string; api?: string }>({});
+
+  // 로그인 mutation
+  const loginMutation = useLogin();
+
+  // 로그인 요청 후 처리
+  useEffect(() => {
+    if (loginMutation.isError) {
+      setError((prev) => ({...prev, api: "로그인에 실패했습니다. 이메일과 비밀번호를 확인하세요." }));
+    }
+  }, [loginMutation.isError]);
 
   // 이메일 유효성 검사
   const validateEmail = (value: string) => {
@@ -25,7 +37,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
 
   // 비밀번호 유효성 검사 (최소 6자 이상)
   const validatePassword = (value: string) => {
-    return value.length >= 6 ? undefined : "비밀번호는 최소 6자 이상 입력해야 합니다.";
+    return value.length >= 1 ? undefined : "비밀번호는 최소 6자 이상 입력해야 합니다.";
   };
 
   // 입력값 변경 시 즉시 유효성 검사
@@ -43,13 +55,22 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
   const handleLogin = () => {
     const emailError = validateEmail(email);
     const passwordError = validatePassword(password);
-
+  
     if (emailError || passwordError) {
       setError({ email: emailError, password: passwordError });
       return;
     }
-
-    console.log("로그인 성공:", { email, password });
+  
+    loginMutation.mutate({ email, password }, {
+      onSuccess: async () => {
+        console.log("로그인 성공! 유저 정보 가져오기...");
+        const userInfo = await getUserinfo();
+        console.log("유저 정보 확인:", userInfo);
+      },
+      onError: (error) => {
+        console.error("로그인 실패:", error);
+      },
+    });
   };
 
   return (
