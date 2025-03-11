@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import { isValidEmail, isValidPassword, isValidName, isValidPhoneNumber } from "@/utils/validation";
+import { useSignup } from "@/hooks/useAuth";
 
 const SignupPage = () => {
   const [email, setEmail] = useState("");
@@ -22,6 +23,14 @@ const SignupPage = () => {
     confirmPassword: "",
     phoneNumber: "",
   });
+
+  const signupMutation = useSignup();
+
+  useEffect(() => {
+    if (signupMutation.isError) {
+      setErrors((prev) => ({ ...prev, error: "회원가입에 실패했습니다. 입력정보를 확인하세요."}));
+    }
+  }, [signupMutation.isError]);
 
   const handleCheckEmail = () => {
     if (!isValidEmail(email)) {
@@ -68,7 +77,25 @@ const SignupPage = () => {
   const handleSignUp = () => {
     if (Object.values(errors).some((error) => error !== "")) return;
 
-    console.log("회원가입 진행");
+    signupMutation.mutate(
+      {
+        email,
+        password,
+        name,
+        nickname,
+        phone_number: phoneNumber,
+        terms_agreements: [{ terms: 0, is_agree: isAgreed }],
+      },
+      {
+        onSuccess: (data) => {
+          console.log("회원가입 성공:", data);
+          alert("회원가입 성공! 로그인 페이지로 이동합니다.");
+        },
+        onError: (error) => {
+          console.error("회원가입 실패:", error);
+        },
+      }
+    );
   };
 
   const isFormValid =

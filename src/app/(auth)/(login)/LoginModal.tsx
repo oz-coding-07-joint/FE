@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "@/components/Modal";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import KakaoLogo from "@/assets/icons/kakao_icon.svg";
 import Image from "next/image";
+import { useLogin } from "@/hooks/useAuth";
 
 type LoginModalProps = {
   isOpen: boolean;
@@ -15,7 +16,17 @@ type LoginModalProps = {
 const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<{ email?: string; password?: string }>({});
+  const [error, setError] = useState<{ email?: string; password?: string; api?: string }>({});
+
+  // 로그인 mutation
+  const loginMutation = useLogin();
+
+  // 로그인 요청 후 처리
+  useEffect(() => {
+    if (loginMutation.isError) {
+      setError((prev) => ({...prev, api: "로그인에 실패했습니다. 이메일과 비밀번호를 확인하세요." }));
+    }
+  }, [loginMutation.isError]);
 
   // 이메일 유효성 검사
   const validateEmail = (value: string) => {
@@ -49,7 +60,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
       return;
     }
 
-    console.log("로그인 성공:", { email, password });
+    loginMutation.mutate({ email, password })
   };
 
   return (
