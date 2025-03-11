@@ -8,14 +8,14 @@ export default function ClassroomLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className='flex min-h-screen'>
-      <Sidebar />
-      <div className='flex-1'>
-        <Header />
-        <main >
-          {children}
-        </main>
+      <div className='flex min-h-screen'>
+        <Sidebar />
+        <div className='flex-1'>
+          <Header />
+          <main >
+            {children}
+          </main>
+        </div>
       </div>
-    </div>
   );
 };

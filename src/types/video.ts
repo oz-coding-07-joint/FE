@@ -2,8 +2,8 @@ interface SChapter {
     id: number;
     lecture_id: number;
     title: string;
-    meterial_url: string;
-    chapter_vedio_titles: SVideo[];
+    material_url: string;
+    chapter_video_titles: SVideo[];
 }
 
 export interface Chapter {
@@ -19,8 +19,8 @@ export interface Chapter {
         id: chapter.id,
         lectureId: chapter.lecture_id,
         title: chapter.title,
-        materialUrl: chapter.meterial_url,
-        chapterVideoTitles: chapter.chapter_vedio_titles.map(transformVideo),
+        materialUrl: chapter.material_url,
+        chapterVideoTitles: chapter.chapter_video_titles.map(transformVideo),
     };
 }
 
