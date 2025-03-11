@@ -99,7 +99,7 @@ const LectureDetailPage = () => {
               <div className='flex justify-center'>
                 {activeTab === 'lecture' ? (
                   chapterDetails && chapterDetails.chapterVideoTitles ? (
-                    <ChapterItemList chapterItems={chapterDetails.chapterVideoTitles} onClick={(video: Video) => setSelectedChapterId(video.id)} selectedVideoId={selectedVideoId} />
+                    <ChapterItemList chapterItems={chapterDetails.chapterVideoTitles} onClick={(video: Video) => setSelectedVideoId(video.id)} selectedVideoId={selectedVideoId} />
                   ) : null
                 ) : (
                   <div className='w-full px-6'>

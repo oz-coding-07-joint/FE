@@ -1,4 +1,4 @@
-interface SChapter {
+export interface SChapter {
     id: number;
     lecture_id: number;
     title: string;

@@ -1,5 +1,6 @@
 import {
   Chapter,
+  SChapter,
   transformChapter,
   transformVideo,
   Video,
@@ -12,7 +13,7 @@ export const fetchChapters = async (lectureId: number): Promise<Chapter[]> => {
       `/api/mockData/lecture-chapter/${lectureId}/`
     );
     console.log("API 응답 데이터:", response.data);
-    return response.data.map((chapter: any) => transformChapter(chapter));
+    return response.data.map((chapter: SChapter) => transformChapter(chapter));
   } catch (error) {
     console.error(error);
     return [];
@@ -50,7 +51,7 @@ export const fetchChapterDetails = async (
     const chapterResponse = await fetchChapters(lectureId);
     console.log("가져온 챕터 목록:", chapterResponse);
     const chapterData = chapterResponse.find(
-      (ch: any) => Number(ch.id) === chapterId
+      (ch: Chapter) => Number(ch.id) === chapterId
     );
 
     if (!chapterData) {
@@ -58,7 +59,7 @@ export const fetchChapterDetails = async (
     }
 
     const videoDetailed = await Promise.all(
-      chapterData.chapterVideoTitles.map(async (videoSummary:any) => {
+      chapterData.chapterVideoTitles.map(async (videoSummary:Video) => {
         return await fetchChapterVideo(videoSummary.id);
       })
     );
