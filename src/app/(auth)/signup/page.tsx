@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import { isValidEmail, isValidPassword, isValidName, isValidPhoneNumber } from "@/utils/validation";
-import { useSignup } from "@/hooks/useAuth";
+import { useEmailVerification, useSignup, useVerifyEmailCode } from "@/hooks/useAuth";
 
 const SignupPage = () => {
   const [email, setEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [nickname, setNickname] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -22,9 +23,12 @@ const SignupPage = () => {
     password: "",
     confirmPassword: "",
     phoneNumber: "",
+    verificationCode: "",
   });
 
   const signupMutation = useSignup();
+  const emailVerificationMutation = useEmailVerification();
+  const verifyEmailCodeMutation = useVerifyEmailCode();
 
   useEffect(() => {
     if (signupMutation.isError) {
@@ -37,12 +41,29 @@ const SignupPage = () => {
       setErrors((prev) => ({ ...prev, email: "올바른 이메일을 입력하세요." }));
       return;
     }
-    setErrors((prev) => ({ ...prev, email: "" }));
-    console.log("인증번호 전송");
+
+    emailVerificationMutation.mutate(email, {
+      onSuccess: () => {
+        console.log("이메일 인증 요청 성공");
+      },
+      onError: (error) => {
+        console.error("이메일 인증 요청 실패:", error);
+      },
+    })
   };
 
   const handleCheckVerificationCode = () => {
-    console.log("인증번호 확인");
+    if (!verificationCode) {
+      setErrors((prev) => ({ ...prev, verificationCode: "인증번호를 입력하세요." }));
+      return;
+    }
+
+    verifyEmailCodeMutation.mutate({ email, code: verificationCode }, {
+      onSuccess: () => {
+        setIsEmailVerified(true);
+        alert("이메일 인증이 완료되었습니다.");
+      },
+    });
   };
 
   const handleChange = (field: string, value: string) => {
