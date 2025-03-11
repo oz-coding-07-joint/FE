@@ -36,6 +36,18 @@ export const changePassword = async (passwordData: { old_password: string; new_p
     return response.data;
 };
 
+//이메일 인증 요청
+export const postEmailVerification = async (email: string) => {
+    const response = await api.post("/users/send-email-verification/", { email });
+    return response.data;
+};
+
+//이메일 인증번호 확인
+export const verifyEmailCode = async (emailCodeData: { email: string, code: string }) => {
+    const response = await api.post("/users/verify-email-code/", { emailCodeData });
+    return response.data;
+};
+
 //회원가입
 export const postSignup = async (userData: { 
     email: string;
@@ -71,5 +83,6 @@ export const getTerms = async () => {
     return response.data;
 };
 
+// 비��번호 ��기
 
 

@@ -11,6 +11,8 @@ import {
   postSignup,
   postSocialProfileCreate,
   postUserDelete,
+  postEmailVerification,
+  verifyEmailCode,
 } from "@/api/authApi";
 import { transformUser, User } from "@/types/auth";
 
@@ -28,19 +30,23 @@ export const useUserInfo = () => {
 
 // 로그인 (토큰은 쿠키에서 관리)
 export const useLogin = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (credentials: { email: string; password: string }) => {
-      const response = await postLogin(credentials);
-      queryClient.invalidateQueries({ queryKey: ["user"] }); // 유저 정보 갱신
-      return response;
-    },
-    onError: (error) => {
-      console.error("로그인 실패:", error);
-    },
-  });
-};
+    const queryClient = useQueryClient();
+  
+    return useMutation({
+      mutationFn: async (credentials: { email: string; password: string }) => {
+        const response = await postLogin(credentials);
+        console.log("로그인 성공, 응답 데이터:", response);
+        return response;
+      },
+      onSuccess: async () => {
+        console.log("유저 정보 갱신 시도...");
+        await queryClient.invalidateQueries({ queryKey: ["user"] }); // ✅ 유저 정보 강제 새로고침
+      },
+      onError: (error) => {
+        console.error("로그인 실패:", error);
+      },
+    });
+  };
 
 // 카카오 로그인
 export const useKakaoLogin = () => {
@@ -93,6 +99,34 @@ export const useChangePassword = () => {
     mutationFn: changePassword,
   });
 };
+
+// 이메일 인증 요청
+export const useEmailVerification = () => {
+    return useMutation({
+      mutationFn: async (email: string) => {
+        const response = await postEmailVerification(email);
+        console.log("이메일 인증 요청 성공:", response);
+        return response;
+      },
+      onError: (error) => {
+        console.error("이메일 인증 요청 실패:", error);
+      },
+    });
+  };
+  
+  // 이메일 인증 코드 확인
+  export const useVerifyEmailCode = () => {
+    return useMutation({
+      mutationFn: async (emailCodeData: { email: string; code: string }) => {
+        const response = await verifyEmailCode(emailCodeData);
+        console.log("이메일 인증 성공:", response);
+        return response;
+      },
+      onError: (error) => {
+        console.error("이메일 인증 실패:", error);
+      },
+    });
+  };
 
 // 회원가입
 export const useSignup = () => {
