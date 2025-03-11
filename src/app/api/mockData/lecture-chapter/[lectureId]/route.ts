@@ -9,7 +9,7 @@ export function GET(request: Request, { params }:{ params: { lectureId: string }
       id: 1,
       lecture_id: 1,
       title: "1장 음정",
-      material_url: "https://lecture.com",
+      material_url: "https://lecture.pdf",
       chapter_video_titles: [
         {
           id: 101,
@@ -25,7 +25,7 @@ export function GET(request: Request, { params }:{ params: { lectureId: string }
       id: 2,
       lecture_id: 1,
       title: "2장 음계",
-      material_url: "https://lecture.com",
+      material_url: "https://lecture.pdf",
       chapter_video_titles: [
         {
           id: 201,

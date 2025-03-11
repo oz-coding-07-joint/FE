@@ -22,7 +22,8 @@ export const fetchChapters = async (lectureId: number): Promise<Chapter[]> => {
 
 // 비디오 정보, 비디오 진행도 상태
 export const fetchChapterVideo = async (
-  chapterVideoId: number
+  chapterVideoId: number,
+  videoTitle?: string
 ): Promise<Video> => {
   try {
     const videoResponse = await axios.get(
@@ -30,13 +31,17 @@ export const fetchChapterVideo = async (
     );
     const videoData = transformVideo(videoResponse.data);
 
+    if(videoTitle) {
+      videoData.title = videoTitle;
+    }
+
     const stateResponse = await axios.get(
       `/api/mockData/chapter-video/${chapterVideoId}/state/`
     );
     return {
       ...videoData,
       progress: stateResponse.data.progress,
-      isCompleted: stateResponse.data.isCompleted,
+      isCompleted: stateResponse.data.is_completed,
     };
   } catch (error) {
     throw error;
@@ -60,9 +65,11 @@ export const fetchChapterDetails = async (
 
     const videoDetailed = await Promise.all(
       chapterData.chapterVideoTitles.map(async (videoSummary:Video) => {
-        return await fetchChapterVideo(videoSummary.id);
+        return await fetchChapterVideo(videoSummary.id, videoSummary.title);
       })
     );
+    console.log('chapterData:', chapterData);
+    console.log(videoDetailed)
 
     return {
       ...chapterData,
@@ -72,3 +79,26 @@ export const fetchChapterDetails = async (
     throw error;
   }
 };
+
+const getVideoState = async (chapterVideoId: number | null) => {
+  try{
+    const response = await axios.get(`/api/mockData/chapter-video/${chapterVideoId}/state/`);
+    return response.data
+  } catch(error){
+    console.error('Failed to fetch video state', error);
+    return null;
+  }
+}
+
+// 비디오 진행률 보내기
+export const updateVideoProgress = async (chapterVideoId: number | null, newProgressSeconds: number, isCompleted: boolean) => {
+  const videoState = await getVideoState(chapterVideoId);
+  if(!videoState) return;
+
+  const response = await axios.patch(`/api/mockData/chapter-video/${chapterVideoId}/progress/`, {
+    progress: newProgressSeconds,
+    is_completed: isCompleted,
+  });
+
+  return response.data;
+}

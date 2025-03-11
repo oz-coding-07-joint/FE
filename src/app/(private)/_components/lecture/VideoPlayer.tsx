@@ -1,4 +1,4 @@
-import { Video } from '@/types/video';
+import { updateVideoProgress } from '@/api/lectureDetailApi';
 import { throttle } from '@/utils/throttle';
 import dynamic from 'next/dynamic';
 import React, { useCallback, useState } from 'react';
@@ -7,7 +7,10 @@ const ReactPlayer = dynamic(() => import('react-player'), {
   ssr: false,
 });
 
-type VideoPlayerProps = Pick<Video, 'videoUrl'>
+type VideoPlayerProps = {
+  videoUrl: string;
+  chapterVideoId: number | null;
+}
 
 type ProgressState = {
   played: number;
@@ -16,7 +19,7 @@ type ProgressState = {
   loadedSeconds: number;
 };
 
-const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
+const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
   const [progress, setProgress] = useState(0);
 
   const handleProgress = useCallback(
@@ -25,8 +28,15 @@ const VideoPlayer = ({ videoUrl }: VideoPlayerProps) => {
     }, 5000), []
   );
 
-  const handlePause = () => {
+  const handlePause = async () => {
     console.log('영상 멈춤', progress)
+
+    try {
+      await updateVideoProgress(chapterVideoId, progress, false);
+      console.log('update success')
+    }catch(error) {
+      console.error('update failed', error);
+    }
   }
 
   return (
