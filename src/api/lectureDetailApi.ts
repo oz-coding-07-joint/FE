@@ -47,7 +47,7 @@ export const fetchChapterDetails = async (
   chapterId: number
 ): Promise<Chapter> => {
   try {
-    const chapterResponse = await fetchChapters(lectureId); // ✅ 변경된 부분
+    const chapterResponse = await fetchChapters(lectureId);
     console.log("가져온 챕터 목록:", chapterResponse);
     const chapterData = chapterResponse.find(
       (ch: any) => Number(ch.id) === chapterId
@@ -58,7 +58,7 @@ export const fetchChapterDetails = async (
     }
 
     const videoDetailed = await Promise.all(
-      chapterData.chapterVideoTitles.map(async (videoSummary) => {
+      chapterData.chapterVideoTitles.map(async (videoSummary:any) => {
         return await fetchChapterVideo(videoSummary.id);
       })
     );
