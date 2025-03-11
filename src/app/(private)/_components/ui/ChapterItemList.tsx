@@ -1,8 +1,5 @@
 import { Video } from "@/types/video";
 import { CheckCircle, Circle } from "phosphor-react";
-import { useState } from "react";
-
-// type ChapterItem = Required<Pick<Video, 'id' | 'isCompleted' | 'title' | 'progress' | 'videoUrl'>>
 
 interface ChapterItemListProps {
   chapterItems: Video[];
@@ -11,10 +8,8 @@ interface ChapterItemListProps {
 }
 
 export const ChapterItemList = ({ chapterItems, onClick, selectedVideoId }: ChapterItemListProps ) => {
-  const [selectedId, setSelectedId] = useState<number>(chapterItems[0]?.id || 0);
 
   const handleClick = (chapterItem: Video) => {
-    setSelectedId(chapterItem.id);
     onClick(chapterItem);
   }
 
