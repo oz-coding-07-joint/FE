@@ -4,19 +4,17 @@ import React from 'react';
 
 type MaterialListProps = Pick<Chapter, 'materialUrl'>
 
-const materialItems: MaterialListProps = { materialUrl: 'https://example.com/file.pdf' }
-
 const fileName = (url: string) => {
   const splitedUrl = url.split('/');
   return splitedUrl[splitedUrl.length - 1]
 }
 
-const MaterialList = () => {
+const MaterialList = ({materialUrl}: MaterialListProps) => {
   return (
       <div className='flex items-center gap-3'>
         <FilePdf size={16} />
         <p>
-          {fileName(materialItems.materialUrl)}
+          {fileName(materialUrl)}
         </p>
       </div>
   );
