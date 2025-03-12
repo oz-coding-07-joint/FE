@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Modal from "@/components/Modal";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
@@ -8,11 +8,18 @@ import KakaoLogo from "@/assets/icons/kakao_icon.svg";
 import Image from "next/image";
 import { useLogin } from "@/hooks/useAuth";
 import { getUserinfo } from "@/api/authApi";
+import { AxiosError } from "axios"; // ✅ AxiosError 타입 추가
 
 type LoginModalProps = {
   isOpen: boolean;
   onClose: () => void;
 };
+
+// 서버에서 반환하는 에러 응답 타입 정의
+interface ErrorResponse {
+  detail?: string; // 400 에러 메시지
+  error?: string;  // 401 에러 메시지
+}
 
 const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
   const [email, setEmail] = useState("");
@@ -22,55 +29,40 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
   // 로그인 mutation
   const loginMutation = useLogin();
 
-  // 로그인 요청 후 처리
-  useEffect(() => {
-    if (loginMutation.isError) {
-      setError((prev) => ({...prev, api: "로그인에 실패했습니다. 이메일과 비밀번호를 확인하세요." }));
-    }
-  }, [loginMutation.isError]);
-
-  // 이메일 유효성 검사
-  const validateEmail = (value: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(value) ? undefined : "유효한 이메일을 입력하세요.";
-  };
-
-  // 비밀번호 유효성 검사 (최소 6자 이상)
-  const validatePassword = (value: string) => {
-    return value.length >= 1 ? undefined : "비밀번호는 최소 6자 이상 입력해야 합니다.";
-  };
-
-  // 입력값 변경 시 즉시 유효성 검사
-  const handleChange = (field: "email" | "password", value: string) => {
-    if (field === "email") {
-      setEmail(value);
-      setError((prev) => ({ ...prev, email: validateEmail(value) }));
-    } else if (field === "password") {
-      setPassword(value);
-      setError((prev) => ({ ...prev, password: validatePassword(value) }));
-    }
-  };
-
-  // 로그인 버튼 클릭 시 최종 유효성 검사
+  // 로그인 버튼 클릭 시 요청
   const handleLogin = () => {
-    const emailError = validateEmail(email);
-    const passwordError = validatePassword(password);
-  
-    if (emailError || passwordError) {
-      setError({ email: emailError, password: passwordError });
-      return;
-    }
-  
-    loginMutation.mutate({ email, password }, {
-      onSuccess: async () => {
-        console.log("로그인 성공! 유저 정보 가져오기...");
-        const userInfo = await getUserinfo();
-        console.log("유저 정보 확인:", userInfo);
-      },
-      onError: (error) => {
-        console.error("로그인 실패:", error);
-      },
-    });
+    setError({}); // 이전 에러 초기화
+
+    loginMutation.mutate(
+      { email, password },
+      {
+        onSuccess: async () => {
+          console.log("로그인 성공! 유저 정보 가져오기...");
+          const userInfo = await getUserinfo();
+          console.log("유저 정보 확인:", userInfo);
+          onClose(); // 로그인 성공 시 모달 닫기
+        },
+        onError: (error) => {
+          console.error("로그인 실패:", error);
+
+          // AxiosError 타입으로 변환
+          const axiosError = error as AxiosError<ErrorResponse>;
+
+          if (axiosError.response) {
+            const { status, data } = axiosError.response;
+            if (status === 400) {
+              setError({ email: data.detail || "존재하지 않는 이메일입니다." });
+            } else if (status === 401) {
+              setError({ password: data.error || "잘못된 비밀번호입니다." });
+            } else {
+              setError({ api: "로그인에 실패했습니다. 다시 시도해주세요." });
+            }
+          } else {
+            setError({ api: "네트워크 오류가 발생했습니다. 다시 시도해주세요." });
+          }
+        },
+      }
+    );
   };
 
   return (
@@ -84,8 +76,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
             type="email"
             placeholder="이메일을 입력하세요."
             value={email}
-            onChange={(e) => handleChange("email", e.target.value)}
-            validateInput={validateEmail}
+            onChange={(e) => setEmail(e.target.value)}
             error={error.email}
           />
         </div>
@@ -97,8 +88,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
             type="password"
             placeholder="비밀번호를 입력하세요."
             value={password}
-            onChange={(e) => handleChange("password", e.target.value)}
-            validateInput={validatePassword}
+            onChange={(e) => setPassword(e.target.value)}
             error={error.password}
           />
         </div>
@@ -109,7 +99,6 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
           size="full" 
           variant="primary" 
           onClick={handleLogin} 
-          disabled={!!error.email || !!error.password} 
         />
       </div>
 

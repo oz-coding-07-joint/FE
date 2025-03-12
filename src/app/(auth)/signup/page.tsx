@@ -5,17 +5,18 @@ import Button from "@/components/Button";
 import Input from "@/components/Input";
 import { isValidEmail, isValidPassword, isValidName, isValidPhoneNumber } from "@/utils/validation";
 import { useEmailVerification, useSignup, useVerifyEmailCode } from "@/hooks/useAuth";
+import { AxiosError } from "axios";
 
 const SignupPage = () => {
   const [email, setEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
-  const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [nickname, setNickname] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isAgreed, setIsAgreed] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
 
   const [errors, setErrors] = useState({
     email: "",
@@ -23,7 +24,6 @@ const SignupPage = () => {
     password: "",
     confirmPassword: "",
     phoneNumber: "",
-    verificationCode: "",
   });
 
   const signupMutation = useSignup();
@@ -32,38 +32,59 @@ const SignupPage = () => {
 
   useEffect(() => {
     if (signupMutation.isError) {
-      setErrors((prev) => ({ ...prev, error: "회원가입에 실패했습니다. 입력정보를 확인하세요."}));
+      setErrors((prev) => ({ ...prev, error: "회원가입에 실패했습니다. 입력정보를 확인하세요." }));
     }
   }, [signupMutation.isError]);
 
-  const handleCheckEmail = () => {
-    if (!isValidEmail(email)) {
-      setErrors((prev) => ({ ...prev, email: "올바른 이메일을 입력하세요." }));
+  /* 이메일 인증 요청 */
+  const handleCheckEmail = async () => {
+    if (!email) {
+      setErrors((prev) => ({ ...prev, email: "이메일을 입력하세요." }));
       return;
     }
 
-    emailVerificationMutation.mutate(email, {
-      onSuccess: () => {
-        console.log("이메일 인증 요청 성공");
-      },
-      onError: (error) => {
-        console.error("이메일 인증 요청 실패:", error);
-      },
-    })
+    try {
+      const response = await emailVerificationMutation.mutateAsync(email);
+      alert(response?.message);
+
+      setErrors((prev) => ({ ...prev, email: "" }));
+    } catch {
+      setErrors((prev) => ({ ...prev, email: "이메일 인증 요청에 실패했습니다." }));
+    }
   };
 
-  const handleCheckVerificationCode = () => {
+  /* 이메일 인증 코드 확인 */
+  const handleCheckVerificationCode = async () => {
     if (!verificationCode) {
       setErrors((prev) => ({ ...prev, verificationCode: "인증번호를 입력하세요." }));
       return;
     }
 
-    verifyEmailCodeMutation.mutate({ email, code: verificationCode }, {
-      onSuccess: () => {
-        setIsEmailVerified(true);
-        alert("이메일 인증이 완료되었습니다.");
-      },
-    });
+    try {
+      const response = await verifyEmailCodeMutation.mutateAsync({ email, code: verificationCode });
+      alert(response?.message);
+
+      setIsEmailVerified(true);
+
+      setErrors((prev) => ({ ...prev, verificationCode: "" }));
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<{ message?: string }>; // ✅ `AxiosError`로 타입 캐스팅
+
+      console.error("❌ 인증 실패:", axiosError.response?.data || axiosError.message);
+
+      // 서버 응답에서 오류 메시지를 가져오기
+      const errorMessage =
+        axiosError.response?.data?.message || "인증번호가 올바르지 않습니다.";
+
+      if (errorMessage.includes("expired")) {
+        alert("인증 코드가 만료되었습니다. 다시 요청해주세요.");
+      }
+
+      setErrors((prev) => ({
+        ...prev,
+        verificationCode: errorMessage,
+      }));
+    }
   };
 
   const handleChange = (field: string, value: string) => {
@@ -96,28 +117,38 @@ const SignupPage = () => {
   };
 
   const handleSignUp = () => {
+    // 오류가 하나라도 있으면 회원가입 진행 안 함
     if (Object.values(errors).some((error) => error !== "")) return;
-
-    signupMutation.mutate(
-      {
-        email,
-        password,
-        name,
-        nickname,
-        phone_number: phoneNumber,
-        terms_agreements: [{ terms: 0, is_agree: isAgreed }],
+  
+    // 개인정보 처리방침 동의 여부 확인
+    if (!isAgreed) {
+      alert("개인정보 처리방침에 동의해야 회원가입이 가능합니다.");
+      return;
+    }
+  
+    const userData = {
+      email,
+      password,
+      name,
+      nickname,
+      phone_number: phoneNumber,
+      terms_agreements: [{ terms: 1, is_agree: isAgreed }],
+    };
+  
+  
+    signupMutation.mutate(userData, {
+      onSuccess: (data) => {
+        console.log("회원가입 성공:", data);
+        alert("회원가입 성공! 로그인 페이지로 이동합니다.");
       },
-      {
-        onSuccess: (data) => {
-          console.log("회원가입 성공:", data);
-          alert("회원가입 성공! 로그인 페이지로 이동합니다.");
-        },
-        onError: (error) => {
-          console.error("회원가입 실패:", error);
-        },
-      }
-    );
+      onError: (error) => {
+        const axiosError = error as AxiosError<{ message?: string }>;
+        alert(`회원가입 실패: ${axiosError.response?.data?.message || "알 수 없는 오류 발생"}`);
+      },
+    });
   };
+  
+
 
   const isFormValid =
     name &&
@@ -135,7 +166,7 @@ const SignupPage = () => {
       <div className="bg-white w-[600px] py-10 px-14 rounded-md shadow-md">
         <h2 className="text-4xl font-bold text-center mb-6 text-muted-600">회원가입</h2>
 
-        <form className="space-y-4">
+        <div className="space-y-4">
           {/* 이름 */}
           <div className="space-y-1">
             <label className="block text-sm text-muted-600">이름</label>
@@ -151,14 +182,15 @@ const SignupPage = () => {
               placeholder="example@gmail.com"
               value={email}
               onChange={(e) => handleChange("email", e.target.value)}
-              button={<Button label="인증번호 전송" onClick={handleCheckEmail} size="small" variant="secondary" />}
+              button={<Button label="인증번호 전송" onClick={handleCheckEmail} size="small" variant="secondary" disabled={isEmailVerified} />}
             />
             <Input
               type="text"
               placeholder="인증번호를 입력하세요."
               value={verificationCode}
               onChange={(e) => setVerificationCode(e.target.value)}
-              button={<Button label="인증번호 확인" onClick={handleCheckVerificationCode} size="small" variant="primary" />}
+              disabled={isEmailVerified}
+              button={<Button label="인증번호 확인" onClick={handleCheckVerificationCode} size="small" variant="primary" disabled={isEmailVerified} />}
             />
             {errors.email && <p className="text-secondary-500 text-xs">{errors.email}</p>}
           </div>
@@ -201,7 +233,7 @@ const SignupPage = () => {
 
           {/* 회원가입 버튼 */}
           <Button label="회원가입" size="full" variant="primary" onClick={handleSignUp} disabled={!isFormValid} />
-        </form>
+        </div>
       </div>
     </div>
   );

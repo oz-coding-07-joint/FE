@@ -13,18 +13,23 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// 응답 인터셉터 - 토큰 갱신
+// 응답 인터셉터 (401 처리 수정)
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
-      try {
-        await api.post("/users/token-refresh/"); // 자동 토큰 갱신
-        return api(error.config); // 원래 요청 재시도
-      } catch (refreshError) {
-        console.error("토큰 갱신 실패:", refreshError);
-        return Promise.reject(refreshError);
-      }
+      console.warn("401 에러 발생 - 현재 리프레시 토큰 API가 없음. 로그아웃 처리 필요");
+
+      // ❌ 기존 자동 토큰 갱신 코드 제거
+      // try {
+      //   await api.post("/users/token-refresh/");
+      //   return api(error.config);
+      // } catch (refreshError) {
+      //   console.error("토큰 갱신 실패:", refreshError);
+      //   return Promise.reject(refreshError);
+      // }
+
+      return Promise.reject(error);
     }
     return Promise.reject(error);
   }

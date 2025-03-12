@@ -14,39 +14,68 @@ import {
   postEmailVerification,
   verifyEmailCode,
 } from "@/api/authApi";
-import { transformUser, User } from "@/types/auth";
+import { SUser, transformUser, User } from "@/types/auth";
 
 // 유저 정보 조회 (전역 캐싱)
 export const useUserInfo = () => {
-  return useQuery<User>({
-    queryKey: ["user"],
-    queryFn: async () => {
-      const response = await getUserinfo();
-      return transformUser(response); // SUser → User 타입 변환
-    },
-    staleTime: 1000 * 60 * 5, // 5분 동안 캐싱 유지
-  });
-};
-
-// 로그인 (토큰은 쿠키에서 관리)
-export const useLogin = () => {
+    return useQuery<User | null>({
+      queryKey: ["user"],
+      queryFn: async () => {
+        try {
+          const response = await getUserinfo();
+          return transformUser(response);
+        } catch (error) {
+          console.error("유저 정보 가져오기 실패:", error);
+          return null; // 에러 발생 시 null 반환하여 로그아웃 상태로 인식
+        }
+      },
+      staleTime: 1000 * 60 * 5,
+    });
+  };
+  
+  // 로그인 (액세스 토큰 전역 상태 관리)
+  export const useLogin = () => {
     const queryClient = useQueryClient();
   
     return useMutation({
       mutationFn: async (credentials: { email: string; password: string }) => {
-        const response = await postLogin(credentials);
+        const response: SUser = await postLogin(credentials);
         console.log("로그인 성공, 응답 데이터:", response);
-        return response;
+  
+        // SUser → User 타입 변환 후 저장
+        const transformedUser = transformUser(response);
+  
+        // 전역 상태 (react-query 캐시) 업데이트
+        queryClient.setQueryData(["user"], transformedUser);
+  
+        return transformedUser;
       },
-      onSuccess: async () => {
-        console.log("유저 정보 갱신 시도...");
-        await queryClient.invalidateQueries({ queryKey: ["user"] }); // ✅ 유저 정보 강제 새로고침
+      onSuccess: () => {
+        console.log("유저 정보 갱신 완료.");
       },
       onError: (error) => {
         console.error("로그인 실패:", error);
       },
     });
   };
+  
+  // 로그아웃
+  export const useLogout = () => {
+    const queryClient = useQueryClient();
+  
+    return useMutation({
+      mutationFn: async () => {
+        await postLogout();
+      },
+      onSuccess: () => {
+        queryClient.setQueryData(["user"], null); // 유저 정보 초기화
+      },
+      onError: (error) => {
+        console.error("로그아웃 실패:", error);
+      },
+    });
+  };
+  
 
 // 카카오 로그인
 export const useKakaoLogin = () => {
@@ -60,23 +89,6 @@ export const useKakaoLogin = () => {
     },
     onError: (error) => {
       console.error("카카오 로그인 실패:", error);
-    },
-  });
-};
-
-// 로그아웃 (쿠키 기반 로그아웃)
-export const useLogout = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async () => {
-      await postLogout();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user"] }); // 유저 정보 초기화
-    },
-    onError: (error) => {
-      console.error("로그아웃 실패:", error);
     },
   });
 };
@@ -118,6 +130,7 @@ export const useEmailVerification = () => {
   export const useVerifyEmailCode = () => {
     return useMutation({
       mutationFn: async (emailCodeData: { email: string; code: string }) => {
+        console.log("📢 이메일 인증 요청 데이터:", emailCodeData);
         const response = await verifyEmailCode(emailCodeData);
         console.log("이메일 인증 성공:", response);
         return response;
@@ -131,7 +144,21 @@ export const useEmailVerification = () => {
 // 회원가입
 export const useSignup = () => {
   return useMutation({
-    mutationFn: postSignup,
+    mutationFn: async (userData: { 
+      email: string;
+      password: string;
+      name: string;
+      nickname: string;
+      phone_number: string;
+      terms_agreements: { terms: number; is_agree: boolean }[];
+    }) => {
+      const response = await postSignup(userData);
+      console.log("회원가입 성공, 유저 데이터:", response);
+      return response;
+    },
+    onError: (error) => {
+      console.error("회원가입 실패:", error);
+    },
   });
 };
 
@@ -147,14 +174,13 @@ export const useSocialProfileCreate = () => {
   });
 };
 
-// 회원 탈퇴
 export const useDeleteUser = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: postUserDelete,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user"] }); // 유저 정보 초기화
-    },
-  });
-};
+    const queryClient = useQueryClient();
+  
+    return useMutation({
+      mutationFn: postUserDelete,
+      onSuccess: () => {
+        queryClient.setQueryData(["user"], null); // 유저 정보 초기화
+      },
+    });
+  };

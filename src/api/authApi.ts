@@ -44,7 +44,7 @@ export const postEmailVerification = async (email: string) => {
 
 //이메일 인증번호 확인
 export const verifyEmailCode = async (emailCodeData: { email: string, code: string }) => {
-    const response = await api.post("/users/verify-email-code/", { emailCodeData });
+    const response = await api.post("/users/verify-email-code/", emailCodeData);
     return response.data;
 };
 
@@ -57,7 +57,7 @@ export const postSignup = async (userData: {
     phone_number: string;
     terms_agreements: { terms: number; is_agree: boolean }[];
   }) => {
-    const response = await api.post("/users/register/", userData);
+    const response = await api.post("/users/signup/", userData);
     return response.data;
 };
 
