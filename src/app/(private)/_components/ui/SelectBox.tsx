@@ -5,17 +5,12 @@ type Options = Pick<Chapter, 'id' | 'title'>
 
 interface SelectBoxProps {
   options: Options[];
-  selectedChapterId: number;
+  selectedChapterId: number | null;
   onChange: (id: number) => void;
 }
 
-// const options: Options[] = [
-//   { id: 1, title: 'Option 1' },
-//   { id: 2, title: 'Option 2' },
-//   { id: 3, title: 'Option 3' },
-// ];
-
 const SelectBox = ({options, selectedChapterId, onChange}: SelectBoxProps) => {
+  
   return (
     <div className='border border-muted-200 rounded-md w-[310px] h-[50px] flex justify-center min-w-0'>
       <select className='w-full border-x-8 border-white'

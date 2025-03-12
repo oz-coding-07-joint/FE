@@ -8,53 +8,26 @@ import SelectBox from '@/app/(private)/_components/ui/SelectBox';
 import Button from '@/components/Button';
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
-import { fetchChapterDetails, fetchChapters } from '@/api/lectureDetailApi';
-import { Chapter, Video } from '@/types/video';
+import { Video } from '@/types/video';
 import { useParams } from 'next/navigation';
+import { useLectureStore } from '@/store/useLectureStore';
 
 
 const LectureDetailPage = () => {
   const params = useParams();
-  const lectureId = params.lectureId;
+  const lectureId = Number(params.lectureId);
   const [activeTab, setActiveTab] = useState<'lecture' | 'materials'>('lecture');
-  const [chapters, setChapters] = useState<Chapter[]>([]);
-  const [chapterDetails, setChapterDetails] = useState<Chapter | null>(null);
-  const [selectedChapterId, setSelectedChapterId] = useState<number>(1);
-  const [selectedVideoId, setSelectedVideoId] = useState<number | null>(null);
 
+  const { chapters, chapterDetails, selectedChapterId, selectedVideoId, setSelectedChapterId, setSelectedVideoId, fetchChapters, fetchChapterDetails, } = useLectureStore();
   useEffect(() => {
-    const loadChapaters = async () => {
-      try {
-        const fetchedChapters = await fetchChapters(Number(lectureId));
-        setChapters(fetchedChapters);
-
-        if (chapters && chapters.length > 0 && !selectedChapterId) {
-          setSelectedChapterId(chapters[0].id);
-        }
-      } catch (error) {
-        console.error('Error fetching chapters:', error);
-      }
-    }
     if (lectureId) {
-      loadChapaters();
+      fetchChapters(lectureId);
     }
   }, [lectureId]);
 
   useEffect(() => {
-    const loadChapterDetails = async () => {
-      try {
-        const fetchedChapterDetails = await fetchChapterDetails(Number(lectureId), selectedChapterId);
-        setChapterDetails(fetchedChapterDetails);
-
-        if (fetchedChapterDetails.chapterVideoTitles.length > 0) {
-          setSelectedVideoId(fetchedChapterDetails.chapterVideoTitles[0].id);
-        }
-      } catch (error) {
-        console.error('Error fetching chapter details:', error);
-      }
-    };
     if (lectureId && selectedChapterId) {
-      loadChapterDetails();
+      fetchChapterDetails(lectureId, selectedChapterId);
     }
   }, [lectureId, selectedChapterId]);
 
@@ -90,7 +63,6 @@ const LectureDetailPage = () => {
                     selectedChapterId={selectedChapterId}
                     onChange={(id) => {
                       setSelectedChapterId(id);
-                      setSelectedVideoId(null);
                     }
                     }
                   />
@@ -103,13 +75,13 @@ const LectureDetailPage = () => {
                   ) : null
                 ) : (
                   <div className='w-full px-6'>
-                    <MaterialList />
+                    <MaterialList materialUrl={chapterDetails?.materialUrl ?? ''} />
                   </div>
                 )}
               </div>
             </DetailContainer>
             <div className='bg-white w-full max-w-6xl rounded-md shadow-md flex flex-col items-center gap-[10px]'>
-              <VideoPlayer videoUrl={currentVideo?.videoUrl} />
+              <VideoPlayer videoUrl={currentVideo?.videoUrl ?? ''} chapterVideoId={selectedChapterId}/>
               {currentVideo?.isCompleted && (
                 <div className='w-[95%] flex justify-end'>
                   <Button label='과제하러가기' />
