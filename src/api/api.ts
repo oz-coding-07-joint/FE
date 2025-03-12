@@ -18,7 +18,7 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
-      console.warn("401 에러 발생 - 현재 리프레시 토큰 API가 없음. 로그아웃 처리 필요");
+      console.warn("401 에러 발생 - 자동 로그아웃 처리");
 
       // ❌ 기존 자동 토큰 갱신 코드 제거
       // try {
@@ -28,6 +28,9 @@ api.interceptors.response.use(
       //   console.error("토큰 갱신 실패:", refreshError);
       //   return Promise.reject(refreshError);
       // }
+
+      //const { logout } = useAuthStore.getState();
+      //logout();
 
       return Promise.reject(error);
     }

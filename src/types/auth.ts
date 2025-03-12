@@ -3,10 +3,10 @@ export interface SUser {
     name: string;
     email: string;
     nickname: string;
-    phone_number: string;
+    phone_number?: string;
     provider?: string; //소셜로그인
-    access: string;
-    refresh: string;
+    access?: string;
+    refresh?: string;
 }
 
 export interface User {
@@ -14,10 +14,10 @@ export interface User {
     name: string;
     email: string;
     nickname: string;
-    phoneNumber: string;
+    phoneNumber?: string;
     provider?: string; //소셜로그인
-    accessToken: string;
-    refreshToken: string;
+    accessToken?: string;
+    refreshToken?: string;
 
 }
 
