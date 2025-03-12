@@ -4,6 +4,7 @@ interface CustomButtonProps {
   size?: "large" | "medium" | "small" | "full";
   variant?: "primary" | "secondary" | "outline";
   disabled?: boolean;
+  type?: "button" | "submit";
 }
 
 export default function Button({
@@ -12,6 +13,7 @@ export default function Button({
   size = "medium",
   variant = "primary",
   disabled = false,
+  type = "button",
 }: CustomButtonProps) {
   // 크기별 스타일 설정
   const sizeClasses = {
@@ -32,6 +34,7 @@ export default function Button({
     <button
       onClick={onClick}
       disabled={disabled}
+      type={type}
       className={`w-auto rounded-sm text-center transition duration-200 ${
         sizeClasses[size]
       } ${variantClasses[variant]} ${

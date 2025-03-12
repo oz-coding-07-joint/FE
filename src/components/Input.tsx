@@ -7,9 +7,9 @@ interface CustomInputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
-  validateInput?: (value: string) => string | undefined;
   button?: React.ReactElement<typeof Button>;
-  error?: string; //부모 컴포넌트에서 전달하는 에러 메시지
+  error?: boolean; // 부모 컴포넌트에서 전달하는 에러 여부 (true/false)
+  onEnterPress?: () => void; // Enter 키 입력 시 실행할 함수 추가
 }
 
 export default function Input({
@@ -18,28 +18,27 @@ export default function Input({
   value,
   onChange,
   disabled = false,
-  validateInput,
   button,
-  error: externalError,
+  error = false,
+  onEnterPress,
 }: CustomInputProps) {
-  const [internalError, setInternalError] = useState<string | undefined>(undefined);
+  const [hasError, setHasError] = useState<boolean>(false);
 
+  // 외부에서 전달된 error 값이 변경되면 내부 상태 업데이트
   useEffect(() => {
-    if (externalError) {
-      setInternalError(externalError);
-    }
-  }, [externalError]);
-  
+    setHasError(error);
+  }, [error]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
     onChange(e);
-  
-    if (validateInput) {
-      const errorMessage = validateInput(newValue);
-      setInternalError(errorMessage || externalError || undefined);
+  };
+
+  // Enter 키 입력 시 실행할 핸들러
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && onEnterPress) {
+      onEnterPress();
     }
   };
-  
 
   return (
     <div className="relative w-full">
@@ -48,24 +47,22 @@ export default function Input({
         placeholder={placeholder}
         value={value}
         onChange={handleChange}
+        onKeyPress={handleKeyPress}
         disabled={disabled}
-        className={`w-full h-12 px-2.5 text-muted-400 placeholder-muted-300 border rounded-sm focus:outline-none focus:ring-2 ${
+        className={`w-full h-12 px-2.5 text-muted-400 placeholder-muted-300 border rounded-sm focus:outline-none focus:ring-2 transition-all ${
           disabled
             ? "bg-[#f1f1f1] text-muted-300 border-muted-200 cursor-not-allowed opacity-50"
-            : internalError
+            : hasError
             ? "border-secondary-500 bg-secondary-100 focus:ring-secondary-500"
             : "border-muted-200 focus:ring-primary-500"
         } ${button ? "pr-20" : ""}`}
       />
-
 
       {button && (
         <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
           <Button {...button.props} />
         </div>
       )}
-
-      {internalError && <p className="mt-1 text-secondary-500 text-xs">{internalError}</p>}
     </div>
   );
 }
