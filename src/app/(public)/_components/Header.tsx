@@ -14,7 +14,9 @@ const Header = () => {
 
   return (
     <header className="bg-[#131723] w-dvw h-24 text-center fixed flex items-center justify-between bg-opacity-90 text-white pl-10 z-10">
-      <Image src={Logoimg} alt="Logo" className="w-32" />
+      <Link href="/" className="cursor-pointer">
+        <Image src={Logoimg} alt="Logo" className="w-32" />
+      </Link>
 
       <nav className="flex gap-3 pr-10">
         <Link href="/classinfo/harmonics" className="hover:text-gray-400">
