@@ -1,6 +1,6 @@
 import { fetchChapterDetails, fetchChapters } from '@/api/lectureDetailApi';
 import { Chapter } from '@/types/video';
-import {create} from 'zustand';
+import { create } from 'zustand';
 
 type LectureStore = {
   chapters: Chapter[];
@@ -10,16 +10,16 @@ type LectureStore = {
   setSelectedChapterId: (id: number) => void;
   setSelectedVideoId: (id: number) => void;
   fetchChapters: (lectureId: number) => Promise<void>;
-  fetchChapterDetails: (lectureId: number, chapterId: number) => Promise<void>;
+  fetchChapterDetails: (lectureId: number) => Promise<void>;
 }
 
-export const useLectureStore = create<LectureStore>((set) => ({
+export const useLectureStore = create<LectureStore>((set, get) => ({
   chapters: [],
   chapterDetails: null,
   selectedChapterId: null,
   selectedVideoId: null,
 
-  setSelectedChapterId: (id) => set({selectedChapterId: id, selectedVideoId: null}),
+  setSelectedChapterId: (id) => set({selectedChapterId: id}),
   setSelectedVideoId: (id) => set({selectedVideoId: id}),
 
   fetchChapters: async (lectureId) => {
@@ -35,9 +35,12 @@ export const useLectureStore = create<LectureStore>((set) => ({
     }
   },
 
-  fetchChapterDetails: async (lectureId, chapterId) => {
+  fetchChapterDetails: async (lectureId) => {
     try{
-      const fetchedChapterDetails = await fetchChapterDetails(lectureId, chapterId);
+      const {selectedChapterId} = get();
+      if(!selectedChapterId) return;
+
+      const fetchedChapterDetails = await fetchChapterDetails(lectureId, selectedChapterId);
       set({chapterDetails: fetchedChapterDetails});
 
       if(fetchedChapterDetails.chapterVideoTitles.length > 0) {

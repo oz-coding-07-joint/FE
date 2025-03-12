@@ -26,8 +26,8 @@ const LectureDetailPage = () => {
   }, [lectureId]);
 
   useEffect(() => {
-    if (lectureId && selectedChapterId) {
-      fetchChapterDetails(lectureId, selectedChapterId);
+    if (lectureId) {
+      fetchChapterDetails(lectureId);
     }
   }, [lectureId, selectedChapterId]);
 

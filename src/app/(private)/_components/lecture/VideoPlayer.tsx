@@ -1,4 +1,4 @@
-import { updateVideoProgress } from '@/api/lectureDetailApi';
+import { getVideoState, updateVideoProgress } from '@/api/lectureDetailApi';
 import { throttle } from '@/utils/throttle';
 import dynamic from 'next/dynamic';
 import React, { useCallback, useState } from 'react';
@@ -30,9 +30,10 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
 
   const handlePause = async () => {
     console.log('영상 멈춤', progress)
+    const isCompletedState = await getVideoState(chapterVideoId)
 
     try {
-      await updateVideoProgress(chapterVideoId, progress, false);
+      await updateVideoProgress(chapterVideoId, progress, isCompletedState.isCompleted);
       console.log('update success')
     }catch(error) {
       console.error('update failed', error);

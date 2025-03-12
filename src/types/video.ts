@@ -30,6 +30,7 @@ interface SVideo {
     video_url?: string;
     progress?: string;
     is_completed?: boolean;
+    last_watched_time?: string;
 }
 
 export interface Video {
@@ -38,6 +39,7 @@ export interface Video {
     videoUrl?: string;
     progress?: string;
     isCompleted?: boolean;
+    lastWatchedTime?: string;
 }
 
 export function transformVideo(video: SVideo): Video {
@@ -47,5 +49,6 @@ export function transformVideo(video: SVideo): Video {
         videoUrl: video.video_url,
         progress: video.progress,
         isCompleted: video.is_completed,
+        lastWatchedTime: video.last_watched_time,
     };
 }
