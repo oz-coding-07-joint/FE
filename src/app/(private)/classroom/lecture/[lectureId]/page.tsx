@@ -6,12 +6,11 @@ import { ChapterItemList } from '@/app/(private)/_components/ui/ChapterItemList'
 import DetailContainer from '@/app/(private)/_components/ui/DetailContainer';
 import SelectBox from '@/app/(private)/_components/ui/SelectBox';
 import Button from '@/components/Button';
-import clsx from 'clsx';
-import React, { useEffect, useState } from 'react';
-import { Video } from '@/types/video';
-import { useParams } from 'next/navigation';
 import { useLectureStore } from '@/store/useLectureStore';
-
+import { Video } from '@/types/video';
+import clsx from 'clsx';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 const LectureDetailPage = () => {
   const params = useParams();
@@ -26,8 +25,8 @@ const LectureDetailPage = () => {
   }, [lectureId]);
 
   useEffect(() => {
-    if (lectureId && selectedChapterId) {
-      fetchChapterDetails(lectureId, selectedChapterId);
+    if (lectureId) {
+      fetchChapterDetails(lectureId);
     }
   }, [lectureId, selectedChapterId]);
 
@@ -81,7 +80,7 @@ const LectureDetailPage = () => {
               </div>
             </DetailContainer>
             <div className='bg-white w-full max-w-6xl rounded-md shadow-md flex flex-col items-center gap-[10px]'>
-              <VideoPlayer videoUrl={currentVideo?.videoUrl ?? ''} chapterVideoId={selectedChapterId}/>
+                <VideoPlayer videoUrl={currentVideo?.videoUrl ?? ''} chapterVideoId={selectedChapterId} />
               {currentVideo?.isCompleted && (
                 <div className='w-[95%] flex justify-end'>
                   <Button label='과제하러가기' />

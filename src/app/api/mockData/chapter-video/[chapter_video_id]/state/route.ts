@@ -17,6 +17,18 @@ export async function GET(request: Request, { params }: {params: {chapter_video_
       progress: "100",
       is_completed: true,
     },
+    {
+      id: 201,
+      student_id: 5001,
+      progress: "70",
+      is_completed: false,
+    },
+    {
+      id: 202,
+      student_id: 5001,
+      progress: "0",
+      is_completed: false,
+    },
   ];
 
   const videoStateData = mock.find((item) => item.id === chapterVideoIdNum);

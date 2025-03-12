@@ -13,6 +13,14 @@ export function GET(request: Request, { params }: { params: { chapter_video_id: 
       id: 102,
       video_url: "https://youtu.be/PG4EkPUqSY8?si=gPUAs5mvIRJWnMyX",
     },
+    {
+      id: 201,
+      video_url: "https://youtu.be/GnvztDUhH3w?si=6T9UFuqlbzBU41ni",
+    },
+    {
+      id: 202,
+      video_url: "https://youtu.be/PG4EkPUqSY8?si=gPUAs5mvIRJWnMyX",
+    },
   ];
 
   const videoStateData = mock.find((item) => item.id === chapterVideoIdNum);

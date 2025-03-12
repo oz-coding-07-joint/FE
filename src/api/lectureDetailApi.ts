@@ -12,7 +12,7 @@ export const fetchChapters = async (lectureId: number): Promise<Chapter[]> => {
     const response = await axios.get(
       `/api/mockData/lecture-chapter/${lectureId}/`
     );
-    console.log("API 응답 데이터:", response.data);
+    console.log("fetchChapters API 응답 데이터:", response.data);
     return response.data.map((chapter: SChapter) => transformChapter(chapter));
   } catch (error) {
     console.error(error);
@@ -31,13 +31,14 @@ export const fetchChapterVideo = async (
     );
     const videoData = transformVideo(videoResponse.data);
 
-    if(videoTitle) {
+    if (videoTitle) {
       videoData.title = videoTitle;
     }
 
     const stateResponse = await axios.get(
       `/api/mockData/chapter-video/${chapterVideoId}/state/`
     );
+    
     return {
       ...videoData,
       progress: stateResponse.data.progress,
@@ -64,12 +65,12 @@ export const fetchChapterDetails = async (
     }
 
     const videoDetailed = await Promise.all(
-      chapterData.chapterVideoTitles.map(async (videoSummary:Video) => {
+      chapterData.chapterVideoTitles.map(async (videoSummary: Video) => {
         return await fetchChapterVideo(videoSummary.id, videoSummary.title);
       })
     );
-    console.log('chapterData:', chapterData);
-    console.log(videoDetailed)
+    console.log("chapterData:", chapterData);
+    console.log(videoDetailed);
 
     return {
       ...chapterData,
@@ -80,25 +81,38 @@ export const fetchChapterDetails = async (
   }
 };
 
-const getVideoState = async (chapterVideoId: number | null) => {
-  try{
-    const response = await axios.get(`/api/mockData/chapter-video/${chapterVideoId}/state/`);
-    return response.data
-  } catch(error){
-    console.error('Failed to fetch video state', error);
+export const getVideoState = async (chapterVideoId: number | null) => {
+  try {
+    const response = await axios.get(
+      `/api/mockData/chapter-video/${chapterVideoId}/state/`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch video state", error);
     return null;
   }
-}
+};
 
 // 비디오 진행률 보내기
-export const updateVideoProgress = async (chapterVideoId: number | null, newProgressSeconds: number, isCompleted: boolean) => {
-  const videoState = await getVideoState(chapterVideoId);
-  if(!videoState) return;
+export const updateVideoProgress = async (
+  chapterVideoId: number | null,
+  newProgressSeconds: number,
+  isCompleted: boolean
 
-  const response = await axios.patch(`/api/mockData/chapter-video/${chapterVideoId}/progress/`, {
-    progress: newProgressSeconds,
-    is_completed: isCompleted,
-  });
+) => {
+  const response = await axios.patch(
+    `/api/mockData/chapter-video/${chapterVideoId}/progress/`,
+    {
+      progress: newProgressSeconds,
+      is_completed: isCompleted,
+    }
+  );
 
-  return response.data;
-}
+  if (!response) {
+    throw new Error(`Failed to update resource`);
+  }
+
+  const updatedResource = await getVideoState(chapterVideoId);
+
+  return updatedResource;
+};
