@@ -38,7 +38,7 @@ export default function Class() {
           <div className="relative w=[350px]">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="w-full h-[50px] text-muted-400 pl-5 pr-10 rounded-lg border border-white bg-white text-left flex justify-between items-center font-semibold"
+              className="w-full h-[50px] text-muted-400 pl-5 pr-10 rounded-md border border-white bg-white text-left flex justify-between items-center font-semibold"
             >
               {selectedCourse}
               <ChevronDownIcon
@@ -49,7 +49,10 @@ export default function Class() {
             </button>
             {/* 드롭다운 리스트 */}
             {isOpen && (
-              <ul className="absolute left-0 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg overflow-hidden transition-opacity opacity-100 z-10 text-muted-400 font-semibold">
+              <ul
+                className="absolute left-0 mt-1 w-full bg-white border border-gray-300
+              rounded-md shadow-lg overflow-hidden transition-opacity opacity-100 z-10 text-muted-400 font-semibold"
+              >
                 <li
                   className="px-5 py-3 hover:bg-gray-100 cursor-pointer"
                   onClick={() => {
@@ -91,7 +94,7 @@ export default function Class() {
           <div className="mt-8 flex justify-center">
             <button
               className="text-center w-[350px] lg:w-[500px] h-12 bg-white
-              rounded-xl bg-yellow text-black hover:bg-primary-800 hover:text-white"
+              rounded-md bg-yellow text-black hover:bg-primary-800 hover:text-white"
             >
               강의 자세히 보러가기
             </button>
