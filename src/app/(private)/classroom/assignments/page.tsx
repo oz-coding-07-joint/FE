@@ -36,9 +36,12 @@ export default function AssignmentsPage() {
   return (
     <div className="p-6 bg-white min-h-[calc(100vh-4rem)]">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">과제 목록</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,300px))] gap-4 justify-items-center">
         {assignments.map((assignment, index) => (
-          <div key={assignment.id} className="bg-white rounded-lg shadow-md">
+          <div
+            key={assignment.id}
+            className="bg-white rounded-lg shadow-md w-full min-w-[250px] max-w-[300px]"
+          >
             <img
               src={assignment.fileUrl || "@/assets/images/no-img.png"}
               alt={assignment.title}
