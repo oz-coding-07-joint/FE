@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import { isValidEmail, isValidPassword, isValidName, isValidPhoneNumber } from "@/utils/validation";
-import { useEmailVerification, useSignup, useVerifyEmailCode } from "@/hooks/useAuth";
+import { useEmailVerification, useGetTerms, useSignup, useVerifyEmailCode } from "@/hooks/useAuth";
 import { AxiosError } from "axios";
+import TermsModal from "./TermModal";
+import { Term } from "@/types/auth";
 
 const SignupPage = () => {
   const [email, setEmail] = useState("");
@@ -15,8 +17,18 @@ const SignupPage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [isAgreed, setIsAgreed] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const { data: terms, isLoading: isTermsLoading } = useGetTerms();
+  const [agreedTerms, setAgreedTerms] = useState<{ [key: number]: boolean }>({});
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
+  const [selectedTerm, setSelectedTerm] = useState<Term | null>(null);
+
+  const handleToggleAgreement = (termId: number) => {
+    setAgreedTerms((prev) => ({
+      ...prev,
+      [termId]: !prev[termId],
+    }));
+  };
 
   const [errors, setErrors] = useState({
     email: "",
@@ -117,14 +129,23 @@ const SignupPage = () => {
   };
 
   const handleSignUp = () => {
-    // 오류가 하나라도 있으면 회원가입 진행 안 함
     if (Object.values(errors).some((error) => error !== "")) return;
   
-    // 개인정보 처리방침 동의 여부 확인
-    if (!isAgreed) {
-      alert("개인정보 처리방침에 동의해야 회원가입이 가능합니다.");
+    // 필수 약관 동의 확인
+    const requiredTerms = terms?.filter((term) => term.isRequired) || [];
+    const allRequiredAgreed = requiredTerms.every((term) => agreedTerms[term.id]);
+
+    if (!allRequiredAgreed) {
+      alert("모든 필수 약관에 동의해야 회원가입이 가능합니다.");
       return;
     }
+
+    const termsAgreements = terms
+    ? terms.map((term) => ({
+        terms: term.id,
+        is_agree: !!agreedTerms[term.id],
+      }))
+    : [];
   
     const userData = {
       email,
@@ -132,22 +153,25 @@ const SignupPage = () => {
       name,
       nickname,
       phone_number: phoneNumber,
-      terms_agreements: [{ terms: 1, is_agree: isAgreed }],
+      terms_agreements: termsAgreements,
     };
   
+    console.log("📢 회원가입 요청 데이터:", userData);
   
     signupMutation.mutate(userData, {
       onSuccess: (data) => {
-        console.log("회원가입 성공:", data);
-        alert("회원가입 성공! 로그인 페이지로 이동합니다.");
+        console.log("✅ 회원가입 및 자동 로그인 완료:", data);
+        alert("회원가입 성공! 자동으로 로그인됩니다.");
       },
       onError: (error) => {
-        const axiosError = error as AxiosError<{ message?: string }>;
-        alert(`회원가입 실패: ${axiosError.response?.data?.message || "알 수 없는 오류 발생"}`);
+        console.error("❌ 회원가입 실패:", error);
+        alert("회원가입에 실패했습니다. 다시 시도해주세요.");
       },
     });
   };
   
+  
+
 
 
   const isFormValid =
@@ -158,7 +182,6 @@ const SignupPage = () => {
     password &&
     confirmPassword &&
     phoneNumber &&
-    isAgreed &&
     !Object.values(errors).some((error) => error !== "");
 
   return (
@@ -223,18 +246,43 @@ const SignupPage = () => {
           </div>
 
           {/* 개인정보처리방침 */}
-          <div className="flex items-center justify-between mt-2">
-            <div className="flex items-center space-x-2">
-              <input type="checkbox" checked={isAgreed} onChange={() => setIsAgreed(!isAgreed)} className="w-4 h-4" />
-              <span className="text-sm text-muted-400">개인정보처리방침 동의</span>
-            </div>
-            <a href="#" className="text-sm text-muted-300 underline">개인정보처리방침</a>
+          <div className="mt-2">
+            {isTermsLoading ? (
+              <p className="text-sm text-muted-400">약관을 불러오는 중...</p>
+            ) : (
+              terms?.map((term) => (
+                <div key={term.id} className="flex items-center justify-between mt-2">
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={!!agreedTerms[term.id]}
+                      onChange={() => handleToggleAgreement(term.id)}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-sm text-muted-400">
+                      {term.name} {term.isRequired && "(필수)"}
+                    </span>
+                  </label>
+                  <span
+                    onClick={() => {
+                      setSelectedTerm(term);
+                      setIsTermsModalOpen(true);
+                    }}
+                    className="text-sm text-muted-300 underline cursor-pointer"
+                  >
+                    {term.name}보기
+                  </span>
+                </div>
+              ))
+            )}
           </div>
 
           {/* 회원가입 버튼 */}
           <Button label="회원가입" size="full" variant="primary" onClick={handleSignUp} disabled={!isFormValid} />
         </div>
       </div>
+       {/* 약관 모달 (분리된 컴포넌트 사용) */}
+      <TermsModal isOpen={isTermsModalOpen} onClose={() => setIsTermsModalOpen(false)} term={selectedTerm} />
     </div>
   );
 };

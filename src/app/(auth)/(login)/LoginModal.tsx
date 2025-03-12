@@ -7,7 +7,6 @@ import Input from "@/components/Input";
 import KakaoLogo from "@/assets/icons/kakao_icon.svg";
 import Image from "next/image";
 import { useLogin } from "@/hooks/useAuth";
-import { getUserinfo } from "@/api/authApi";
 import { AxiosError } from "axios"; // ✅ AxiosError 타입 추가
 
 type LoginModalProps = {
@@ -37,9 +36,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
       { email, password },
       {
         onSuccess: async () => {
-          console.log("로그인 성공! 유저 정보 가져오기...");
-          const userInfo = await getUserinfo();
-          console.log("유저 정보 확인:", userInfo);
+          console.log("로그인 성공!");
           onClose(); // 로그인 성공 시 모달 닫기
         },
         onError: (error) => {

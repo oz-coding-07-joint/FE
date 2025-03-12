@@ -2,20 +2,17 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useUserInfo, useLogout } from "@/hooks/useAuth";
+import { useLogout } from "@/hooks/useAuth";
 import { UserCircle } from "phosphor-react";
 
 const UserMenu = () => {
   const [menuOpen, setMenuOpen] = useState(false); // 드롭다운 상태
-  const { data: user } = useUserInfo(); // 로그인한 유저 정보 가져오기
   const logoutMutation = useLogout(); // 로그아웃 훅
 
   const handleLogout = () => {
     logoutMutation.mutate(); // 로그아웃 실행
     setMenuOpen(false); // 드롭다운 닫기
   };
-
-  if (!user) return null; // 유저 정보 없으면 렌더링 안 함
 
   return (
     <div className="relative">
@@ -25,7 +22,7 @@ const UserMenu = () => {
         className="flex items-center gap-2 hover:text-gray-400"
       >
         <UserCircle size={32} />
-        <span>{user.nickname}</span>
+        <span>홍길동님</span>
       </button>
 
       {/* 드롭다운 메뉴 */}

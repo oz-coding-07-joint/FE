@@ -5,7 +5,7 @@ import {
   postKakaoLogin,
   postLogin,
   postLogout,
-  getUserinfo,
+  getUserInfo,
   updateUserInfo,
   changePassword,
   postSignup,
@@ -13,16 +13,17 @@ import {
   postUserDelete,
   postEmailVerification,
   verifyEmailCode,
+  getTerms,
 } from "@/api/authApi";
-import { SUser, transformUser, User } from "@/types/auth";
+import { STerm, SUser, Term, transformTerm, transformUser, User } from "@/types/auth";
 
 // 유저 정보 조회 (전역 캐싱)
-export const useUserInfo = () => {
+export const useGetUserInfo = () => {
     return useQuery<User | null>({
       queryKey: ["user"],
       queryFn: async () => {
         try {
-          const response = await getUserinfo();
+          const response = await getUserInfo();
           return transformUser(response);
         } catch (error) {
           console.error("유저 정보 가져오기 실패:", error);
@@ -143,6 +144,8 @@ export const useEmailVerification = () => {
 
 // 회원가입
 export const useSignup = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (userData: { 
       email: string;
@@ -152,9 +155,25 @@ export const useSignup = () => {
       phone_number: string;
       terms_agreements: { terms: number; is_agree: boolean }[];
     }) => {
-      const response = await postSignup(userData);
-      console.log("회원가입 성공, 유저 데이터:", response);
-      return response;
+      // 회원가입 요청
+      const signupResponse = await postSignup(userData);
+      console.log("회원가입 성공:", signupResponse);
+
+      // 회원가입 후 바로 로그인 요청
+      const loginResponse: SUser = await postLogin({
+        email: userData.email,
+        password: userData.password,
+      });
+      console.log("자동 로그인 성공:", loginResponse);
+
+      // 로그인 정보 전역 상태 업데이트 (react-query 캐싱)
+      const transformedUser = transformUser(loginResponse);
+      queryClient.setQueryData(["user"], transformedUser);
+
+      return transformedUser;
+    },
+    onSuccess: (data) => {
+      console.log("회원가입 및 자동 로그인 성공:", data);
     },
     onError: (error) => {
       console.error("회원가입 실패:", error);
@@ -174,6 +193,7 @@ export const useSocialProfileCreate = () => {
   });
 };
 
+// 회원 탈퇴
 export const useDeleteUser = () => {
     const queryClient = useQueryClient();
   
@@ -184,3 +204,16 @@ export const useDeleteUser = () => {
       },
     });
   };
+
+//약관가져오기
+export const useGetTerms = () => {
+  return useQuery<Term[]>({
+    queryKey: ["terms"],
+    queryFn: async () => {
+      const data: STerm[] = await getTerms();
+      return data
+        .filter((term) => term.is_active) 
+        .map(transformTerm);
+    },
+  });
+};  

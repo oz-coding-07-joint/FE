@@ -33,3 +33,29 @@ export function transformUser(user: SUser): User {
         refreshToken: user.refresh,
     };
 }
+
+export interface STerm {
+    id: number;
+    name: string;
+    detail: string;
+    is_active: boolean;
+    is_required: boolean; //필수
+}
+
+export interface Term {
+    id: number;
+    name: string;
+    detail: string;
+    isActive: boolean;
+    isRequired: boolean;
+}
+
+export function transformTerm(term: STerm): Term {
+    return {
+        id: term.id,
+        name: term.name,
+        detail: term.detail,
+        isActive: term.is_active,
+        isRequired: term.is_required,
+    };
+}

@@ -6,11 +6,11 @@ import Image from "next/image";
 import Logoimg from "@/assets/images/logo.png";
 import LoginModal from "@/app/(auth)/(login)/LoginModal";
 import UserMenu from "@/components/UserMenu";
-import { useUserInfo } from "@/hooks/useAuth";
+import { useGetUserInfo } from "@/hooks/useAuth";
 
 const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data: user } = useUserInfo(); // 로그인한 유저 정보 가져오기;
+  const { data: user } = useGetUserInfo(); // 로그인한 유저 정보 가져오기;
 
   return (
     <header className="bg-[#131723] w-dvw h-24 text-center fixed flex items-center justify-between bg-opacity-90 text-white pl-10 z-10">

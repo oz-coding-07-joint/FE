@@ -1,3 +1,4 @@
+import { STerm, SUser } from "@/types/auth";
 import api from "./api";
 
 //카카오로그인
@@ -19,8 +20,8 @@ export const postLogout = async () => {
 };
 
 //회원정보조회
-export const getUserinfo = async () => {
-    const response = await api.get("/users/myinfo/");
+export const getUserInfo = async (): Promise<SUser> => {
+    const response = await api.get<SUser>("/users/myinfo/");
     return response.data;
 };
 
@@ -78,11 +79,11 @@ export const postUserDelete = async () => {
 };
 
 // 약관조회
-export const getTerms = async () => {
-    const response = await api.get("/terms/");
+export const getTerms = async (): Promise<STerm[]> => {
+    const response = await api.get<STerm[]>("/terms/");
     return response.data;
 };
+  
 
-// 비��번호 ��기
 
 
