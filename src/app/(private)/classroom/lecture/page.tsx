@@ -28,9 +28,12 @@ export default function LecturePage() {
   return (
     <div className="p-6 bg-white min-h-[calc(100vh-4rem)]">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">강의 목록</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,300px))] gap-4 justify-items-center">
         {lectures.map((lecture) => (
-          <div key={lecture.id} className="bg-white rounded-lg shadow-md">
+          <div
+            key={lecture.id}
+            className="bg-white rounded-lg shadow-md w-full min-w-[250px] max-w-[300px]"
+          >
             <img
               src={lecture.thumbnailUrl}
               alt={lecture.title}
@@ -49,11 +52,11 @@ export default function LecturePage() {
               <p className="text-gray-500 text-sm mt-1">
                 {lecture.progressRate}% 강좌 완료
               </p>
-              <div className="flex gap-3 mt-4">
-                <button className="bg-white border border-gray-300 text-gray-600 px-3 py-1 rounded">
+              <div className="flex mt-4">
+                <button className="bg-white border border-gray-300 text-gray-600 px-3 py-1 rounded flex-1">
                   수업 정보 보기
                 </button>
-                <button className="bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700">
+                <button className="bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700 flex-1 ml-3">
                   수업 후기 작성
                 </button>
               </div>
