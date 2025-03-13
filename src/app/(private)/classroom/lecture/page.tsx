@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchLectures, fetchLectureDetail } from "@/api/lectureApi";
+import { fetchLectures, fetchLectureDetail, submitReview } from "@/api/lectureApi";
 import { Lecture } from "@/types/class";
 import { LectureDetail } from "@/types/lectureDetail";
+import { ReviewRequest } from "@/types/review";
 import Modal from "@/components/Modal";
 
 export default function LecturePage() {
@@ -11,6 +12,9 @@ export default function LecturePage() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lectureDetail, setLectureDetail] = useState<LectureDetail | null>(null);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [reviewData, setReviewData] = useState<ReviewRequest>({ star: 0, content: "" });
+  const [selectedLectureId, setSelectedLectureId] = useState<number | null>(null);
 
   useEffect(() => {
     async function loadLectures() {
@@ -37,6 +41,27 @@ export default function LecturePage() {
     }
   };
 
+  const handleReviewClick = (lectureId: number) => {
+    setSelectedLectureId(lectureId);
+    setReviewData({ star: 0, content: "" });
+    setIsReviewModalOpen(true);
+  };
+
+  const handleReviewSubmit = async () => {
+    if (selectedLectureId && reviewData.star > 0 && reviewData.content.trim()) {
+      try {
+        await submitReview(selectedLectureId, reviewData);
+        alert("후기가 성공적으로 제출되었습니다!");
+        setIsReviewModalOpen(false);
+      } catch (error) {
+        alert("후기 제출에 실패했습니다. 다시 시도해 주세요.");
+        console.error("후기 제출 오류:", error);
+      }
+    } else {
+      alert("별점과 후기 내용을 입력해 주세요.");
+    }
+  };
+
   if (isLoading) return <div className="text-center text-gray-600">Loading...</div>;
 
   return (
@@ -49,7 +74,7 @@ export default function LecturePage() {
             className="bg-white rounded-lg shadow-md w-full min-w-[250px] max-w-[300px]"
           >
             <img
-              src={lecture.thumbnailUrl || "/placeholder.jpg"}
+              src={lecture.thumbnailUrl && lecture.thumbnailUrl !== "" ? lecture.thumbnailUrl : "https://via.placeholder.com/300x200"}
               alt={lecture.title}
               className="w-full h-48 object-cover rounded-t-lg"
             />
@@ -73,7 +98,10 @@ export default function LecturePage() {
                 >
                   수업 정보 보기
                 </button>
-                <button className="bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700 flex-1 ml-3">
+                <button
+                  className="bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700 flex-1 ml-3"
+                  onClick={() => handleReviewClick(lecture.id)}
+                >
                   수업 후기 작성
                 </button>
               </div>
@@ -129,6 +157,43 @@ export default function LecturePage() {
             </div>
           </div>
         )}
+      </Modal>
+
+      <Modal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)}>
+        <div className="p-6">
+          <h2 className="text-xl font-bold text-gray-800 mb-4">수강후기</h2>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">평점</label>
+            <div className="flex">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  onClick={() => setReviewData({ ...reviewData, star })}
+                  className={`text-2xl ${star <= reviewData.star ? "text-yellow-400" : "text-gray-300"}`}
+                >
+                  ★
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">후기 내용</label>
+            <textarea
+              value={reviewData.content}
+              onChange={(e) => setReviewData({ ...reviewData, content: e.target.value })}
+              className="w-full p-2 border rounded text-black placeholder-gray-400"
+              placeholder="이 강의에 대한 후기를 작성해 주세요."
+            />
+          </div>
+          <div className="flex justify-end">
+            <button
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              onClick={handleReviewSubmit}
+            >
+              제출하기
+            </button>
+          </div>
+        </div>
       </Modal>
     </div>
   );
