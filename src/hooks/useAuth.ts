@@ -18,6 +18,7 @@ import {
 import { STerm, Term, transformTerm, transformUser, User } from "@/types/auth";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 // 유저 정보 조회
 export const useGetUserInfo = () => {
@@ -148,7 +149,8 @@ export const useVerifyEmailCode = () => {
 
 // 회원가입 후 자동 로그인 (추가 API 요청 없이 상태 업데이트)
 export const useSignup = () => {
-  const queryClient = useQueryClient();
+  const { login } = useAuthStore();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: async (userData: {
@@ -163,7 +165,8 @@ export const useSignup = () => {
       return await postLogin({ email: userData.email, password: userData.password }); // 자동 로그인
     },
     onSuccess: (user) => {
-      queryClient.setQueryData(["user"], user); // 로그인 응답 데이터를 그대로 저장
+      login(user);
+      router.push("/");
     },
     onError: (error) => {
       console.error("회원가입 실패:", error);
@@ -174,12 +177,9 @@ export const useSignup = () => {
 
 // 소셜 로그인 후 프로필 생성
 export const useSocialProfileCreate = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: postSocialProfileCreate,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user"] }); // 유저 정보 갱신
     },
   });
 };
