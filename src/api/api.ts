@@ -1,3 +1,4 @@
+import { useAuthStore } from "@/store/useAuthStore";
 import axios from "axios";
 
 const api = axios.create({
@@ -20,17 +21,9 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       console.warn("401 에러 발생 - 자동 로그아웃 처리");
 
-      // ❌ 기존 자동 토큰 갱신 코드 제거
-      // try {
-      //   await api.post("/users/token-refresh/");
-      //   return api(error.config);
-      // } catch (refreshError) {
-      //   console.error("토큰 갱신 실패:", refreshError);
-      //   return Promise.reject(refreshError);
-      // }
-
-      //const { logout } = useAuthStore.getState();
-      //logout();
+      const { logout } = useAuthStore.getState();
+      logout();
+      window.location.reload();
 
       return Promise.reject(error);
     }

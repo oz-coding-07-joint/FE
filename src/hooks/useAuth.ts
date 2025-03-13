@@ -17,6 +17,7 @@ import {
 } from "@/api/authApi";
 import { STerm, Term, transformTerm, transformUser, User } from "@/types/auth";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useEffect } from "react";
 
 // 유저 정보 조회
 export const useGetUserInfo = () => {
@@ -53,6 +54,15 @@ export const useLogin = () => {
   });
 };
 
+// 새로고침 시 자동 로그인 유지
+export const useAuthInit = () => {
+  const { restoreUser } = useAuthStore();
+
+  useEffect(() => {
+    restoreUser(); // 유저 정보 복원
+  }, [restoreUser]);
+};
+
 // 로그아웃 (HttpOnly 쿠키 삭제 및 전역 상태 초기화)
 export const useLogout = () => {
   const { logout } = useAuthStore();
@@ -63,6 +73,7 @@ export const useLogout = () => {
     },
     onSuccess: () => {
       logout(); // 유저 정보 초기화
+      window.location.reload();
     },
     onError: (error) => {
       console.error("로그아웃 실패:", error);
@@ -90,16 +101,16 @@ export const useKakaoLogin = () => {
 
 // 회원정보 수정
 export const useUpdateUserInfo = () => {
-  const { fetchUserInfo } = useAuthStore();
+  const { updateUser } = useAuthStore();
 
   return useMutation({
     mutationFn: updateUserInfo,
-    onSuccess: async() => {
-      console.log("회원정보 수정 성공");
-      const updatedUser = await getUserInfo();
-      if (updatedUser) {
-        fetchUserInfo(transformUser(updatedUser)); // 회원정보 수정 후 전역 상태 업데이트
-      }
+    onSuccess: (updatedUser) => {
+      updateUser(updatedUser); // 상태 업데이트
+      console.log("회원정보 수정 완료");
+    },
+    onError: (error) => {
+      console.error("회원정보 수정 실패:", error);
     },
   });
 };

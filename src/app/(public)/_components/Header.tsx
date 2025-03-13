@@ -10,15 +10,15 @@ import { useAuthStore } from "@/store/useAuthStore";
 
 const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { user } = useAuthStore(); // 로그인한 유저 정보 가져오기;
+  const { user } = useAuthStore(); // 로그인한 유저 정보 가져오기
 
   return (
-    <header className="bg-[#131723] w-dvw h-24 text-center fixed flex items-center justify-between bg-opacity-90 text-white pl-10 z-10">
+    <header className="bg-[#131723] w-full h-24 text-center fixed flex items-center justify-between bg-opacity-90 text-white z-10 px-10 box-border">
       <Link href="/" className="cursor-pointer">
         <Image src={Logoimg} alt="Logo" className="w-32" />
       </Link>
 
-      <nav className="flex gap-3 pr-10">
+      <nav className="flex gap-3 items-center">
         <Link href="/classinfo/harmonics" className="hover:text-gray-400">
           강의소개
         </Link>
