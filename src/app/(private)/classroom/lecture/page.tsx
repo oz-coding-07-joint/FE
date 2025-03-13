@@ -33,10 +33,7 @@ export default function LecturePage() {
       <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,300px))] gap-4 justify-items-center">
         {lectures.map((lecture) => (
           <Link key={lecture.id} href={`/classroom/lecture/${lecture.id}`}>
-            <div
-              key={lecture.id}
-              className="bg-white rounded-lg shadow-md w-full min-w-[250px] max-w-[300px]"
-            >
+            <div className="bg-white rounded-lg shadow-md w-full min-w-[250px] max-w-[300px]">
               <img
                 src={lecture.thumbnailUrl || "@/assets/images/no-img.png"}
                 alt={lecture.title}

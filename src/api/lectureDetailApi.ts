@@ -6,18 +6,22 @@ import {
   Video,
 } from "@/types/video";
 import axios from "axios";
-import api from "./api";
+
+//임시 토큰 사용
+const mockToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxODcwNzMyLCJpYXQiOjE3NDE4NTI3MzIsImp0aSI6IjUwZGZmM2RhODNjYTRiZjg5NjU2ZjY4NGVhZDhmNjllIiwidXNlcl9pZCI6N30.2VgCUrmrNo7-2gxXv7z0QzW8Jgx5I2mzqX4lgttsShI'
+
+const mockAPI = axios.create({
+  baseURL: '/api/mockData',
+  headers: {
+    Authorization: `Bearer ${mockToken}`,
+    'Content-Type': "application/json",
+  }
+})
 
 export const fetchChapters = async (lectureId: number): Promise<Chapter[]> => {
   try {
-    //임시 토큰 사용
-    const mockToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxODcwNzMyLCJpYXQiOjE3NDE4NTI3MzIsImp0aSI6IjUwZGZmM2RhODNjYTRiZjg5NjU2ZjY4NGVhZDhmNjllIiwidXNlcl9pZCI6N30.2VgCUrmrNo7-2gxXv7z0QzW8Jgx5I2mzqX4lgttsShI'
-    const response = await api.get(
-      `/courses/lecture_chapter/${lectureId}`,{
-        headers: {
-          Authorization: `Bearer ${mockToken}`
-        }
-      }
+    const response = await mockAPI.get(
+      `/courses/lecture_chapter/${lectureId}`
     );
 
     console.log("fetchChapters API 응답 데이터:", response.data);
@@ -34,8 +38,8 @@ export const fetchChapterVideo = async (
   videoTitle?: string
 ): Promise<Video> => {
   try {
-    const videoResponse = await axios.get(
-      `/api/mockData/chapter_video/${chapterVideoId}/`
+    const videoResponse = await mockAPI.get(
+      `/courses/chapter_video/${chapterVideoId}/`
     );
     const videoData = transformVideo(videoResponse.data);
 
@@ -43,8 +47,8 @@ export const fetchChapterVideo = async (
       videoData.title = videoTitle;
     }
 
-    const stateResponse = await axios.get(
-      `/api/mockData/chapter_video/${chapterVideoId}/state/`
+    const stateResponse = await mockAPI.get(
+      `/courses/chapter_video/${chapterVideoId}/state/`
     );
     
     return {
@@ -91,8 +95,8 @@ export const fetchChapterDetails = async (
 
 export const getVideoState = async (chapterVideoId: number | null) => {
   try {
-    const response = await axios.get(
-      `/api/mockData/chapter_video/${chapterVideoId}/state/`
+    const response = await mockAPI.get(
+      `/courses/chapter_video/${chapterVideoId}/state/`
     );
     return response.data;
   } catch (error) {
@@ -108,8 +112,8 @@ export const updateVideoProgress = async (
   isCompleted: boolean
 
 ) => {
-  const response = await axios.patch(
-    `/api/mockData/chapter_video/${chapterVideoId}/progress/`,
+  const response = await mockAPI.patch(
+    `/courses/chapter_video/${chapterVideoId}/progress/`,
     {
       progress: newProgressSeconds,
       is_completed: isCompleted,
