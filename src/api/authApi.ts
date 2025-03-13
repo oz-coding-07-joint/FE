@@ -1,4 +1,4 @@
-import { STerm, SUser, User, transformUser } from "@/types/auth";
+import { STerm, SUser, Term, User, transformTerm, transformUser } from "@/types/auth";
 import api from "./api";
 
 // 카카오 로그인
@@ -14,21 +14,21 @@ export const postLogin = async (credentials: { email: string; password: string }
 };
 
 // 로그아웃 (HttpOnly 쿠키 삭제)
-export const postLogout = async () => {
-    const response = await api.post("/users/logout/");
-    return response.data;
+export const postLogout = async (): Promise<void> => {
+    await api.post("/users/logout/");
 };
 
 // 회원 정보 조회 (HttpOnly 쿠키 기반)
 export const getUserInfo = async (): Promise<User | null> => {
     try {
-        const response = await api.get<{ user: SUser }>("/users/myinfo/");
-        return transformUser(response.data.user);
+        const response = await api.get<SUser>("/users/myinfo/");
+        return transformUser(response.data);
     } catch (error) {
         console.error("유저 정보 가져오기 실패:", error);
-        return null;
+        return null; // 비로그인 상태 또는 서버 오류 시 null 반환
     }
 };
+
 
 // 회원 정보 수정
 export const updateUserInfo = async (userData: { name: string; email: string; phone_number: string }) => {
@@ -62,9 +62,8 @@ export const postSignup = async (userData: {
     nickname: string;
     phone_number: string;
     terms_agreements: { terms: number; is_agree: boolean }[];
-}) => {
-    const response = await api.post("/users/signup/", userData);
-    return response.data;
+}): Promise<void> => {
+    await api.post("/users/signup/", userData); // 회원가입 요청 후 응답 데이터 불필요
 };
 
 // 소셜 로그인 시 프로필 생성
@@ -84,7 +83,9 @@ export const postUserDelete = async () => {
 };
 
 // 약관 조회 (is_active 필터링 적용)
-export const getTerms = async (): Promise<STerm[]> => {
+export const getTerms = async (): Promise<Term[]> => {
     const response = await api.get<STerm[]>("/terms/");
-    return response.data.filter(term => term.is_active); // 활성화된 약관만 반환
+    return response.data
+        .filter(term => term.is_active) // 활성화된 약관만 필터링
+        .map(transformTerm);
 };

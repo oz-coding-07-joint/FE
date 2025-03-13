@@ -7,7 +7,8 @@ import Input from "@/components/Input";
 import KakaoLogo from "@/assets/icons/kakao_icon.svg";
 import Image from "next/image";
 import { useLogin } from "@/hooks/useAuth";
-import { AxiosError } from "axios"; // AxiosError 타입 추가
+import { AxiosError } from "axios";
+import { isValidEmail } from "@/utils/validation"; // 이메일 유효성 검사 추가
 
 type LoginModalProps = {
   isOpen: boolean;
@@ -16,29 +17,52 @@ type LoginModalProps = {
 
 // 서버에서 반환하는 에러 응답 타입 정의
 interface ErrorResponse {
-  detail?: string; // 400 에러 메시지
-  error?: string;  // 401 에러 메시지
+  detail?: string; // 서버가 반환하는 오류 메시지
+  error?: string;  // 서버가 반환하는 오류 메시지
 }
 
 const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<{ email?: boolean; password?: boolean; api?: string }>({});
+
+  // 에러 상태 관리
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   // 로그인 mutation
   const loginMutation = useLogin();
 
   // 로그인 요청 핸들러
   const handleLogin = () => {
-    setError({}); // 기존 에러 초기화
+    // 기존 에러 초기화
+    setEmailError(null);
+    setPasswordError(null);
+    setApiError(null);
 
+    // 유효성 검사
+    if (!email) {
+      setEmailError("이메일을 입력하세요.");
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setEmailError("올바른 이메일 형식이 아닙니다.");
+      return;
+    }
+
+    if (!password) {
+      setPasswordError("비밀번호를 입력하세요.");
+      return;
+    }
+
+    // 서버로 로그인 요청
     loginMutation.mutate(
       { email, password },
       {
-        onSuccess: async () => {
+        onSuccess: () => {
           console.log("로그인 성공!");
-          onClose(); // 모달 닫기
-          //window.location.reload(); // 페이지 새로고침으로 상태 반영
+          onClose(); // 로그인 성공 시에만 모달 닫기
         },
         onError: (error) => {
           console.error("로그인 실패:", error);
@@ -47,28 +71,28 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
           const axiosError = error as AxiosError<ErrorResponse>;
 
           if (axiosError.response) {
-            const { status, data } = axiosError.response;
-            if (status === 400) {
-              setError({ email: true, api: data.detail || "존재하지 않는 이메일입니다." });
-            } else if (status === 401) {
-              setError({ password: true, api: data.error || "잘못된 비밀번호입니다." });
-            } else {
-              setError({ api: "로그인에 실패했습니다. 다시 시도해주세요." });
-            }
+            const { data } = axiosError.response;
+
+            // 서버에서 받은 에러 메시지를 그대로 표시
+            setApiError(data.detail || data.error || "로그인에 실패했습니다. 다시 시도해주세요.");
           } else {
-            setError({ api: "네트워크 오류가 발생했습니다. 다시 시도해주세요." });
+            setApiError("네트워크 오류가 발생했습니다. 다시 시도해주세요.");
           }
         },
       }
     );
   };
 
-  // 입력값 변경 시 에러 초기화
+  // 입력값 변경 시 해당 필드의 에러 초기화
   const handleChange = (field: "email" | "password", value: string) => {
-    setError((prev) => ({ ...prev, [field]: false })); // 해당 필드의 에러 제거
-
-    if (field === "email") setEmail(value);
-    else setPassword(value);
+    if (field === "email") {
+      setEmail(value);
+      setEmailError(null);
+    } else {
+      setPassword(value);
+      setPasswordError(null);
+    }
+    setApiError(null); // 입력 시 서버 오류 초기화
   };
 
   return (
@@ -83,10 +107,10 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
             placeholder="이메일을 입력하세요."
             value={email}
             onChange={(e) => handleChange("email", e.target.value)}
-            error={!!error.email}
+            error={!!emailError}
             onEnterPress={handleLogin}
           />
-          {error.email && <p className="text-secondary-500 text-xs mt-1">존재하지 않는 이메일입니다.</p>}
+          {emailError && <p className="text-secondary-500 text-xs mt-1">{emailError}</p>}
         </div>
 
         {/* 비밀번호 입력 */}
@@ -97,10 +121,10 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
             placeholder="비밀번호를 입력하세요."
             value={password}
             onChange={(e) => handleChange("password", e.target.value)}
-            error={!!error.password}
+            error={!!passwordError}
             onEnterPress={handleLogin}
           />
-          {error.password && <p className="text-secondary-500 text-xs mt-1">잘못된 비밀번호입니다.</p>}
+          {passwordError && <p className="text-secondary-500 text-xs mt-1">{passwordError}</p>}
         </div>
 
         {/* 로그인 버튼 */}
@@ -111,8 +135,8 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
           onClick={handleLogin} 
         />
 
-        {/* API 오류 메시지 출력 */}
-        {error.api && <p className="text-center text-secondary-500 text-sm mt-2">{error.api}</p>}
+        {/* 서버에서 반환한 오류 메시지 출력 */}
+        {apiError && <p className="text-center text-secondary-500 text-sm mt-2">{apiError}</p>}
       </div>
 
       {/* 회원가입 링크 */}

@@ -21,8 +21,15 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       console.warn("401 에러 발생 - 자동 로그아웃 처리");
 
-      const { logout } = useAuthStore.getState();
-      logout();
+      const requestUrl = String(error.config?.url || ""); // 문자열로 변환하여 처리
+
+      // 로그인 요청(`/users/login/`)에서 발생한 401은 새로고침하지 않고 에러 처리만 실행
+      if (requestUrl.includes("/users/login/")) {
+        return Promise.reject(error);
+      }
+
+      useAuthStore.setState({ user: null });
+      
       window.location.reload();
 
       return Promise.reject(error);

@@ -19,7 +19,7 @@ export const useAuthStore = create<AuthState>()((set) => ({
   },
 
   logout: () => {
-    console.log("🚪 로그아웃 완료");
+    console.log("로그아웃 완료");
     set(() => ({ user: null }));
   },
 
@@ -36,6 +36,6 @@ export const useAuthStore = create<AuthState>()((set) => ({
 
   updateUser: (updatedUser) => {
     console.log("유저 정보 업데이트:", updatedUser);
-    set(() => ({ user: updatedUser })); // 상태 업데이트
+    set(() => ({ user: updatedUser }));
   },
 }));
