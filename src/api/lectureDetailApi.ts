@@ -8,7 +8,7 @@ import {
 import axios from "axios";
 
 //임시 토큰 사용
-const mockToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxODcwNzMyLCJpYXQiOjE3NDE4NTI3MzIsImp0aSI6IjUwZGZmM2RhODNjYTRiZjg5NjU2ZjY4NGVhZDhmNjllIiwidXNlcl9pZCI6N30.2VgCUrmrNo7-2gxXv7z0QzW8Jgx5I2mzqX4lgttsShI'
+const mockToken = process.env.TEMPORARY_TOKEN;
 
 const mockAPI = axios.create({
   baseURL: '/api/mockData',
