@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchLectures } from "@/api/lectureApi";
+import { fetchLectures, fetchLectureDetail } from "@/api/lectureApi";
 import { Lecture } from "@/types/class";
-import { fetchLectureDetail } from "@/api/lectureApi";
 import { LectureDetail } from "@/types/lectureDetail";
 import Modal from "@/components/Modal";
 
