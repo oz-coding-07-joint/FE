@@ -6,11 +6,12 @@ import {
   Video,
 } from "@/types/video";
 import axios from "axios";
+import api from "./api";
 
 export const fetchChapters = async (lectureId: number): Promise<Chapter[]> => {
   try {
     const response = await axios.get(
-      `/api/mockData/lecture-chapter/${lectureId}/`
+      `/api/mockData/lecture_chapter/${lectureId}/`
     );
     console.log("fetchChapters API 응답 데이터:", response.data);
     return response.data.map((chapter: SChapter) => transformChapter(chapter));
@@ -27,7 +28,7 @@ export const fetchChapterVideo = async (
 ): Promise<Video> => {
   try {
     const videoResponse = await axios.get(
-      `/api/mockData/chapter-video/${chapterVideoId}/`
+      `/api/mockData/chapter_video/${chapterVideoId}/`
     );
     const videoData = transformVideo(videoResponse.data);
 
@@ -36,7 +37,7 @@ export const fetchChapterVideo = async (
     }
 
     const stateResponse = await axios.get(
-      `/api/mockData/chapter-video/${chapterVideoId}/state/`
+      `/api/mockData/chapter_video/${chapterVideoId}/state/`
     );
     
     return {
@@ -84,7 +85,7 @@ export const fetchChapterDetails = async (
 export const getVideoState = async (chapterVideoId: number | null) => {
   try {
     const response = await axios.get(
-      `/api/mockData/chapter-video/${chapterVideoId}/state/`
+      `/api/mockData/chapter_video/${chapterVideoId}/state/`
     );
     return response.data;
   } catch (error) {
@@ -101,7 +102,7 @@ export const updateVideoProgress = async (
 
 ) => {
   const response = await axios.patch(
-    `/api/mockData/chapter-video/${chapterVideoId}/progress/`,
+    `/api/mockData/chapter_video/${chapterVideoId}/progress/`,
     {
       progress: newProgressSeconds,
       is_completed: isCompleted,

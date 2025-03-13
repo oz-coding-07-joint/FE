@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 
-export function GET(request: Request, { params }:{ params: { lectureId: string } }) {
-  const { lectureId } = params;
-  const lectureIdNum = Number(lectureId);
+export function GET(request: Request, { params }:{ params: { lecture_id: string } }) {
+  const { lecture_id } = params;
+  const lectureIdNum = Number(lecture_id);
   console.log("lectureIdNum:", lectureIdNum); 
   const mock = [
     {
