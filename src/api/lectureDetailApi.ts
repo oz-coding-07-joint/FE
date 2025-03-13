@@ -10,9 +10,16 @@ import api from "./api";
 
 export const fetchChapters = async (lectureId: number): Promise<Chapter[]> => {
   try {
-    const response = await axios.get(
-      `/api/mockData/lecture_chapter/${lectureId}/`
+    //임시 토큰 사용
+    const mockToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQxODcwNzMyLCJpYXQiOjE3NDE4NTI3MzIsImp0aSI6IjUwZGZmM2RhODNjYTRiZjg5NjU2ZjY4NGVhZDhmNjllIiwidXNlcl9pZCI6N30.2VgCUrmrNo7-2gxXv7z0QzW8Jgx5I2mzqX4lgttsShI'
+    const response = await api.get(
+      `/courses/lecture_chapter/${lectureId}`,{
+        headers: {
+          Authorization: `Bearer ${mockToken}`
+        }
+      }
     );
+
     console.log("fetchChapters API 응답 데이터:", response.data);
     return response.data.map((chapter: SChapter) => transformChapter(chapter));
   } catch (error) {
