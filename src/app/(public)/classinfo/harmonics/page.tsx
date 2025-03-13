@@ -10,7 +10,7 @@ const ClassDetailPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <>
-      <div className="bg-primary-900 flex-grow h-full pt-40 flex flex-col items-center gap-12 text-white">
+      <div className="bg-primary-900 flex-grow h-full pt-40 flex flex-col items-center gap-12 text-white ">
         <span className="text-white text-[40px] text-center">
           클래식 화성학
         </span>
@@ -70,7 +70,7 @@ const ClassDetailPage = () => {
         </div>
         {/* footer */}
         <div
-          className="text-black bg-white w-[1200px] h-[100px]  my-10
+          className="sticky bottom-0 text-black bg-white w-[900px] lg:w-[1200px] h-[100px]  my-10 bg-opacity-80
         flex justify-center items-center rounded-md gap-52 lg:gap-96"
         >
           <div className="flex flex-col text-2xl">
