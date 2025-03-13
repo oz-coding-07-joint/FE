@@ -115,6 +115,7 @@ export default function LecturePage() {
         {lectureDetail && (
           <div className="p-6">
             <h2 className="text-xl font-bold text-gray-800 mb-6">수업정보</h2>
+            <div className="w-full border-b-2 border-gray-600 mt-1 mb-4"></div>
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-1">강의명</label>
               <p className="text-gray-600">{lectureDetail.title}</p>
@@ -148,6 +149,7 @@ export default function LecturePage() {
       <Modal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)}>
         <div className="p-6">
           <h2 className="text-xl font-bold text-gray-800 mb-6">수강후기</h2>
+          <div className="w-full border-b-2 border-gray-600 mt-1 mb-4"></div>
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700">강의명</label>
             <p className="text-gray-800 mb-2">{selectedLectureTitle}</p>
@@ -178,7 +180,7 @@ export default function LecturePage() {
           <div className="mt-6">
             <div className="flex justify-end">
               <button
-                className="bg-primary-600 text-white px-4 py-2 rounded hover:bg-primary-700"
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                 onClick={handleReviewSubmit}
               >
                 제출하기
