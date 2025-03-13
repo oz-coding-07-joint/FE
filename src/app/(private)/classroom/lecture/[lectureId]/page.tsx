@@ -6,11 +6,12 @@ import { ChapterItemList } from '@/app/(private)/_components/ui/ChapterItemList'
 import DetailContainer from '@/app/(private)/_components/ui/DetailContainer';
 import SelectBox from '@/app/(private)/_components/ui/SelectBox';
 import Button from '@/components/Button';
+import LoadingSkeleton from '@/components/LoadingSkeleton';
 import { useLectureStore } from '@/store/useLectureStore';
 import { Video } from '@/types/video';
 import clsx from 'clsx';
 import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
 const LectureDetailPage = () => {
   const params = useParams();
@@ -69,9 +70,9 @@ const LectureDetailPage = () => {
               )}
               <div className='flex justify-center'>
                 {activeTab === 'lecture' ? (
-                  chapterDetails && chapterDetails.chapterVideoTitles ? (
+                  chapterDetails && chapterDetails.chapterVideoTitles?.length ? (
                     <ChapterItemList chapterItems={chapterDetails.chapterVideoTitles} onClick={(video: Video) => setSelectedVideoId(video.id)} selectedVideoId={selectedVideoId} />
-                  ) : null
+                  ) : (<LoadingSkeleton />)
                 ) : (
                   <div className='w-full px-6'>
                     <MaterialList materialUrl={chapterDetails?.materialUrl ?? ''} />
@@ -80,7 +81,9 @@ const LectureDetailPage = () => {
               </div>
             </DetailContainer>
             <div className='bg-white w-full max-w-6xl rounded-md shadow-md flex flex-col items-center gap-[10px]'>
+              <Suspense fallback={<LoadingSkeleton />}>
                 <VideoPlayer videoUrl={currentVideo?.videoUrl ?? ''} chapterVideoId={selectedChapterId} />
+              </Suspense>
               {currentVideo?.isCompleted && (
                 <div className='w-[95%] flex justify-end'>
                   <Button label='과제하러가기' />
