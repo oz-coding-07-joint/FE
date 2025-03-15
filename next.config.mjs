@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 
-const API_SERVER_BASE_URL = "http://211.188.59.23/api/v1";
+const API_SERVER_BASE_URL = "https://api.umdoong.shop/api/v1";
 
 const nextConfig = {
   rewrites: async () => {

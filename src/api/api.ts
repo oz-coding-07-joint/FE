@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  // baseURL: "http://211.188.59.23/api/v1",
+  // baseURL: " https://api.umdoong.shop/api/v1",
   baseURL: "/api/v1",
   withCredentials: true, // 쿠키 자동 전송
   headers: {
