@@ -22,6 +22,8 @@ const SignupPage = () => {
   const [agreedTerms, setAgreedTerms] = useState<{ [key: number]: boolean }>({});
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
   const [selectedTerm, setSelectedTerm] = useState<Term | null>(null);
+  
+
 
   const handleToggleAgreement = (termId: number) => {
     setAgreedTerms((prev) => ({
@@ -80,9 +82,9 @@ const SignupPage = () => {
 
       setErrors((prev) => ({ ...prev, verificationCode: "" }));
     } catch (error: unknown) {
-      const axiosError = error as AxiosError<{ message?: string }>; // ✅ `AxiosError`로 타입 캐스팅
+      const axiosError = error as AxiosError<{ message?: string }>; // `AxiosError`로 타입 캐스팅
 
-      console.error("❌ 인증 실패:", axiosError.response?.data || axiosError.message);
+      console.error("인증 실패:", axiosError.response?.data || axiosError.message);
 
       // 서버 응답에서 오류 메시지를 가져오기
       const errorMessage =
@@ -106,6 +108,10 @@ const SignupPage = () => {
       case "name":
         setName(value);
         if (!isValidName(value)) setErrors((prev) => ({ ...prev, name: "이름을 입력해주세요." }));
+        break;
+      case "nickname":
+        setName(value);
+        if (!isValidName(value)) setErrors((prev) => ({ ...prev, nickname: "닉네임을 입력해주세요." }));
         break;
       case "email":
         setEmail(value);
@@ -156,16 +162,23 @@ const SignupPage = () => {
       terms_agreements: termsAgreements,
     };
   
-    console.log("📢 회원가입 요청 데이터:", userData);
+    //console.log("회원가입 요청 데이터:", userData);
   
     signupMutation.mutate(userData, {
-      onSuccess: (data) => {
-        console.log("✅ 회원가입 및 자동 로그인 완료:", data);
+      onSuccess: () => {
+        //console.log("회원가입 및 자동 로그인 완료:", data);
         alert("회원가입 성공! 자동으로 로그인됩니다.");
       },
       onError: (error) => {
-        console.error("❌ 회원가입 실패:", error);
+        console.error("회원가입 실패:", error);
         alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+        setErrors({
+          email: "",
+          name: "",
+          password: "",
+          confirmPassword: "",
+          phoneNumber: "",
+        });
       },
     });
   };
