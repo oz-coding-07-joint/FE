@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -42,7 +43,7 @@ export default function AssignmentsPage() {
             className="bg-white rounded-lg shadow-md w-full min-w-[250px] max-w-[300px]"
           >
             <img
-              src={assignment.fileUrl || "/placeholder.jpg"}
+              src={assignment.fileUrl || "@/assets/images/no-img.png"}
               alt={assignment.title}
               className="w-full h-48 object-cover rounded-t-lg"
             />

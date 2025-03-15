@@ -1,20 +1,52 @@
-import { Video } from '@/types/video';
+import { getVideoState, updateVideoProgress } from '@/api/lectureDetailApi';
+import { throttle } from '@/utils/throttle';
 import dynamic from 'next/dynamic';
-import React from 'react';
+import { useCallback, useState } from 'react';
 
 const ReactPlayer = dynamic(() => import('react-player'), {
   ssr: false,
 });
 
-type VideoPlayerProps = Pick<Video, 'videoUrl'>
+type VideoPlayerProps = {
+  videoUrl: string;
+  chapterVideoId: number | null;
+}
 
-const VideoPlayer = ({videoUrl}: VideoPlayerProps) => {
+type ProgressState = {
+  played: number;
+  playedSeconds: number;
+  loaded: number;
+  loadedSeconds: number;
+};
+
+const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
+  const [progress, setProgress] = useState(0);
+
+  const handleProgress = useCallback(
+    throttle((state: ProgressState) => {
+      setProgress(state.playedSeconds)
+    }, 5000), []
+  );
+
+  const handlePause = async () => {
+    console.log('영상 멈춤', progress)
+    const isCompletedState = await getVideoState(chapterVideoId)
+
+    try {
+      await updateVideoProgress(chapterVideoId, progress, isCompletedState.isCompleted);
+      console.log('update success')
+    } catch (error) {
+      console.error('update failed', error);
+    }
+  }
 
   return (
-    <div className='w-full aspect-video mt-5'>
+    <div className='w-[95%] aspect-video mt-5 flex items-center justify-center bg-gray-200'>
       <ReactPlayer
         url={videoUrl}
         controls={true}
+        onProgress={handleProgress}
+        onPause={handlePause}
         width='100%'
         height='100%'
       />

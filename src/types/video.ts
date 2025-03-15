@@ -1,9 +1,9 @@
-interface SChapter {
+export interface SChapter {
     id: number;
     lecture_id: number;
     title: string;
-    meterial_url: string;
-    chapter_vedio_titles: SVideo[];
+    material_url: string;
+    chapter_video_titles: SVideo[];
 }
 
 export interface Chapter {
@@ -19,8 +19,8 @@ export interface Chapter {
         id: chapter.id,
         lectureId: chapter.lecture_id,
         title: chapter.title,
-        materialUrl: chapter.meterial_url,
-        chapterVideoTitles: chapter.chapter_vedio_titles.map(transformVideo),
+        materialUrl: chapter.material_url,
+        chapterVideoTitles: chapter.chapter_video_titles.map(transformVideo),
     };
 }
 
@@ -30,6 +30,7 @@ interface SVideo {
     video_url?: string;
     progress?: string;
     is_completed?: boolean;
+    last_watched_time?: string;
 }
 
 export interface Video {
@@ -38,6 +39,7 @@ export interface Video {
     videoUrl?: string;
     progress?: string;
     isCompleted?: boolean;
+    lastWatchedTime?: string;
 }
 
 export function transformVideo(video: SVideo): Video {
@@ -47,5 +49,6 @@ export function transformVideo(video: SVideo): Video {
         videoUrl: video.video_url,
         progress: video.progress,
         isCompleted: video.is_completed,
+        lastWatchedTime: video.last_watched_time,
     };
 }

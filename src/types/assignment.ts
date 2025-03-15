@@ -47,14 +47,17 @@ export function transformAssignment(assignment: SAssignment): Assignment {
 interface SAssignmentComment {
     id: number;
     parent_id?: number; // 피드백이면 parentId 있음
+    assignment_id: number; // 과제 ID 추가
     file_url: string;
     content: string;
     created_at: Date;
     user: User;
 }
+
 export interface AssignmentComment {
     id: number;
-    parentId?: number; // 피드백이면 parentId 있음
+    parentId?: number | null; // 피드백이면 parentId 있음
+    assignmentId: number; // 과제 ID 추가
     fileUrl: string;
     content: string;
     createdAt: Date;
@@ -64,7 +67,8 @@ export interface AssignmentComment {
 export function transformAssignmentComment(comment: SAssignmentComment): AssignmentComment {
     return {
         id: comment.id,
-        parentId: comment.parent_id,
+        parentId: comment.parent_id !== undefined ? comment.parent_id : null, // undefined이면 null로 처리
+        assignmentId: comment.assignment_id, // assignmentId 추가
         fileUrl: comment.file_url,
         content: comment.content,
         createdAt: comment.created_at,
