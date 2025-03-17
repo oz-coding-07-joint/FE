@@ -7,11 +7,23 @@ import {
 } from "@/types/video";
 import axios from "axios";
 
+//임시 토큰 사용
+const mockToken = process.env.TEMPORARY_TOKEN;
+
+const mockAPI = axios.create({
+  baseURL: '/api/mockData',
+  headers: {
+    Authorization: `Bearer ${mockToken}`,
+    'Content-Type': "application/json",
+  }
+})
+
 export const fetchChapters = async (lectureId: number): Promise<Chapter[]> => {
   try {
-    const response = await axios.get(
-      `/api/mockData/lecture-chapter/${lectureId}/`
+    const response = await mockAPI.get(
+      `/courses/lecture_chapter/${lectureId}`
     );
+
     console.log("fetchChapters API 응답 데이터:", response.data);
     return response.data.map((chapter: SChapter) => transformChapter(chapter));
   } catch (error) {
@@ -26,8 +38,8 @@ export const fetchChapterVideo = async (
   videoTitle?: string
 ): Promise<Video> => {
   try {
-    const videoResponse = await axios.get(
-      `/api/mockData/chapter-video/${chapterVideoId}/`
+    const videoResponse = await mockAPI.get(
+      `/courses/chapter_video/${chapterVideoId}/`
     );
     const videoData = transformVideo(videoResponse.data);
 
@@ -35,8 +47,8 @@ export const fetchChapterVideo = async (
       videoData.title = videoTitle;
     }
 
-    const stateResponse = await axios.get(
-      `/api/mockData/chapter-video/${chapterVideoId}/state/`
+    const stateResponse = await mockAPI.get(
+      `/courses/chapter_video/${chapterVideoId}/state/`
     );
     
     return {
@@ -83,8 +95,8 @@ export const fetchChapterDetails = async (
 
 export const getVideoState = async (chapterVideoId: number | null) => {
   try {
-    const response = await axios.get(
-      `/api/mockData/chapter-video/${chapterVideoId}/state/`
+    const response = await mockAPI.get(
+      `/courses/chapter_video/${chapterVideoId}/state/`
     );
     return response.data;
   } catch (error) {
@@ -100,8 +112,8 @@ export const updateVideoProgress = async (
   isCompleted: boolean
 
 ) => {
-  const response = await axios.patch(
-    `/api/mockData/chapter-video/${chapterVideoId}/progress/`,
+  const response = await mockAPI.patch(
+    `/courses/chapter_video/${chapterVideoId}/progress/`,
     {
       progress: newProgressSeconds,
       is_completed: isCompleted,

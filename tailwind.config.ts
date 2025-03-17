@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -48,7 +49,7 @@ const config: Config = {
       backgroundImage: { mainImage: "url('../assets/images/main.jpg')" },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/line-clamp")],
 };
 
 export default config;
