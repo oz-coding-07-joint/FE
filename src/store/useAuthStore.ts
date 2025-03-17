@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { User } from "@/types/auth";
 import { getUserInfo } from "@/api/authApi";
+import Cookies from "js-cookie";
 
 interface AuthState {
   user: User | null;
@@ -8,10 +9,12 @@ interface AuthState {
   logout: () => void;
   restoreUser: () => Promise<void>;
   updateUser: (updatedUser: User) => void;
+  showLoginModal: boolean;
 }
 
 export const useAuthStore = create<AuthState>()((set) => ({
   user: null,
+  showLoginModal: false,
 
   login: (user) => {
     console.log("로그인 성공:", user);
@@ -19,12 +22,19 @@ export const useAuthStore = create<AuthState>()((set) => ({
   },
 
   logout: () => {
-    console.log("🚪 로그아웃 완료");
+    console.log("로그아웃 완료");
+    Cookies.remove("access_token"); // 쿠키에서 토큰 삭제
     set(() => ({ user: null }));
   },
 
   restoreUser: async () => {
     try {
+      const token = Cookies.get("access_token"); // 쿠키에서 토큰 확인
+      if (!token) {
+        set(() => ({ user: null }));
+        return;
+      }
+
       const user = await getUserInfo();
       console.log("새로고침 후 유저 정보 복원:", user);
       set(() => ({ user }));

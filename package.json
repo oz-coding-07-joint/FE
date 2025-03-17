@@ -23,6 +23,7 @@
     "zustand": "^5.0.3"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@types/node": "^20",
     "@types/react": "^18",

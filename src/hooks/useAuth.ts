@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
 import {
   postKakaoLogin,
   postLogin,
@@ -10,44 +10,59 @@ import {
   changePassword,
   postSignup,
   postSocialProfileCreate,
-  postUserDelete,
   postEmailVerification,
   verifyEmailCode,
   getTerms,
 } from "@/api/authApi";
-import { STerm, Term, transformTerm, transformUser, User } from "@/types/auth";
-import { useAuthStore } from "@/store/useAuthStore";
-import { useEffect } from "react";
+import { Term, User } from "@/types/auth";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from '@/store/useAuthStore';
+import Cookies from "js-cookie"; // 쿠키 추가
 
-// 유저 정보 조회
+// 로그인 상태 복원
 export const useGetUserInfo = () => {
-  return useQuery<User | null>({
+  const { user, login, logout } = useAuthStore();
+
+  return useQuery<User | null, Error>({
     queryKey: ["user"],
     queryFn: async () => {
-      try {
-        const response = await getUserInfo();
-        return response ? transformUser(response) : null;
-      } catch (error) {
-        console.error("유저 정보 가져오기 실패:", error);
-        return null;
+      if (user) {
+        return user;
       }
+      return await getUserInfo(); // 없으면 서버에서 가져오기
     },
-    enabled: false,
-  });
+    staleTime: 1000 * 60 * 5, // 5분 동안 캐시 유지
+    onSuccess: (user: User | null) => {
+
+      if (user) {
+        login(user); // Zustand 상태 업데이트
+        console.log("Zustand 상태 업데이트 완료:", user);
+      } 
+    },
+    onError: () => {
+      console.warn("유저 정보 가져오기 실패 (비로그인 상태)");
+      logout();
+    },
+    retry: false,
+  } as UseQueryOptions<User | null, Error>);
 };
+
 
 // 로그인
 export const useLogin = () => {
-  const { login } = useAuthStore(); 
+  const { login } = useAuthStore();
+  const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (credentials: { email: string; password: string }) => {
-      return await postLogin(credentials); // 로그인 요청 후 유저 정보 반환
-    },
-    onSuccess: (user) => {
-      console.log("로그인 성공:", user);
-      login(user); // 로그인 성공 시 전역 상태 업데이트
+    mutationFn: postLogin,
+    onSuccess: async (user) => {
+      if (user) {
+        console.log("로그인 성공:", user);
+        login(user); // 로그인 성공 시 zustand 업데이트
+        await queryClient.invalidateQueries({ queryKey: ["user"] });
+      } else {
+        console.error("로그인 실패: 사용자 정보가 없습니다.");
+      }
     },
     onError: (error) => {
       console.error("로그인 실패:", error);
@@ -55,26 +70,17 @@ export const useLogin = () => {
   });
 };
 
-// 새로고침 시 자동 로그인 유지
-export const useAuthInit = () => {
-  const { restoreUser } = useAuthStore();
-
-  useEffect(() => {
-    restoreUser(); // 유저 정보 복원
-  }, [restoreUser]);
-};
-
-// 로그아웃 (HttpOnly 쿠키 삭제 및 전역 상태 초기화)
+// 로그아웃 (쿠키 삭제 + 상태 초기화)
 export const useLogout = () => {
   const { logout } = useAuthStore();
+  const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => {
-      await postLogout(); // 서버에서 쿠키 삭제
-    },
-    onSuccess: () => {
-      logout(); // 유저 정보 초기화
-      window.location.reload();
+    mutationFn: postLogout,
+    onSuccess: async () => {
+      Cookies.remove("access_token"); // 쿠키에서 토큰 삭제
+      logout(); // zustand 상태 초기화
+      await queryClient.invalidateQueries({ queryKey: ["user"] });
     },
     onError: (error) => {
       console.error("로그아웃 실패:", error);
@@ -85,14 +91,15 @@ export const useLogout = () => {
 // 카카오 로그인
 export const useKakaoLogin = () => {
   const { login } = useAuthStore();
+  const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => {
-      const user = await postKakaoLogin();
-      return user;
-    },
-    onSuccess: (user) => {
-      login(user); // 로그인 성공 시 전역 상태 업데이트
+    mutationFn: postKakaoLogin,
+    onSuccess: async (user) => {
+      if (user) {
+        login(user);
+        await queryClient.invalidateQueries({ queryKey: ["user"] });
+      }
     },
     onError: (error) => {
       console.error("카카오 로그인 실패:", error);
@@ -103,11 +110,13 @@ export const useKakaoLogin = () => {
 // 회원정보 수정
 export const useUpdateUserInfo = () => {
   const { updateUser } = useAuthStore();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: updateUserInfo,
-    onSuccess: (updatedUser) => {
-      updateUser(updatedUser); // 상태 업데이트
+    onSuccess: async (updatedUser) => {
+      updateUser(updatedUser); // zustand 상태 업데이트
+      await queryClient.invalidateQueries({ queryKey: ["user"] });
       console.log("회원정보 수정 완료");
     },
     onError: (error) => {
@@ -126,9 +135,7 @@ export const useChangePassword = () => {
 // 이메일 인증 요청
 export const useEmailVerification = () => {
   return useMutation({
-    mutationFn: async (email: string) => {
-      return await postEmailVerification(email);
-    },
+    mutationFn: postEmailVerification,
     onError: (error) => {
       console.error("이메일 인증 요청 실패:", error);
     },
@@ -138,19 +145,18 @@ export const useEmailVerification = () => {
 // 이메일 인증 코드 확인
 export const useVerifyEmailCode = () => {
   return useMutation({
-    mutationFn: async (emailCodeData: { email: string; code: string }) => {
-      return await verifyEmailCode(emailCodeData);
-    },
+    mutationFn: verifyEmailCode,
     onError: (error) => {
       console.error("이메일 인증 실패:", error);
     },
   });
 };
 
-// 회원가입 후 자동 로그인 (추가 API 요청 없이 상태 업데이트)
+// 회원가입 후 자동 로그인 (토큰 쿠키 저장 추가)
 export const useSignup = () => {
   const { login } = useAuthStore();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (userData: {
@@ -162,11 +168,16 @@ export const useSignup = () => {
       terms_agreements: { terms: number; is_agree: boolean }[];
     }) => {
       await postSignup(userData); // 회원가입 요청
-      return await postLogin({ email: userData.email, password: userData.password }); // 자동 로그인
+      return await postLogin({ email: userData.email, password: userData.password }); // 회원가입 후 자동 로그인
     },
-    onSuccess: (user) => {
-      login(user);
-      router.push("/");
+    onSuccess: async (user) => {
+      if (user) {
+        login(user); // Zustand 상태 업데이트
+        await queryClient.invalidateQueries({ queryKey: ["user"] }); // 유저 정보 다시 불러오기
+        router.push("/"); // 홈으로 이동
+      } else {
+        console.error("회원가입 후 로그인 실패: 사용자 정보가 없습니다.");
+      }
     },
     onError: (error) => {
       console.error("회원가입 실패:", error);
@@ -179,20 +190,7 @@ export const useSignup = () => {
 export const useSocialProfileCreate = () => {
   return useMutation({
     mutationFn: postSocialProfileCreate,
-    onSuccess: () => {
-    },
-  });
-};
-
-// 회원 탈퇴
-export const useDeleteUser = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: postUserDelete,
-    onSuccess: () => {
-      queryClient.setQueryData(["user"], null); // 유저 정보 초기화
-    },
+    onSuccess: () => {},
   });
 };
 
@@ -200,9 +198,6 @@ export const useDeleteUser = () => {
 export const useGetTerms = () => {
   return useQuery<Term[]>({
     queryKey: ["terms"],
-    queryFn: async () => {
-      const data: STerm[] = await getTerms();
-      return data.filter((term) => term.is_active).map(transformTerm);
-    },
+    queryFn: getTerms,
   });
 };
