@@ -1,6 +1,6 @@
 import React from 'react';
-import Sidebar from '../_components/layout/Sidebar';
-import Header from '../_components/layout/Header';
+import Sidebar from './_components/layout/Sidebar';
+import Header from './_components/layout/Header';
 
 export default function ClassroomLayout({
   children,
