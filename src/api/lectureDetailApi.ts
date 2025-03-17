@@ -12,17 +12,17 @@ import api from "./api";
 const mockToken = process.env.NEXT_PUBLIC_TEMPORARY_TOKEN;
 
 const mockAPI = axios.create({
-  baseURL: "http://211.188.59.23/api/v1",
+  baseURL: "https://api.umdoong.shop/api/v1",
   withCredentials: true,
   headers: {
-    // Authorization: `Bearer ${mockToken}`,
+    Authorization: `Bearer ${mockToken}`,
     "Content-Type": "application/json",
   },
 });
 
 export const fetchChapters = async (lectureId: number): Promise<Chapter[]> => {
   try {
-    const response = await api.get(
+    const response = await mockAPI.get(
       `/courses/lecture_chapter/${lectureId}/`
     );
 
@@ -39,7 +39,7 @@ export const fetchChapterVideo = async (
   chapterVideoId: number,
 ): Promise<Video> => {
   try {
-    const videoResponse = await api.get(
+    const videoResponse = await mockAPI.get(
       `/courses/chapter_video/${chapterVideoId}/`
     );
     const videoData = transformVideo(videoResponse.data);
@@ -90,7 +90,7 @@ export const createVideoProgress = async (
   lastWatchedTime: number
 ) => {
   try {
-    const response = await api.post(
+    const response = await mockAPI.post(
       `/courses/chater_video/${chapterVideoId}/progress/`,
       {
         last_watched_time: lastWatchedTime,

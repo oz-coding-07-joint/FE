@@ -53,7 +53,7 @@ const LectureDetailPage = () => {
                   onClick={() => setActiveTab('materials')}
                 >학습자료</button>
               }
-              width='w-sm max-w-[390px] '
+              width='w-sm max-w-[300px]'
               height='h-[800px]'
             >
               {chapters && chapters.length > 0 && (
@@ -76,9 +76,7 @@ const LectureDetailPage = () => {
                     <ChapterItemList chapterItems={chapterDetails.chapterVideoTitles} onClick={(video: Video) => setSelectedVideoId(video.id)} selectedVideoId={selectedVideoId} />
                   ) : (<LoadingSkeleton />)
                 ) : (
-                  <div className='w-full px-6'>
-                    <MaterialList materialUrl={chapterDetails?.materialUrl ?? ''} />
-                  </div>
+                  <MaterialList materialUrl={chapterDetails?.materialUrl ?? ''} />
                 )}
               </div>
             </DetailContainer>
