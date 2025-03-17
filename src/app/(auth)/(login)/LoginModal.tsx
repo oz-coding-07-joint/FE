@@ -22,6 +22,9 @@ interface ErrorResponse {
 }
 
 const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
+  const KAKAO_CLIENT_ID = process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID;
+  const REDIRECT_URI = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -82,6 +85,11 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
       }
     );
   };
+
+  // Kakao 로그인
+  const handleKakaoLogin = () => {
+    window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+  }
 
   // 입력값 변경 시 해당 필드의 에러 초기화
   const handleChange = (field: "email" | "password", value: string) => {
@@ -154,7 +162,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
       {/* 카카오 로그인 버튼 */}
       <button
         className="w-12 h-12 flex items-center justify-center rounded-full mx-auto"
-        onClick={() => console.log("카카오 로그인 클릭")}
+        onClick={handleKakaoLogin}
       >
         <Image src={KakaoLogo} alt="카카오 로그인" className="w-32" />
       </button>
