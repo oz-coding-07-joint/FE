@@ -81,7 +81,6 @@ export const useLogout = () => {
       Cookies.remove("access_token"); // 쿠키에서 토큰 삭제
       logout(); // zustand 상태 초기화
       await queryClient.invalidateQueries({ queryKey: ["user"] });
-      window.location.href = "/"; // 리디렉션
     },
     onError: (error) => {
       console.error("로그아웃 실패:", error);
