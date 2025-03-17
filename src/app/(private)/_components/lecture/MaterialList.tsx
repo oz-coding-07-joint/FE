@@ -5,7 +5,7 @@ import axios from 'axios';
 import { FilePdf } from 'phosphor-react';
 import { useEffect, useState } from 'react';
 
-type MaterialListProps = Pick<Chapter, 'materialUrl'>
+type MaterialListProps = Partial<Pick<Chapter, 'materialInfo'>>
 
 const getFileName = (url: string) => {
   try {
@@ -29,31 +29,34 @@ const getFileType = async (url: string) => {
   }
 }
 
-const MaterialList = ({ materialUrl }: MaterialListProps) => {
-  const [fileType, setFileType] = useState<string | null>(null)
+const MaterialList = ({ materialInfo }: MaterialListProps) => {
+  if(!materialInfo) return null;
 
-  const fileName = getFileName(materialUrl);
+  const fileName = materialInfo.fileName.replace(/^materials_([^_]+_[^_]+)_\S+\.\w+$/, "$1");
+  // const [fileType, setFileType] = useState<string | null>(null)
 
-  useEffect(() => {
-    const fetchFileType = async () => {
-      const type = await getFileType(materialUrl)
-      setFileType(type)
-    }
-    fetchFileType()
-  }, [materialUrl])
+  // const fileName = getFileName(materialUrl);
+
+  // useEffect(() => {
+  //   const fetchFileType = async () => {
+  //     const type = await getFileType(materialUrl)
+  //     setFileType(type)
+  //   }
+  //   fetchFileType()
+  // }, [materialUrl])
 
   return (
     <div className='w-[85%]'>
       <a className='flex items-center gap-3'
-        href={materialUrl}
-        download={fileName}
+        href={materialInfo.url}
+        download={materialInfo.fileName}
         target='_blank'
         rel="noopener noreferrer"
       >
         <FilePdf size={16} />
-        <p className='text-black'>
+        {/* <p className='text-black'>
           {fileType}
-        </p>
+        </p> */}
         <p className='line-clamp-1'>
           {fileName}
         </p>

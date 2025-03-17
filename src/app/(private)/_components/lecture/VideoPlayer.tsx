@@ -1,4 +1,3 @@
-// import { getVideoState, updateVideoProgress } from '@/api/lectureDetailApi';
 import { createVideoProgress, updateVideoProgress } from '@/api/lectureDetailApi';
 import { throttle } from '@/utils/throttle';
 import dynamic from 'next/dynamic';
@@ -54,9 +53,8 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
     setPlaying(false);
 
     if(chapterVideoId) {
-      const isCompleted = progress >= (videoDuration - 5);
       try {
-        await updateVideoProgress(chapterVideoId, progress, isCompleted);
+        await updateVideoProgress(chapterVideoId, progress);
         console.log('update success')
       } catch (error) {
         console.error('update failed', error);
@@ -67,8 +65,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
   useEffect(() => {
     return () => {
       if(chapterVideoId) {
-        const isCompleted = progress >= (videoDuration - 5);
-        updateVideoProgress(chapterVideoId, progress, isCompleted);
+        updateVideoProgress(chapterVideoId, progress);
       }
     }
   }, [chapterVideoId, progress])

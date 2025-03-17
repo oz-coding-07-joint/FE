@@ -5,26 +5,24 @@ import {
   transformVideo,
   Video,
 } from "@/types/video";
-import axios from "axios";
+// import axios from "axios";
 import api from "./api";
 
 //임시 토큰 사용
-const mockToken = process.env.NEXT_PUBLIC_TEMPORARY_TOKEN;
+// const mockToken = process.env.NEXT_PUBLIC_TEMPORARY_TOKEN;
 
-const mockAPI = axios.create({
-  baseURL: "https://api.umdoong.shop/api/v1",
-  withCredentials: true,
-  headers: {
-    Authorization: `Bearer ${mockToken}`,
-    "Content-Type": "application/json",
-  },
-});
+// const mockAPI = axios.create({
+//   baseURL: "https://api.umdoong.shop/api/v1",
+//   withCredentials: true,
+//   headers: {
+//     Authorization: `Bearer ${mockToken}`,
+//     "Content-Type": "application/json",
+//   },
+// });
 
 export const fetchChapters = async (lectureId: number): Promise<Chapter[]> => {
   try {
-    const response = await mockAPI.get(
-      `/courses/lecture_chapter/${lectureId}/`
-    );
+    const response = await api.get(`/courses/lecture_chapter/${lectureId}/`);
 
     console.log("fetchChapters API 응답 데이터:", response.data);
     return response.data.map((chapter: SChapter) => transformChapter(chapter));
@@ -36,15 +34,15 @@ export const fetchChapters = async (lectureId: number): Promise<Chapter[]> => {
 
 // 비디오 정보 id, title, videoUrl
 export const fetchChapterVideo = async (
-  chapterVideoId: number,
+  chapterVideoId: number
 ): Promise<Video> => {
   try {
-    const videoResponse = await mockAPI.get(
+    const videoResponse = await api.get(
       `/courses/chapter_video/${chapterVideoId}/`
     );
     const videoData = transformVideo(videoResponse.data);
 
-    console.log('videoData:', videoData)
+    console.log("videoData:", videoData);
 
     return videoData;
   } catch (error) {
@@ -74,6 +72,7 @@ export const fetchChapterDetails = async (
     );
     console.log("chapterData:", chapterData);
     console.log(videoDetailed);
+    console.log({ ...chapterData, chapterVideoTitles: videoDetailed });
 
     return {
       ...chapterData,
@@ -90,8 +89,8 @@ export const createVideoProgress = async (
   lastWatchedTime: number
 ) => {
   try {
-    const response = await mockAPI.post(
-      `/courses/chater_video/${chapterVideoId}/progress/`,
+    const response = await api.post(
+      `/courses/chapter_video/${chapterVideoId}/progress/`,
       {
         last_watched_time: lastWatchedTime,
       }
@@ -107,15 +106,15 @@ export const createVideoProgress = async (
 // 비디오 진행률 업데이트
 export const updateVideoProgress = async (
   chapterVideoId: number | null,
-  lastWatchedTime: number,
-  isCompleted: boolean,
+  lastWatchedTime: number
+  // isCompleted: boolean,
 ) => {
   try {
     const response = await api.patch(
       `/courses/chapter_video/${chapterVideoId}/progress/update/`,
       {
         last_watched_time: lastWatchedTime,
-        is_completed: isCompleted,
+        // is_completed: isCompleted,
       }
     );
 
@@ -125,7 +124,7 @@ export const updateVideoProgress = async (
 
     return response.data;
   } catch (error) {
-    console.error('Failed to update video progress', error);
+    console.error("Failed to update video progress", error);
     throw error;
   }
 };

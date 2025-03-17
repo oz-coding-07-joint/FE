@@ -76,7 +76,7 @@ const LectureDetailPage = () => {
                     <ChapterItemList chapterItems={chapterDetails.chapterVideoTitles} onClick={(video: Video) => setSelectedVideoId(video.id)} selectedVideoId={selectedVideoId} />
                   ) : (<LoadingSkeleton />)
                 ) : (
-                  <MaterialList materialUrl={chapterDetails?.materialUrl ?? ''} />
+                  <MaterialList materialInfo={chapterDetails?.materialInfo} />
                 )}
               </div>
             </DetailContainer>
