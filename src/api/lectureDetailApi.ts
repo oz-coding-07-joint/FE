@@ -6,22 +6,24 @@ import {
   Video,
 } from "@/types/video";
 import axios from "axios";
+import api from "./api";
 
 //임시 토큰 사용
-const mockToken = process.env.TEMPORARY_TOKEN;
+const mockToken = process.env.NEXT_PUBLIC_TEMPORARY_TOKEN;
 
 const mockAPI = axios.create({
-  baseURL: '/api/mockData',
+  baseURL: "http://211.188.59.23/api/v1",
+  withCredentials: true,
   headers: {
-    Authorization: `Bearer ${mockToken}`,
-    'Content-Type': "application/json",
-  }
-})
+    // Authorization: `Bearer ${mockToken}`,
+    "Content-Type": "application/json",
+  },
+});
 
 export const fetchChapters = async (lectureId: number): Promise<Chapter[]> => {
   try {
-    const response = await mockAPI.get(
-      `/courses/lecture_chapter/${lectureId}`
+    const response = await api.get(
+      `/courses/lecture_chapter/${lectureId}/`
     );
 
     console.log("fetchChapters API 응답 데이터:", response.data);
@@ -32,30 +34,19 @@ export const fetchChapters = async (lectureId: number): Promise<Chapter[]> => {
   }
 };
 
-// 비디오 정보, 비디오 진행도 상태
+// 비디오 정보 id, title, videoUrl
 export const fetchChapterVideo = async (
   chapterVideoId: number,
-  videoTitle?: string
 ): Promise<Video> => {
   try {
-    const videoResponse = await mockAPI.get(
+    const videoResponse = await api.get(
       `/courses/chapter_video/${chapterVideoId}/`
     );
     const videoData = transformVideo(videoResponse.data);
 
-    if (videoTitle) {
-      videoData.title = videoTitle;
-    }
+    console.log('videoData:', videoData)
 
-    const stateResponse = await mockAPI.get(
-      `/courses/chapter_video/${chapterVideoId}/state/`
-    );
-    
-    return {
-      ...videoData,
-      progress: stateResponse.data.progress,
-      isCompleted: stateResponse.data.is_completed,
-    };
+    return videoData;
   } catch (error) {
     throw error;
   }
@@ -78,7 +69,7 @@ export const fetchChapterDetails = async (
 
     const videoDetailed = await Promise.all(
       chapterData.chapterVideoTitles.map(async (videoSummary: Video) => {
-        return await fetchChapterVideo(videoSummary.id, videoSummary.title);
+        return await fetchChapterVideo(videoSummary.id);
       })
     );
     console.log("chapterData:", chapterData);
@@ -93,38 +84,48 @@ export const fetchChapterDetails = async (
   }
 };
 
-export const getVideoState = async (chapterVideoId: number | null) => {
+// 비디오 진행 상태 만들기
+export const createVideoProgress = async (
+  chapterVideoId: number | null,
+  lastWatchedTime: number
+) => {
   try {
-    const response = await mockAPI.get(
-      `/courses/chapter_video/${chapterVideoId}/state/`
+    const response = await api.post(
+      `/courses/chater_video/${chapterVideoId}/progress/`,
+      {
+        last_watched_time: lastWatchedTime,
+      }
     );
+
     return response.data;
   } catch (error) {
-    console.error("Failed to fetch video state", error);
-    return null;
+    console.error("Failed to create video progress", error);
+    throw error;
   }
 };
 
-// 비디오 진행률 보내기
+// 비디오 진행률 업데이트
 export const updateVideoProgress = async (
   chapterVideoId: number | null,
-  newProgressSeconds: number,
-  isCompleted: boolean
-
+  lastWatchedTime: number,
+  isCompleted: boolean,
 ) => {
-  const response = await mockAPI.patch(
-    `/courses/chapter_video/${chapterVideoId}/progress/`,
-    {
-      progress: newProgressSeconds,
-      is_completed: isCompleted,
+  try {
+    const response = await api.patch(
+      `/courses/chapter_video/${chapterVideoId}/progress/update/`,
+      {
+        last_watched_time: lastWatchedTime,
+        is_completed: isCompleted,
+      }
+    );
+
+    if (!response) {
+      throw new Error(`Failed to update resource`);
     }
-  );
 
-  if (!response) {
-    throw new Error(`Failed to update resource`);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to update video progress', error);
+    throw error;
   }
-
-  const updatedResource = await getVideoState(chapterVideoId);
-
-  return updatedResource;
 };

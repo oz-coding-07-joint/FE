@@ -57,16 +57,18 @@ const LectureDetailPage = () => {
               height='h-[800px]'
             >
               {chapters && chapters.length > 0 && (
-                <div className='flex justify-center m-[1rem]'>
-                  <SelectBox
-                    options={chapters.map((ch) => ({ id: ch.id, title: ch.title }))}
-                    selectedChapterId={selectedChapterId}
-                    onChange={(id) => {
-                      setSelectedChapterId(id);
-                    }
-                    }
-                  />
-                </div>
+                <Suspense fallback={<LoadingSkeleton />}>
+                  <div className='flex justify-center m-[1rem]'>
+                    <SelectBox
+                      options={chapters.map((ch) => ({ id: ch.id, title: ch.title }))}
+                      selectedChapterId={selectedChapterId}
+                      onChange={(id) => {
+                        setSelectedChapterId(id);
+                      }
+                      }
+                    />
+                  </div>
+                </Suspense>
               )}
               <div className='flex justify-center'>
                 {activeTab === 'lecture' ? (

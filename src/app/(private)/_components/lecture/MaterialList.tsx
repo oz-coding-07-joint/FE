@@ -11,12 +11,17 @@ const fileName = (url: string) => {
 
 const MaterialList = ({materialUrl}: MaterialListProps) => {
   return (
-      <div className='flex items-center gap-3'>
+      <a className='flex items-center gap-3'
+      href={materialUrl}
+      download={fileName(materialUrl)}
+      target='_blank'
+      rel="noopener noreferrer"
+      >
         <FilePdf size={16} />
         <p>
           {fileName(materialUrl)}
         </p>
-      </div>
+      </a>
   );
 };
 
