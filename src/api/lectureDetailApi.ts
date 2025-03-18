@@ -1,12 +1,7 @@
-import {
-  Chapter,
-  SChapter,
-  transformChapter,
-  transformVideo,
-  Video,
-} from "@/types/video";
-import api from "./api";
+import { SChapter, transformChapter, transformVideo } from "@/types/video";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import api from "./api";
+import { AxiosError } from "axios";
 
 // 챕터 리스트
 export const useChapters = (lectureId: number) =>
@@ -15,9 +10,10 @@ export const useChapters = (lectureId: number) =>
     queryFn: async () => {
       const response = await api.get(`/courses/lecture_chapter/${lectureId}/`);
       const transformedChapter = response.data.map((chapter: SChapter) =>
-        transformChapter(chapter))
+        transformChapter(chapter)
+      );
 
-      console.log(transformedChapter)
+      console.log('useChapter', transformedChapter);
       return response.data.map((chapter: SChapter) =>
         transformChapter(chapter)
       );
@@ -34,44 +30,38 @@ export const useChapterVideo = (chapterVideoId: number) =>
         `/courses/chapter_video/${chapterVideoId}/`
       );
       const transformedVideo = transformVideo(response.data);
-      console.log(transformedVideo)
+      console.log('useChapterVideo', transformedVideo);
       return transformVideo(response.data);
     },
-    // enabled: !!chapterVideoId,
   });
 
-// export const fetchChapterDetails = async (
-//   lectureId: number,
-//   chapterId: number
-// ): Promise<Chapter> => {
-//   try {
-//     const chapterResponse = await fetchChapters(lectureId);
-//     console.log("가져온 챕터 목록:", chapterResponse);
-//     const chapterData = chapterResponse.find(
-//       (ch: Chapter) => Number(ch.id) === chapterId
-//     );
+export const useGetVideoProgress = (chapterVideoId: number | null) => {
+  return useQuery({
+    queryKey: ["videoProgress", chapterVideoId],
+    queryFn: async () => {
+      try {
+        const response = await api.get(
+          `courses/chapter_video/${chapterVideoId}/state/`
+        );
 
-//     if (!chapterData) {
-//       throw new Error(`Chapter with ID ${chapterId} not found`);
-//     }
+        console.log('useGetVideoProgress', response.data)
+        const data = response.data;
 
-//     const videoDetailed = await Promise.all(
-//       chapterData.chapterVideoTitles.map(async (videoSummary: Video) => {
-//         return await fetchChapterVideo(videoSummary.id);
-//       })
-//     );
-//     console.log("chapterData:", chapterData);
-//     console.log(videoDetailed);
-//     console.log({ ...chapterData, chapterVideoTitles: videoDetailed });
-
-//     return {
-//       ...chapterData,
-//       chapterVideoTitles: videoDetailed,
-//     };
-//   } catch (error) {
-//     throw error;
-//   }
-// };
+        return {
+          ...data,
+          isCompleted: data.is_completed ?? data.progress >= 95,
+        };
+      } catch (error) {
+        if ((error as AxiosError).response?.status === 404) {
+          return null;
+        }
+        throw error;
+      }
+    },
+    enabled: !!chapterVideoId,
+    retry: false,
+  });
+};
 
 // 비디오 진행 상태 만들기
 export const useCreateVideoProgress = () => {
@@ -80,19 +70,24 @@ export const useCreateVideoProgress = () => {
     mutationFn: async ({
       chapterVideoId,
       lastWatchedTime,
+      duration,
     }: {
-      chapterVideoId: number;
+      chapterVideoId: number | null;
       lastWatchedTime: number;
+      duration: number;
     }) => {
       const response = await api.post(
         `/courses/chapter_video/${chapterVideoId}/progress/`,
-        { last_watched_time: lastWatchedTime }
+        { last_watched_time: lastWatchedTime, total_duration: duration }
       );
-      console.log('비디오 상태 만들기 완료')
+
+      console.log("비디오 상태 만들기 완료");
       return response.data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["chapterVideo"] });
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["videoProgress", variables.chapterVideoId],
+      });
     },
   });
 };
@@ -104,19 +99,38 @@ export const useUpdateVideoProgress = () => {
     mutationFn: async ({
       chapterVideoId,
       lastWatchedTime,
+      duration,
     }: {
       chapterVideoId: number | null;
       lastWatchedTime: number;
+      duration: number;
     }) => {
-      const response = await api.patch(
-        `/courses/chapter_video/${chapterVideoId}/progress/update/`,
-        { last_watched_time: lastWatchedTime }
-      );
-      console.log('진행률 업데이트')
-      return response.data;
+      if (!chapterVideoId) return null;
+      // const progressRate = duration > 0 ? lastWatchedTime / duration : 0;
+      // const isCompleted = progressRate >= 0.95;
+
+      try {
+        const response = await api.patch(
+          `/courses/chapter_video/${chapterVideoId}/progress/update/`,
+          { last_watched_time: lastWatchedTime, total_duration: duration }
+        );
+        console.log("진행률 업데이트", response.data);
+        return response.data;
+      } catch (error) {
+        if ((error as AxiosError).response?.status === 404) {
+          const createResponse = await api.post(
+            `/courses/chapter_video/${chapterVideoId}/progress/`,
+            { last_watched_time: lastWatchedTime, total_duration: duration }
+          );
+          return createResponse.data;
+        }
+        throw error;
+      }
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["chapterVideo"] });
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["videoProgress", variables.chapterVideoId],
+      });
     },
   });
 };
