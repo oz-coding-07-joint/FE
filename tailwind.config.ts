@@ -49,7 +49,7 @@ const config: Config = {
       backgroundImage: { mainImage: "url('../assets/images/main.jpg')" },
     },
   },
-  plugins: [require("@tailwindcss/line-clamp")],
+  plugins: [],
 };
 
 export default config;
