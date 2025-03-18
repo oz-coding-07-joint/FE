@@ -5,126 +5,118 @@ import {
   transformVideo,
   Video,
 } from "@/types/video";
-// import axios from "axios";
 import api from "./api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-//임시 토큰 사용
-// const mockToken = process.env.NEXT_PUBLIC_TEMPORARY_TOKEN;
+// 챕터 리스트
+export const useChapters = (lectureId: number) =>
+  useQuery({
+    queryKey: ["chapters", lectureId],
+    queryFn: async () => {
+      const response = await api.get(`/courses/lecture_chapter/${lectureId}/`);
+      const transformedChapter = response.data.map((chapter: SChapter) =>
+        transformChapter(chapter))
 
-// const mockAPI = axios.create({
-//   baseURL: "https://api.umdoong.shop/api/v1",
-//   withCredentials: true,
-//   headers: {
-//     Authorization: `Bearer ${mockToken}`,
-//     "Content-Type": "application/json",
-//   },
-// });
-
-export const fetchChapters = async (lectureId: number): Promise<Chapter[]> => {
-  try {
-    const response = await api.get(`/courses/lecture_chapter/${lectureId}/`);
-
-    console.log("fetchChapters API 응답 데이터:", response.data);
-    return response.data.map((chapter: SChapter) => transformChapter(chapter));
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
+      console.log(transformedChapter)
+      return response.data.map((chapter: SChapter) =>
+        transformChapter(chapter)
+      );
+    },
+    staleTime: 1000 * 60 * 10,
+  });
 
 // 비디오 정보 id, title, videoUrl
-export const fetchChapterVideo = async (
-  chapterVideoId: number
-): Promise<Video> => {
-  try {
-    const videoResponse = await api.get(
-      `/courses/chapter_video/${chapterVideoId}/`
-    );
-    const videoData = transformVideo(videoResponse.data);
+export const useChapterVideo = (chapterVideoId: number) =>
+  useQuery({
+    queryKey: ["chapterVideo", chapterVideoId],
+    queryFn: async () => {
+      const response = await api.get(
+        `/courses/chapter_video/${chapterVideoId}/`
+      );
+      const transformedVideo = transformVideo(response.data);
+      console.log(transformedVideo)
+      return transformVideo(response.data);
+    },
+    // enabled: !!chapterVideoId,
+  });
 
-    console.log("videoData:", videoData);
+// export const fetchChapterDetails = async (
+//   lectureId: number,
+//   chapterId: number
+// ): Promise<Chapter> => {
+//   try {
+//     const chapterResponse = await fetchChapters(lectureId);
+//     console.log("가져온 챕터 목록:", chapterResponse);
+//     const chapterData = chapterResponse.find(
+//       (ch: Chapter) => Number(ch.id) === chapterId
+//     );
 
-    return videoData;
-  } catch (error) {
-    throw error;
-  }
-};
+//     if (!chapterData) {
+//       throw new Error(`Chapter with ID ${chapterId} not found`);
+//     }
 
-export const fetchChapterDetails = async (
-  lectureId: number,
-  chapterId: number
-): Promise<Chapter> => {
-  try {
-    const chapterResponse = await fetchChapters(lectureId);
-    console.log("가져온 챕터 목록:", chapterResponse);
-    const chapterData = chapterResponse.find(
-      (ch: Chapter) => Number(ch.id) === chapterId
-    );
+//     const videoDetailed = await Promise.all(
+//       chapterData.chapterVideoTitles.map(async (videoSummary: Video) => {
+//         return await fetchChapterVideo(videoSummary.id);
+//       })
+//     );
+//     console.log("chapterData:", chapterData);
+//     console.log(videoDetailed);
+//     console.log({ ...chapterData, chapterVideoTitles: videoDetailed });
 
-    if (!chapterData) {
-      throw new Error(`Chapter with ID ${chapterId} not found`);
-    }
-
-    const videoDetailed = await Promise.all(
-      chapterData.chapterVideoTitles.map(async (videoSummary: Video) => {
-        return await fetchChapterVideo(videoSummary.id);
-      })
-    );
-    console.log("chapterData:", chapterData);
-    console.log(videoDetailed);
-    console.log({ ...chapterData, chapterVideoTitles: videoDetailed });
-
-    return {
-      ...chapterData,
-      chapterVideoTitles: videoDetailed,
-    };
-  } catch (error) {
-    throw error;
-  }
-};
+//     return {
+//       ...chapterData,
+//       chapterVideoTitles: videoDetailed,
+//     };
+//   } catch (error) {
+//     throw error;
+//   }
+// };
 
 // 비디오 진행 상태 만들기
-export const createVideoProgress = async (
-  chapterVideoId: number | null,
-  lastWatchedTime: number
-) => {
-  try {
-    const response = await api.post(
-      `/courses/chapter_video/${chapterVideoId}/progress/`,
-      {
-        last_watched_time: lastWatchedTime,
-      }
-    );
-
-    return response.data;
-  } catch (error) {
-    console.error("Failed to create video progress", error);
-    throw error;
-  }
+export const useCreateVideoProgress = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      chapterVideoId,
+      lastWatchedTime,
+    }: {
+      chapterVideoId: number;
+      lastWatchedTime: number;
+    }) => {
+      const response = await api.post(
+        `/courses/chapter_video/${chapterVideoId}/progress/`,
+        { last_watched_time: lastWatchedTime }
+      );
+      console.log('비디오 상태 만들기 완료')
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["chapterVideo"] });
+    },
+  });
 };
 
 // 비디오 진행률 업데이트
-export const updateVideoProgress = async (
-  chapterVideoId: number | null,
-  lastWatchedTime: number
-  // isCompleted: boolean,
-) => {
-  try {
-    const response = await api.patch(
-      `/courses/chapter_video/${chapterVideoId}/progress/update/`,
-      {
-        last_watched_time: lastWatchedTime,
-        // is_completed: isCompleted,
-      }
-    );
-
-    if (!response) {
-      throw new Error(`Failed to update resource`);
-    }
-
-    return response.data;
-  } catch (error) {
-    console.error("Failed to update video progress", error);
-    throw error;
-  }
+export const useUpdateVideoProgress = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      chapterVideoId,
+      lastWatchedTime,
+    }: {
+      chapterVideoId: number | null;
+      lastWatchedTime: number;
+    }) => {
+      const response = await api.patch(
+        `/courses/chapter_video/${chapterVideoId}/progress/update/`,
+        { last_watched_time: lastWatchedTime }
+      );
+      console.log('진행률 업데이트')
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["chapterVideo"] });
+    },
+  });
 };
