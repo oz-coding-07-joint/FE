@@ -49,5 +49,5 @@ export const useLectureStore = create<LectureStore>((set, get) => ({
     } catch(error) {
       console.error(`Error fetching chapter details:`, error);
     }
-  }
+  },
 }));

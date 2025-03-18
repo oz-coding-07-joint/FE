@@ -1,7 +1,7 @@
-import { getVideoState, updateVideoProgress } from '@/api/lectureDetailApi';
+import { createVideoProgress, updateVideoProgress } from '@/api/lectureDetailApi';
 import { throttle } from '@/utils/throttle';
 import dynamic from 'next/dynamic';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const ReactPlayer = dynamic(() => import('react-player'), {
   ssr: false,
@@ -21,6 +21,9 @@ type ProgressState = {
 
 const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
   const [progress, setProgress] = useState(0);
+  const [playing, setPlaying] = useState<boolean>(false);
+  const [hasCreatedProgress, setHasCreatedProgress] = useState<boolean>(false);
+  const [videoDuration, setVideoDuration] = useState(0);
 
   const handleProgress = useCallback(
     throttle((state: ProgressState) => {
@@ -28,25 +31,55 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
     }, 5000), []
   );
 
-  const handlePause = async () => {
-    console.log('영상 멈춤', progress)
-    const isCompletedState = await getVideoState(chapterVideoId)
+  const handleDuration = (duration: number) => {
+    setVideoDuration(duration)
+  }
+  const handlePlay = async () => {
+    setPlaying(true);
 
-    try {
-      await updateVideoProgress(chapterVideoId, progress, isCompletedState.isCompleted);
-      console.log('update success')
-    } catch (error) {
-      console.error('update failed', error);
+    if(!hasCreatedProgress && chapterVideoId) {
+      try {
+        await createVideoProgress(chapterVideoId, 0);
+        setHasCreatedProgress(true);
+        console.log('Progress created');
+      } catch(error) {
+        console.error('Failed to create progress', error);
+      }
     }
   }
+
+  const handlePause = async () => {
+    console.log('영상 멈춤', progress)
+    setPlaying(false);
+
+    if(chapterVideoId) {
+      try {
+        await updateVideoProgress(chapterVideoId, progress);
+        console.log('update success')
+      } catch (error) {
+        console.error('update failed', error);
+      }
+    }
+  }
+
+  useEffect(() => {
+    return () => {
+      if(chapterVideoId) {
+        updateVideoProgress(chapterVideoId, progress);
+      }
+    }
+  }, [chapterVideoId, progress])
 
   return (
     <div className='w-[95%] aspect-video mt-5 flex items-center justify-center bg-gray-200'>
       <ReactPlayer
         url={videoUrl}
+        playing={playing}
+        onDuration={handleDuration}
         controls={true}
         onProgress={handleProgress}
         onPause={handlePause}
+        onPlay={handlePlay}
         width='100%'
         height='100%'
       />

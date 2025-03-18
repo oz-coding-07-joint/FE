@@ -1,22 +1,27 @@
 import { Chapter } from '@/types/video';
 import { FilePdf } from 'phosphor-react';
-import React from 'react';
 
-type MaterialListProps = Pick<Chapter, 'materialUrl'>
+type MaterialListProps = Partial<Pick<Chapter, 'materialInfo'>>
 
-const fileName = (url: string) => {
-  const splitedUrl = url.split('/');
-  return splitedUrl[splitedUrl.length - 1]
-}
+const MaterialList = ({ materialInfo }: MaterialListProps) => {
+  if(!materialInfo) return null;
 
-const MaterialList = ({materialUrl}: MaterialListProps) => {
+  const fileName = materialInfo.fileName.replace(/^materials_([^_]+_[^_]+)_\S+\.\w+$/, "$1");
+
   return (
-      <div className='flex items-center gap-3'>
+    <div className='w-[85%]'>
+      <a className='flex items-center gap-3'
+        href={materialInfo.url}
+        download={materialInfo.fileName}
+        target='_blank'
+        rel="noopener noreferrer"
+      >
         <FilePdf size={16} />
-        <p>
-          {fileName(materialUrl)}
+        <p className='w-[200px] line-clamp-1'>
+          {fileName}
         </p>
-      </div>
+      </a>
+    </div>
   );
 };
 
