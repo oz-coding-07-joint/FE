@@ -1,5 +1,5 @@
 import { SChapter, transformChapter, transformVideo } from "@/types/video";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "./api";
 import { AxiosError } from "axios";
 
@@ -132,5 +132,36 @@ export const useUpdateVideoProgress = () => {
         queryKey: ["videoProgress", variables.chapterVideoId],
       });
     },
+  });
+};
+
+export const useGetMultipleVideoProgress = (chapterItems: { id: number }[]) => {
+  return useQueries({
+    queries: chapterItems
+      .filter(item => !!item.id) // null 체크
+      .map(item => ({
+        queryKey: ["videoProgress", item.id],
+        queryFn: async () => {
+          try {
+            const response = await api.get(
+              `courses/chapter_video/${item.id}/state/`
+            );
+            
+            const data = response.data;
+            
+            return {
+              ...data,
+              isCompleted: data.is_completed ?? data.progress >= 95,
+            };
+          } catch (error) {
+            if ((error as AxiosError).response?.status === 404) {
+              return null;
+            }
+            throw error;
+          }
+        },
+        enabled: !!item.id,
+        retry: false,
+      }))
   });
 };

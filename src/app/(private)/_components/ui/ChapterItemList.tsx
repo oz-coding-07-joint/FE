@@ -1,4 +1,4 @@
-import { useGetVideoProgress } from "@/api/lectureDetailApi";
+import { useGetMultipleVideoProgress } from "@/api/lectureDetailApi";
 import { Video } from "@/types/video";
 import { CheckCircle, Circle } from "phosphor-react";
 
@@ -10,9 +10,7 @@ interface ChapterItemListProps {
 
 export const ChapterItemList = ({ chapterItems, onClick, selectedVideoId }: ChapterItemListProps) => {
 
-  const progressQueries = chapterItems.map((item) =>
-    useGetVideoProgress(item.id)
-  )
+  const progressQueries = useGetMultipleVideoProgress(chapterItems);
   console.log('progressQueris', progressQueries)
 
   const handleClick = (chapterItem: Video) => {

@@ -26,8 +26,8 @@ const LectureDetailPage = () => {
 
   const { selectedChapterId, selectedVideoId, setSelectedChapterId, setSelectedVideoId, } = useLectureStore();
 
-  const { data: chapters, isLoading: chaptersLoading } = useChapters(lectureId);
-  const { data: chapterDetails, isLoading: chapterDetailsLoading } = useChapterVideo(selectedVideoId ?? 1);
+  const { data: chapters } = useChapters(lectureId);
+  const { data: chapterDetails } = useChapterVideo(selectedVideoId ?? 1);
 
   useEffect(() => {
     if(chapters && chapters.length > 0) {

@@ -24,8 +24,8 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
   const [progress, setProgress] = useState(0);
   const [playing, setPlaying] = useState<boolean>(false);
   const [duration, setDuration] = useState(0);
-  const [initialized, setInitialized] = useState(false);
-  const [showContinuwModal, setShowContinueModal] = useState(false);
+  // const [initialized, setInitialized] = useState(false);
+  // const [showContinuwModal, setShowContinueModal] = useState(false);
 
   const createProgress = useCreateVideoProgress();
   const updateProgress = useUpdateVideoProgress();
@@ -36,23 +36,23 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
   // 새로운 비디오 선택했을 때 상태 초기화
   useEffect(() => {
     setProgress(0);
-    setInitialized(false);
+    // setInitialized(false);
     setPlaying(false);
     console.log('duration', duration)
   }, [videoUrl, chapterVideoId]);
 
-  useEffect(() => {
-    if (progressData) {
-      if (parseFloat(progressData.last_watched_time) > 0 && !progressData.is_completed) {
-        setShowContinueModal(true);
-      } else {
-        setShowContinueModal(false);
-        if (progressData.is_completed) {
-          setInitialized(true);
-        }
-      }
-    }
-  }, [progressData]);
+  // useEffect(() => {
+  //   if (progressData) {
+  //     if (parseFloat(progressData.last_watched_time) > 0 && !progressData.is_completed) {
+  //       setShowContinueModal(true);
+  //     } else {
+  //       setShowContinueModal(false);
+  //       if (progressData.is_completed) {
+  //         setInitialized(true);
+  //       }
+  //     }
+  //   }
+  // }, [progressData]);
 
   const handlePlay = async () => {
     if (getProgressLoading) return;
