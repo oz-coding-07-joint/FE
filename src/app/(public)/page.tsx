@@ -8,7 +8,7 @@ import Explanation from "./_components/Explanation";
 
 export default function MainPage() {
   return (
-    <div className="bg-primary-900 w-dvw flex flex-col text-xl font-bold">
+    <div className="bg-primary-900 flex flex-col text-xl font-bold">
       <Mainpage />
       <Explanation />
       <Features />
