@@ -47,8 +47,8 @@ const config: Config = {
         Pretendard: ["var(--font-pretendard)", "sans-serif"],
       },
       backgroundImage: {
-        // mainImage: "url('../assets/images/main.jpg')",
-        // landingImage: "url('../assets/images/explanationimg.jpg')",
+        mainImage: "url('../assets/images/main.jpg')",
+        //landingImage: "url('..assets/images/explanationimg.jpg')",
       },
     },
   },
