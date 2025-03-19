@@ -1,30 +1,24 @@
-import { Assignment } from "@/types/assignment";
+import { AxiosError } from "axios";
+import api from "./api";
+import { Assignment } from "@/types/lectureDetail";
 
+// 과제 목록 조회
 export async function fetchAssignments(): Promise<Assignment[]> {
-  // 백엔드 API 호출 (예시)
   try {
-    const response = await fetch("/api/assignments");
-    if (!response.ok) throw new Error("네트워크 응답이 올바르지 않음");
-    const data: Assignment[] = await response.json();
-    return data;
+    const response = await api.get('/assignments/1/');
+    console.log("fetchAssignments API 응답 데이터:", response.data);
+    return response.data.assignments as Assignment[];
   } catch (error) {
-    console.error("과제 목록을 불러오는 중 오류 발생:", error);
-    // 더미 데이터로 대체 (백엔드 오류 시)
-    return [
-      {
-        id: 1,
-        videoId: 1,
-        title: "IT스타트업 사원개발캠프 - GA와 데이터러닝시",
-        content: "첫 번째 과제 설명",
-        fileUrl: "/placeholder.jpg",
-      },
-      {
-        id: 2,
-        videoId: 2,
-        title: "IT스타트업 사원개발캠프 - GA와 데이터러닝시",
-        content: "두 번째 과제 설명",
-        fileUrl: "/placeholder.jpg",
-      },
-    ];
+    const axiosError = error as AxiosError;
+    if (axiosError.response) {
+      console.error("과제 목록을 불러오는 중 오류 발생:", {
+        status: axiosError.response.status,
+        data: axiosError.response.data,
+        message: axiosError.message,
+      });
+    } else {
+      console.error("과제 목록을 불러오는 중 네트워크 오류:", axiosError.message);
+    }
+    return [];
   }
 }
