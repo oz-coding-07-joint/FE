@@ -1,12 +1,9 @@
-import { useCreateVideoProgress, useGetVideoProgress, useUpdateVideoProgress } from '@/api/lectureDetailApi';
+import { useGetVideoProgress, useUpdateVideoProgress } from '@/api/lectureDetailApi';
+import Modal from '@/components/Modal';
 import { throttle } from '@/utils/throttle';
-import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type ReactPlayerType from 'react-player';
-
-const ReactPlayer = dynamic(() => import('react-player'), {
-  ssr: false,
-});
+import ReactPlayer from 'react-player';
 
 type VideoPlayerProps = {
   videoUrl: string;
@@ -21,92 +18,136 @@ type ProgressState = {
 };
 
 const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
-  const [progress, setProgress] = useState(0);
-  const [playing, setPlaying] = useState<boolean>(false);
+  const [isWindow, setIsWindow] = useState(false)
+  const [playing, setPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
-  // const [initialized, setInitialized] = useState(false);
-  // const [showContinuwModal, setShowContinueModal] = useState(false);
+  const progressRef = useRef(0);
+  const playerRef = useRef<ReactPlayerType | null>(null);
+  const [continueModal, setContinueModal] = useState(false);
+  const [calculatedLastWatchedTime, setCalculatedLastWatchedTime] = useState<number>(0)
 
-  const createProgress = useCreateVideoProgress();
   const updateProgress = useUpdateVideoProgress();
   const { data: progressData, refetch, isLoading: getProgressLoading } = useGetVideoProgress(chapterVideoId)
 
-  const playerRef = useRef<ReactPlayerType | null>(null);
-
-  // 새로운 비디오 선택했을 때 상태 초기화
   useEffect(() => {
-    setProgress(0);
-    // setInitialized(false);
-    setPlaying(false);
-    console.log('duration', duration)
-  }, [videoUrl, chapterVideoId]);
+    setIsWindow(true)
+  }, [])
 
+  // 다른 영상으로 갔을 때 상태 초기화
+  useEffect(() => {
+    progressRef.current = 0;
+    setPlaying(false);
+    setCalculatedLastWatchedTime(0);
+  }, [videoUrl]);
+
+  // lastWatchedTime계산
+  useEffect(() => {
+    if (progressData?.progress !== '0.00' && !progressData?.isCompleted && duration > 0) {
+      const progressAsNumber = Number(progressData?.progress);
+
+      if (!isNaN(progressAsNumber) && progressAsNumber > 0) {
+        const lastWatchedTime = (progressAsNumber / 100) * duration;
+        setCalculatedLastWatchedTime(lastWatchedTime);
+      }
+    }
+  }, [progressData?.progress])
+
+  // 모달
   // useEffect(() => {
-  //   if (progressData) {
-  //     if (parseFloat(progressData.last_watched_time) > 0 && !progressData.is_completed) {
-  //       setShowContinueModal(true);
-  //     } else {
-  //       setShowContinueModal(false);
-  //       if (progressData.is_completed) {
-  //         setInitialized(true);
-  //       }
-  //     }
+  // const handleModal = () => {
+  //   if (progressData?.progress !== '0.00' && !progressData?.isCompleted && duration > 0) {
+  //     setContinueModal(true);
   //   }
-  // }, [progressData]);
+  // }
+  // }, [chapterVideoId]);
+
+  const handleContinue = () => {
+    if (progressData?.progress !== '0.00' && duration > 0) {
+      const progressAsNumber = Number(progressData?.progress);
+      const lastWatchedTime = (progressAsNumber / 100) * duration;
+      playerRef.current?.seekTo(lastWatchedTime, 'seconds')
+    } else {
+      console.log('handleContinue error')
+    }
+    setContinueModal(false);
+    setPlaying(true);
+  }
+
+  const handleBegin = () => {
+    setContinueModal(false);
+    setPlaying(true);
+  }
 
   const handlePlay = async () => {
     if (getProgressLoading) return;
-    setPlaying(true);
-    await refetch();
-    if (progressData || progressData?.progress !== 0) {
-      await updateProgress.mutateAsync({ chapterVideoId, lastWatchedTime: progress, duration });
-    } else {
-      await createProgress.mutateAsync({ chapterVideoId, lastWatchedTime: progress, duration });
+
+    if (progressData?.progress === '0.00' && duration > 0) {
+      setPlaying(true);
+    } else if (!progressData?.isCompleted) {
+      setContinueModal(true);
+      handlePause();
     }
+
+    await refetch();
   }
 
   const handlePause = async () => {
     setPlaying(false);
-    await refetch();
   }
 
   const handleEnded = async () => {
     setPlaying(false);
-    await updateProgress.mutateAsync({ chapterVideoId, lastWatchedTime: progress, duration });
-    await refetch();
+    setContinueModal(false)
+    await updateProgress.mutateAsync({ chapterVideoId, lastWatchedTime: duration, duration });
   };
 
   const handleProgress = useCallback(
     throttle((state: ProgressState) => {
-      setProgress(state.playedSeconds);
+      const playedSeconds = state.playedSeconds;
+      progressRef.current = playedSeconds;
 
-      updateProgress.mutate({
-        chapterVideoId, lastWatchedTime: state.playedSeconds, duration
-      })
+      if (chapterVideoId && !progressData?.isCompleted && playedSeconds > (calculatedLastWatchedTime || 0)) {
+        updateProgress.mutate({
+          chapterVideoId,
+          lastWatchedTime: playedSeconds,
+          duration,
+        });
+      }
     }, 3000),
-    [playing, chapterVideoId, progressData, duration]
+    [playing, chapterVideoId, calculatedLastWatchedTime, duration]
   );
 
   const handleDuration = (totalDuration: number) => {
+    console.log('Video duration:', totalDuration);
     setDuration(totalDuration);
   }
 
   return (
-    <div className='w-[95%] aspect-video mt-5 flex items-center justify-center bg-gray-200'>
-      <ReactPlayer
-        ref={playerRef}
-        url={videoUrl}
-        playing={playing}
-        onDuration={handleDuration}
-        controls={true}
-        onProgress={handleProgress}
-        onPause={handlePause}
-        onPlay={handlePlay}
-        onEnded={handleEnded}
-        width='100%'
-        height='100%'
-      />
-    </div>
+    <>
+      {isWindow && (
+        <div className='w-[95%] aspect-video mt-5 flex items-center justify-center bg-gray-200'>
+          <ReactPlayer
+            ref={playerRef}
+            url={videoUrl}
+            playing={playing}
+            onDuration={handleDuration}
+            controls={true}
+            onProgress={handleProgress}
+            onPause={handlePause}
+            onPlay={handlePlay}
+            onEnded={handleEnded}
+            width='100%'
+            height='100%'
+          />
+
+          <Modal isOpen={continueModal} onClose={() => setContinueModal(false)}>
+            <p>이어서 보시겠습니까?</p>
+            <button onClick={handleContinue}> 이어보기 </button>
+            <button onClick={handleBegin}> 처음부터 </button>
+          </Modal>
+        </div>
+      )}
+    </>
   );
 };
 
