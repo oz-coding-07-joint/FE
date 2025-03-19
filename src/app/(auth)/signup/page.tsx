@@ -6,8 +6,11 @@ import Input from "@/components/Input";
 import { isValidEmail, isValidPassword, isValidName, isValidPhoneNumber } from "@/utils/validation";
 import { useEmailVerification, useGetTerms, useSignup, useVerifyEmailCode } from "@/hooks/useAuth";
 import { AxiosError } from "axios";
-import TermsModal from "./TermModal";
+import TermsModal from "../_components/TermModal";
 import { Term } from "@/types/auth";
+import Logoimg from "@/assets/images/logo.png";
+import Link from "next/link";
+import Image from "next/image";
 
 const SignupPage = () => {
   const [email, setEmail] = useState("");
@@ -35,6 +38,7 @@ const SignupPage = () => {
   const [errors, setErrors] = useState({
     email: "",
     name: "",
+    nickname: "",
     password: "",
     confirmPassword: "",
     phoneNumber: "",
@@ -135,23 +139,32 @@ const SignupPage = () => {
   };
 
   const handleSignUp = () => {
-    if (Object.values(errors).some((error) => error !== "")) return;
+    signupMutation.reset();
+    // 기존 에러 초기화
+    setErrors({
+      email: "",
+      name: "",
+      nickname: "",
+      password: "",
+      confirmPassword: "",
+      phoneNumber: "",
+    });
   
     // 필수 약관 동의 확인
     const requiredTerms = terms?.filter((term) => term.isRequired) || [];
     const allRequiredAgreed = requiredTerms.every((term) => agreedTerms[term.id]);
-
+  
     if (!allRequiredAgreed) {
       alert("모든 필수 약관에 동의해야 회원가입이 가능합니다.");
       return;
     }
-
+  
     const termsAgreements = terms
-    ? terms.map((term) => ({
-        terms: term.id,
-        is_agree: !!agreedTerms[term.id],
-      }))
-    : [];
+      ? terms.map((term) => ({
+          terms: term.id,
+          is_agree: !!agreedTerms[term.id],
+        }))
+      : [];
   
     const userData = {
       email,
@@ -162,21 +175,32 @@ const SignupPage = () => {
       terms_agreements: termsAgreements,
     };
   
-    //console.log("회원가입 요청 데이터:", userData);
-  
+    // 회원가입 API 요청
     signupMutation.mutate(userData, {
       onSuccess: () => {
-        //console.log("회원가입 및 자동 로그인 완료:", data);
         alert("회원가입 성공! 자동으로 로그인됩니다.");
       },
       onError: (error) => {
-        console.error("회원가입 실패:", error);
-        alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+        const axiosError = error as AxiosError<{ [key: string]: string[] }>; // ✅ 백엔드에서 받은 에러를 객체로 변환
+        if (axiosError.response?.data) {
+          const errorData = axiosError.response.data;
+  
+          // 각 필드별로 에러 메시지 설정
+          setErrors((prev) => ({
+            ...prev,
+            email: errorData.email ? errorData.email[0] : "",
+            name: errorData.name ? errorData.name[0] : "",
+            nickname: errorData.nickname ? errorData.nickname[0] : "",
+            password: errorData.password ? errorData.password[0] : "",
+            confirmPassword: errorData.confirmPassword ? errorData.confirmPassword[0] : "",
+            phoneNumber: errorData.phone_number ? errorData.phone_number[0] : "",
+          }));
+        } else {
+          alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+        }
       },
     });
   };
-  
-  
 
 
 
@@ -191,9 +215,12 @@ const SignupPage = () => {
     !Object.values(errors).some((error) => error !== "");
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-primary-900">
-      <div className="bg-white w-[600px] py-10 px-14 rounded-md shadow-md">
-        <h2 className="text-4xl font-bold text-center mb-6 text-muted-600">회원가입</h2>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-primary-900 space-y-4">
+      <Link href="/" className="cursor-pointer">
+        <Image src={Logoimg} alt="Logo" className="w-32" />
+      </Link>
+      <div className="bg-white w-[600px] py-8 px-14 rounded-md shadow-md">
+        <h2 className="text-3xl font-bold text-center mb-6 text-muted-600">회원가입</h2>
 
         <div className="space-y-4">
           {/* 이름 */}
@@ -251,7 +278,7 @@ const SignupPage = () => {
             {errors.phoneNumber && <p className="text-secondary-500 text-xs">{errors.phoneNumber}</p>}
           </div>
 
-          {/* 개인정보처리방침 */}
+          {/* 약관동의 */}
           <div className="mt-2">
             {isTermsLoading ? (
               <p className="text-sm text-muted-400">약관을 불러오는 중...</p>
@@ -284,7 +311,7 @@ const SignupPage = () => {
           </div>
 
           {/* 회원가입 버튼 */}
-          <Button label="회원가입" size="full" variant="primary" onClick={handleSignUp} disabled={!isFormValid} />
+          <Button label="회원가입" size="full" variant="primary" onClick={handleSignUp} />
         </div>
       </div>
        {/* 약관 모달 (분리된 컴포넌트 사용) */}

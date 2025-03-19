@@ -72,7 +72,7 @@ export default function LecturePage() {
   if (isLoading) return <div className="text-center text-gray-600">Loading...</div>;
 
   return (
-    <div className="p-6 bg-white min-h-[calc(100vh-4rem)]">
+    <div className="p-6 min-h-[calc(100vh-4rem)]">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">강의 목록</h1>
       <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,300px))] gap-4 justify-items-center">
         {lectures.map((lecture) => (
