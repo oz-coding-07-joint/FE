@@ -48,7 +48,7 @@ const config: Config = {
       },
       backgroundImage: {
         mainImage: "url('../assets/images/main.jpg')",
-        //landingImage: "url('..assets/images/explanationimg.jpg')",
+        landingImage: "url('..assets/images/explanationimg.jpg')",
       },
     },
   },
