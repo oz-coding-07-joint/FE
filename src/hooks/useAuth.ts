@@ -90,23 +90,18 @@ export const useLogout = () => {
 
 // 회원정보 수정
 export const useUpdateUserInfo = () => {
-  const { updateUser } = useAuthStore();
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: updateUserInfo,
-    onSuccess: async (updatedUser) => {
-      console.log("받은 업데이트된 유저 정보:", updatedUser);
-      updateUser(updatedUser); // zustand 상태 업데이트
-      console.log("업데이트 후 Zustand user 상태:", useAuthStore.getState().user);
-      await queryClient.invalidateQueries({ queryKey: ["user"] });
-      console.log("회원정보 수정 완료");
+    onSuccess: async () => {
+      console.log("회원정보 수정 완료..");
+      window.location.reload(); // 새로고침하여 유저 정보 자동으로 다시 불러오기
     },
     onError: (error) => {
       console.error("회원정보 수정 실패:", error);
     },
   });
 };
+
 
 // 비밀번호 변경
 export const useChangePassword = () => {
