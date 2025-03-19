@@ -21,9 +21,9 @@ export const postLogin = async (credentials: { email: string; password: string }
   
     // 액세스 토큰을 쿠키에 저장
     Cookies.set("access_token", response.data.access, {
-      expires: 1, // 1일 후 만료
-      secure: true, // HTTPS 환경에서만 전송
-      sameSite: "Strict", // CSRF 보호
+        expires: 0.01, // 15분 (1일 = 24시간, 0.01일 ≈ 15분)
+        secure: true, // HTTPS 환경에서만 전송
+        sameSite: "Strict", // CSRF 보호
     });
   
     return transformUser(response.data.user); // 유저 데이터 변환 후 반환
