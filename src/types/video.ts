@@ -45,8 +45,8 @@ interface SVideo {
         progress: number,
         is_completed: boolean,
     };
-    is_completed?: boolean;
-    last_watched_time?: string;
+    // is_completed?: boolean;
+    // last_watched_time?: string;
 }
 
 export interface Video {
@@ -58,8 +58,8 @@ export interface Video {
         progress: number,
         isCompleted: boolean,
     };
-    isCompleted?: boolean;
-    lastWatchedTime?: string;
+    // isCompleted?: boolean;
+    // lastWatchedTime?: string;
 }
 
 export function transformVideo(video: SVideo): Video {

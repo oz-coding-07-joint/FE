@@ -1,5 +1,6 @@
 'use client'
 
+import { useChapters, useChapterVideo } from '@/api/lectureDetailApi';
 import MaterialList from '@/app/(private)/_components/lecture/MaterialList';
 import VideoPlayer from '@/app/(private)/_components/lecture/VideoPlayer';
 import { ChapterItemList } from '@/app/(private)/_components/ui/ChapterItemList';
@@ -13,25 +14,36 @@ import clsx from 'clsx';
 import { useParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 
+interface ParamIdTitle {
+  id: number;
+  title: string;
+}
+
 const LectureDetailPage = () => {
   const params = useParams();
   const lectureId = Number(params.lectureId);
   const [activeTab, setActiveTab] = useState<'lecture' | 'materials'>('lecture');
 
-  const { chapters, chapterDetails, selectedChapterId, selectedVideoId, setSelectedChapterId, setSelectedVideoId, fetchChapters, fetchChapterDetails, } = useLectureStore();
-  useEffect(() => {
-    if (lectureId) {
-      fetchChapters(lectureId);
-    }
-  }, [lectureId]);
+  const { selectedChapterId, selectedVideoId, setSelectedChapterId, setSelectedVideoId, } = useLectureStore();
+
+  const { data: chapters } = useChapters(lectureId);
+  const { data: chapterDetails } = useChapterVideo(selectedVideoId ?? 1);
 
   useEffect(() => {
-    if (lectureId) {
-      fetchChapterDetails(lectureId);
+    if(chapters && chapters.length > 0) {
+      setSelectedChapterId(chapters[0].id);
     }
-  }, [lectureId, selectedChapterId]);
+  }, [chapters])
 
-  const currentVideo = chapterDetails?.chapterVideoTitles.find(video => video.id === selectedVideoId);
+  const currentChapter = chapters?.find((ch : ParamIdTitle) => ch.id === selectedChapterId)
+
+  useEffect(() => {
+    if(currentChapter && currentChapter.chapterVideoTitles?.length > 0){
+      setSelectedVideoId(currentChapter.chapterVideoTitles[0].id)
+    }
+  }, [currentChapter, setSelectedChapterId]);
+
+  const currentVideo = currentChapter?.chapterVideoTitles?.find((video: ParamIdTitle) => video.id === selectedVideoId);
 
   const tabClassName = (tab: 'lecture' | 'materials') =>
     clsx('h-max', activeTab === tab ? 'font-bold text-primary-900' : 'text-muted-400')
@@ -60,7 +72,7 @@ const LectureDetailPage = () => {
                 <Suspense fallback={<LoadingSkeleton />}>
                   <div className='flex justify-center m-[1rem]'>
                     <SelectBox
-                      options={chapters.map((ch) => ({ id: ch.id, title: ch.title }))}
+                      options={chapters.map((ch: ParamIdTitle) => ({ id: ch.id, title: ch.title }))}
                       selectedChapterId={selectedChapterId}
                       onChange={(id) => {
                         setSelectedChapterId(id);
@@ -72,17 +84,17 @@ const LectureDetailPage = () => {
               )}
               <div className='flex justify-center'>
                 {activeTab === 'lecture' ? (
-                  chapterDetails && chapterDetails.chapterVideoTitles?.length ? (
-                    <ChapterItemList chapterItems={chapterDetails.chapterVideoTitles} onClick={(video: Video) => setSelectedVideoId(video.id)} selectedVideoId={selectedVideoId} />
+                  currentChapter && currentChapter?.chapterVideoTitles?.length ? (
+                    <ChapterItemList chapterItems={currentChapter?.chapterVideoTitles} onClick={(video: Video) => setSelectedVideoId(video.id)} selectedVideoId={selectedVideoId} />
                   ) : (<LoadingSkeleton />)
                 ) : (
-                  <MaterialList materialInfo={chapterDetails?.materialInfo} />
+                  <MaterialList materialInfo={currentChapter?.materialInfo} />
                 )}
               </div>
             </DetailContainer>
             <div className='bg-white w-full max-w-6xl rounded-md shadow-md flex flex-col items-center gap-[10px]'>
               <Suspense fallback={<LoadingSkeleton />}>
-                <VideoPlayer videoUrl={currentVideo?.videoUrl ?? ''} chapterVideoId={selectedChapterId} />
+                <VideoPlayer videoUrl={chapterDetails?.videoUrl ?? ''} chapterVideoId={selectedVideoId} />
               </Suspense>
               {currentVideo?.isCompleted && (
                 <div className='w-[95%] flex justify-end'>
