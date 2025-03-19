@@ -97,10 +97,10 @@ export default function LecturePage() {
                   {lecture.progressRate}% 강좌 완료
                 </p>
                 <div className="flex mt-4">
-                  <button className="bg-white border border-gray-300 text-gray-600 px-3 py-1 rounded flex-1">
+                  <button className="bg-white border border-gray-300 text-gray-600 px-3 py-1 rounded flex-1" onClick={() => handleLectureDetail(lecture.id)}>
                     수업 정보 보기
                   </button>
-                  <button className="bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700 flex-1 ml-3">
+                  <button className="bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700 flex-1 ml-3" onClick={() => handleReviewClick(lecture.id)}>
                     수업 후기 작성
                   </button>
                 </div>

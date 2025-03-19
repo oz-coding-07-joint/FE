@@ -39,15 +39,21 @@ const AssignmentPage = () => {
       const response = await axios.get(`/api/assignments?chapterId=${selectedChapter}`);
       console.log("Fetched assignments:", response.data);
       setAssignments(response.data);
-      const initialStatus = response.data.reduce((acc: any, curr: ChapterAssignment) => {
-        acc[curr.assignment.id] = "미제출";
-        return acc;
-      }, {});
+  
+      const initialStatus: Record<number, string> = response.data.reduce(
+        (acc: Record<number, string>, curr: ChapterAssignment) => {
+          acc[curr.assignment.id] = "미제출";
+          return acc;
+        },
+        {} as Record<number, string>
+      );
+  
       setAssignmentStatus(initialStatus);
     } catch (error) {
       console.error("과제 목록을 불러오는 데 실패했습니다:", error);
     }
   };
+  
 
   const fetchComments = async (assignmentId: number) => {
     try {

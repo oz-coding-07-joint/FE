@@ -201,19 +201,6 @@ const SignupPage = () => {
       },
     });
   };
-
-
-
-  const isFormValid =
-    name &&
-    email &&
-    verificationCode &&
-    nickname &&
-    password &&
-    confirmPassword &&
-    phoneNumber &&
-    !Object.values(errors).some((error) => error !== "");
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-primary-900 space-y-4">
       <Link href="/" className="cursor-pointer">
