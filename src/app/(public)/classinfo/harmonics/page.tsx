@@ -5,9 +5,75 @@ import Harmony from "../../../../assets/images/harmony.jpg";
 import { useState } from "react";
 import RegistrationModal from "@/app/(public)/classinfo/harmonics/RegistrationModal";
 import Button from "@/components/Button";
+import { useAuthStore } from "@/store/useAuthStore";
+
+import api from "@/api/api";
+import { isAxiosError } from "axios";
+import LoginModal from "@/app/(auth)/_components/LoginModal";
+
+interface ResponseDataType {
+  detail: string;
+}
 
 const ClassDetailPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { user, showLoginModal, setShowLoginModal } = useAuthStore();
+
+  const handleRegistrationClick = async () => {
+    if (!user) {
+      alert("로그인이 필요합니다.");
+      setShowLoginModal(true);
+    } else {
+      try {
+        const response = await api.post<ResponseDataType>(
+          "registrations/enrollment/1/"
+        );
+        // 201 성공 처리
+        // response.data.detail;
+        if (response.status === 201) {
+          alert("수강 신청이 완료 되었습니다.");
+          setIsModalOpen(true);
+        }
+
+        // console.log(response);
+        setIsModalOpen(true);
+      } catch (error) {
+        if (isAxiosError<ResponseDataType>(error)) {
+          if (error.response) {
+            // status 값에 따른 처리
+            // 에러처리 로직
+            switch (error.response.status) {
+              // 400 : 이미 수강 신청이 되었습니다.
+              case 400:
+                alert("이미 수강 신청이 되었습니다.");
+                setIsModalOpen(true);
+                break;
+
+              // 401 : 비로그인
+              case 401:
+                alert("로그인이 필요합니다.");
+                break;
+
+              // 403 : 수강생 아님
+              case 403:
+                alert("수강생만 신청할 수 있습니다.");
+                break;
+
+              // 404 : 요청주소 에러 ( 404, 500 한번에 처리)
+              // 500 : 서버 에러
+              default:
+                alert(
+                  "알수 없는 오류가 발생했습니다. 나중에 다시 시도해주세요"
+                );
+            }
+          } else {
+            alert("네트워크 오류가 발생했습니다.");
+          }
+          console.log(error);
+        }
+      }
+    }
+  };
   return (
     <>
       <div className="bg-primary-900 flex-grow h-full pt-40 flex flex-col items-center gap-12 text-white ">
@@ -85,7 +151,7 @@ const ClassDetailPage = () => {
             label="수강신청하기"
             size="large"
             variant="primary"
-            onClick={() => setIsModalOpen(true)}
+            onClick={handleRegistrationClick}
           />
         </div>
       </div>
@@ -93,6 +159,12 @@ const ClassDetailPage = () => {
         <RegistrationModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
+        />
+      )}
+      {showLoginModal && (
+        <LoginModal
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
         />
       )}
     </>
