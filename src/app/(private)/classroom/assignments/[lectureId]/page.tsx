@@ -6,7 +6,7 @@ import AssignmentDetail from "@/app/(private)/_components/ui/AssignmentDetail";
 import AssignmentFeedback from "@/app/(private)/_components/ui/AssignmentFeedback";
 import api from "@/api/api";
 import { useAuthStore } from "@/store/useAuthStore";
-import { Assignment, transformAssignment } from "@/types/assignment";
+import { Assignment } from "@/types/assignment";
 
 interface LectureDetail {
   id: number;
