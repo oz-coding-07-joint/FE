@@ -72,7 +72,7 @@ export default function LecturePage() {
   if (isLoading) return <div className="text-center text-gray-600">Loading...</div>;
 
   return (
-    <div className="p-6 bg-white min-h-[calc(100vh-4rem)]">
+    <div className="p-6 min-h-[calc(100vh-4rem)]">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">강의 목록</h1>
       <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,300px))] gap-4 justify-items-center">
         {lectures.map((lecture) => (
@@ -97,10 +97,10 @@ export default function LecturePage() {
                   {lecture.progressRate}% 강좌 완료
                 </p>
                 <div className="flex mt-4">
-                  <button className="bg-white border border-gray-300 text-gray-600 px-3 py-1 rounded flex-1">
+                  <button className="bg-white border border-gray-300 text-gray-600 px-3 py-1 rounded flex-1" onClick={() => handleLectureDetail(lecture.id)}>
                     수업 정보 보기
                   </button>
-                  <button className="bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700 flex-1 ml-3">
+                  <button className="bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700 flex-1 ml-3" onClick={() => handleReviewClick(lecture.id)}>
                     수업 후기 작성
                   </button>
                 </div>

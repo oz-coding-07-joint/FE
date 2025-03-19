@@ -9,6 +9,7 @@ import Image from "next/image";
 import { useLogin } from "@/hooks/useAuth";
 import { AxiosError } from "axios";
 import { isValidEmail } from "@/utils/validation"; // 이메일 유효성 검사 추가
+import { useKakaoAuth } from "@/hooks/useKakaoAuth";
 
 type LoginModalProps = {
   isOpen: boolean;
@@ -22,8 +23,6 @@ interface ErrorResponse {
 }
 
 const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
-  const KAKAO_CLIENT_ID = process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID;
-  const REDIRECT_URI = process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI;
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,6 +34,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
 
   // 로그인 mutation
   const loginMutation = useLogin();
+  const { loginWithKakao } = useKakaoAuth();
 
   // 로그인 요청 핸들러
   const handleLogin = () => {
@@ -66,6 +66,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
         onSuccess: () => {
           console.log("로그인 성공!");
           onClose(); // 로그인 성공 시에만 모달 닫기
+          isOpen = false;
         },
         onError: (error) => {
           console.error("로그인 실패:", error);
@@ -86,11 +87,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
     );
   };
 
-  // Kakao 로그인
-  const handleKakaoLogin = () => {
-    window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
-  }
-
+  
   // 입력값 변경 시 해당 필드의 에러 초기화
   const handleChange = (field: "email" | "password", value: string) => {
     if (field === "email") {
@@ -162,7 +159,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
       {/* 카카오 로그인 버튼 */}
       <button
         className="w-12 h-12 flex items-center justify-center rounded-full mx-auto"
-        onClick={handleKakaoLogin}
+        onClick={loginWithKakao}
       >
         <Image src={KakaoLogo} alt="카카오 로그인" className="w-32" />
       </button>
