@@ -1,4 +1,5 @@
 import { User } from "./auth";
+
 interface SAssignmentList {
     lecture_chapter_id: number;
     assignment: SAssignment;
@@ -16,7 +17,7 @@ export function transformAssignmentList(assignmentList: SAssignmentList): Assign
     };
 }
 
-interface SAssignment {
+export interface SAssignment {
     id: number;
     chapter_video_id: number;
     title: string;
@@ -32,6 +33,8 @@ export interface Assignment {
     title: string;
     content: string;
     fileUrl: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export function transformAssignment(assignment: SAssignment): Assignment {
@@ -41,6 +44,8 @@ export function transformAssignment(assignment: SAssignment): Assignment {
         title: assignment.title,
         content: assignment.content,
         fileUrl: assignment.file_url,
+        createdAt: assignment.created_at,
+        updatedAt: assignment.updated_at,
     };
 }
 
