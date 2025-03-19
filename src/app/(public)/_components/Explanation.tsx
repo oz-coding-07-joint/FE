@@ -1,6 +1,3 @@
-import Image from "next/image";
-import LandingImg from "@/assets/images/explanationImg.jpg";
-
 export default function Explanation() {
   return (
     <div className="relative h-[1080px] flex flex-col justify-center items-center gap-16 tracking-tighter">
