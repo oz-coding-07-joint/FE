@@ -1,19 +1,9 @@
 import { useGetVideoProgress, useUpdateVideoProgress } from '@/api/lectureDetailApi';
 import Modal from '@/components/Modal';
 import { throttle } from '@/utils/throttle';
-// import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type ReactPlayerType from 'react-player';
 import ReactPlayer from 'react-player';
-
-// const ReactPlayer = dynamic(() => import('react-player').then((mod) => mod.default), {
-//   ssr: false,import { useState } from 'react';
-
-// });
-
-// 1. progress가 '100.00'일 때 모달이 안뜨도록
-// 2. progress가 '100.00'이 되고 나면 영상을 다시 재생해도 progress, isCompleted상태는 변하지 않게
-// 3. 렌더링되면 바로 모달이 뜨는게 아니라 영상 재생 버튼을 눌러야 모달이 뜨도록
 
 type VideoPlayerProps = {
   videoUrl: string;
@@ -52,7 +42,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
 
   // lastWatchedTime계산
   useEffect(() => {
-    if (progressData?.progress !== '0.00' && duration > 0) {
+    if (progressData?.progress !== '0.00' && !progressData?.isCompleted && duration > 0) {
       const progressAsNumber = Number(progressData?.progress);
 
       if (!isNaN(progressAsNumber) && progressAsNumber > 0) {
@@ -63,11 +53,13 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
   }, [progressData?.progress])
 
   // 모달
-  useEffect(() => {
-    if (progressData?.progress !== '0.00' && !progressData?.isCompleted && duration > 0) {
-      setContinueModal(true);
-    }
-  }, [chapterVideoId]);
+  // useEffect(() => {
+  // const handleModal = () => {
+  //   if (progressData?.progress !== '0.00' && !progressData?.isCompleted && duration > 0) {
+  //     setContinueModal(true);
+  //   }
+  // }
+  // }, [chapterVideoId]);
 
   const handleContinue = () => {
     if (progressData?.progress !== '0.00' && duration > 0) {
@@ -88,7 +80,14 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
 
   const handlePlay = async () => {
     if (getProgressLoading) return;
-    setPlaying(true);
+
+    if (progressData?.progress === '0.00' && duration > 0) {
+      setPlaying(true);
+    } else if (!progressData?.isCompleted) {
+      setContinueModal(true);
+      handlePause();
+    }
+
     await refetch();
   }
 
@@ -107,7 +106,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
       const playedSeconds = state.playedSeconds;
       progressRef.current = playedSeconds;
 
-      if (chapterVideoId && playedSeconds > (calculatedLastWatchedTime || 0)) {
+      if (chapterVideoId && !progressData?.isCompleted && playedSeconds > (calculatedLastWatchedTime || 0)) {
         updateProgress.mutate({
           chapterVideoId,
           lastWatchedTime: playedSeconds,
