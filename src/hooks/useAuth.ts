@@ -2,7 +2,6 @@
 
 import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
 import {
-  postKakaoLogin,
   postLogin,
   postLogout,
   getUserInfo,
@@ -81,6 +80,7 @@ export const useLogout = () => {
       Cookies.remove("access_token"); // 쿠키에서 토큰 삭제
       logout(); // zustand 상태 초기화
       await queryClient.invalidateQueries({ queryKey: ["user"] });
+      window.location.reload();
     },
     onError: (error) => {
       console.error("로그아웃 실패:", error);
@@ -88,42 +88,20 @@ export const useLogout = () => {
   });
 };
 
-// 카카오 로그인
-export const useKakaoLogin = () => {
-  const { login } = useAuthStore();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: postKakaoLogin,
-    onSuccess: async (user) => {
-      if (user) {
-        login(user);
-        await queryClient.invalidateQueries({ queryKey: ["user"] });
-      }
-    },
-    onError: (error) => {
-      console.error("카카오 로그인 실패:", error);
-    },
-  });
-};
-
 // 회원정보 수정
 export const useUpdateUserInfo = () => {
-  const { updateUser } = useAuthStore();
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: updateUserInfo,
-    onSuccess: async (updatedUser) => {
-      updateUser(updatedUser); // zustand 상태 업데이트
-      await queryClient.invalidateQueries({ queryKey: ["user"] });
-      console.log("회원정보 수정 완료");
+    onSuccess: async () => {
+      console.log("회원정보 수정 완료..");
+      window.location.reload(); // 새로고침하여 유저 정보 자동으로 다시 불러오기
     },
     onError: (error) => {
       console.error("회원정보 수정 실패:", error);
     },
   });
 };
+
 
 // 비밀번호 변경
 export const useChangePassword = () => {

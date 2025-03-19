@@ -3,7 +3,7 @@ import { useState } from "react";
 import UserMenu from '@/components/UserMenu';
 import React from 'react';
 import { useAuthStore } from "@/store/useAuthStore";
-import LoginModal from "@/app/(auth)/(login)/LoginModal";
+import LoginModal from "@/app/(auth)/_components/LoginModal";
 
 const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

@@ -46,7 +46,10 @@ const config: Config = {
       fontFamily: {
         Pretendard: ["var(--font-pretendard)", "sans-serif"],
       },
-      backgroundImage: { mainImage: "url('../assets/images/main.jpg')" },
+      backgroundImage: {
+        mainImage: "url('../assets/images/main.jpg')",
+        landingImage: "url('../assets/images/explanationimg.jpg')",
+      },
     },
   },
   plugins: [],

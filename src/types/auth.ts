@@ -7,6 +7,7 @@ export interface SUser {
     provider?: string; //소셜로그인
     access?: string;
     refresh?: string;
+    is_active?: boolean;
 }
 
 export interface User {
@@ -18,6 +19,7 @@ export interface User {
     provider?: string; //소셜로그인
     accessToken?: string;
     refreshToken?: string;
+    isActive?: boolean;
 
 }
 
@@ -31,6 +33,7 @@ export function transformUser(user: SUser): User {
         provider: user.provider,
         accessToken: user.access,
         refreshToken: user.refresh,
+        isActive: user.is_active,
     };
 }
 

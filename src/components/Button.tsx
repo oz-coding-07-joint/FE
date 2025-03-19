@@ -35,7 +35,7 @@ export default function Button({
       onClick={onClick}
       disabled={disabled}
       type={type}
-      className={`w-auto rounded-sm text-center transition duration-200 ${
+      className={`w-auto min-w-fit rounded-sm text-center transition duration-200 whitespace-nowrap ${
         sizeClasses[size]
       } ${variantClasses[variant]} ${
         disabled ? "opacity-70 cursor-not-allowed" : ""
@@ -45,4 +45,3 @@ export default function Button({
     </button>
   );
 }
-

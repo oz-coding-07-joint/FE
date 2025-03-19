@@ -36,6 +36,7 @@ const AssignmentPage = () => {
   const { user } = useAuthStore();
 
   // 📌 강의 상세 정보 가져오기
+
   useEffect(() => {
     const fetchLecture = async () => {
       try {
