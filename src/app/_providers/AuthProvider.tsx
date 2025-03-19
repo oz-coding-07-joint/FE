@@ -9,7 +9,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   // 컴포넌트 마운트 시 유저 정보 복원 (자동 로그인)
   useEffect(() => {
     restoreUser();
-  }, []);
+  }, [restoreUser]);
 
 
   return <>{children}</>;

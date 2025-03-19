@@ -3,9 +3,16 @@ import api from "./api";
 import Cookies from "js-cookie"; 
 
 // 카카오 로그인
-export const postKakaoLogin = async () => {
-    const response = await api.post("/users/kakao-login/");
-    return response.data;
+export const postKakaoLogin = async (code: string): Promise<User> => {
+    const response = await api.post<{ access: string; user: SUser }>("/users/kakao-login/", code);
+    // 액세스 토큰을 쿠키에 저장
+    Cookies.set("access_token", response.data.access, {
+        expires: 1, // 1일 후 만료
+        secure: true, // HTTPS 환경에서만 전송
+        sameSite: "Strict", // CSRF 보호
+    });
+
+    return transformUser(response.data.user); // 유저 데이터 변환 후 반환
 };
 
 //로그인
@@ -57,7 +64,7 @@ export const updateUserInfo = async (userData: { name: string; email: string; ph
 
 // 비밀번호 변경
 export const changePassword = async (passwordData: { old_password: string; new_password: string }) => {
-    const response = await api.post("/users/change-password/", passwordData);
+    const response = await api.patch("/users/password-change/", passwordData);
     return response.data;
 };
 
