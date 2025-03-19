@@ -2,7 +2,6 @@
 
 import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
 import {
-  postKakaoLogin,
   postLogin,
   postLogout,
   getUserInfo,
