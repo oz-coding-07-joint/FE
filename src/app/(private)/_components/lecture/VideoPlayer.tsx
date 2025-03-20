@@ -25,6 +25,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
   const playerRef = useRef<ReactPlayerType | null>(null);
   const [continueModal, setContinueModal] = useState(false);
   const [calculatedLastWatchedTime, setCalculatedLastWatchedTime] = useState<number>(0)
+  const [hasPlayed, setHasPlayed] = useState(false)
 
   const updateProgress = useUpdateVideoProgress();
   const { data: progressData, refetch, isLoading: getProgressLoading } = useGetVideoProgress(chapterVideoId)
@@ -38,6 +39,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
     progressRef.current = 0;
     setPlaying(false);
     setCalculatedLastWatchedTime(0);
+    setHasPlayed(false);
   }, [videoUrl]);
 
   // lastWatchedTime계산
@@ -53,13 +55,13 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
   }, [progressData?.progress])
 
   // 모달
-  // useEffect(() => {
-  // const handleModal = () => {
-  //   if (progressData?.progress !== '0.00' && !progressData?.isCompleted && duration > 0) {
-  //     setContinueModal(true);
-  //   }
-  // }
-  // }, [chapterVideoId]);
+  useEffect(() => {
+    if (playing && !hasPlayed && progressData?.progress !== '0.00' && !progressData?.isCompleted && duration > 0) {
+      setContinueModal(true);
+      setPlaying(false);
+      setHasPlayed(true);
+    }
+  }, [playing]);
 
   const handleContinue = () => {
     if (progressData?.progress !== '0.00' && duration > 0) {
@@ -80,15 +82,9 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
 
   const handlePlay = async () => {
     if (getProgressLoading) return;
-
-    if (progressData?.progress === '0.00' && duration > 0) {
-      setPlaying(true);
-    } else if (!progressData?.isCompleted) {
-      setContinueModal(true);
-      handlePause();
-    }
-
     await refetch();
+
+    setPlaying(true)
   }
 
   const handlePause = async () => {
@@ -106,7 +102,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
       const playedSeconds = state.playedSeconds;
       progressRef.current = playedSeconds;
 
-      if (chapterVideoId && !progressData?.isCompleted && playedSeconds > (calculatedLastWatchedTime || 0)) {
+      if (!continueModal &&chapterVideoId && !progressData?.isCompleted && playedSeconds > (calculatedLastWatchedTime || 0)) {
         updateProgress.mutate({
           chapterVideoId,
           lastWatchedTime: playedSeconds,
@@ -118,7 +114,6 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
   );
 
   const handleDuration = (totalDuration: number) => {
-    console.log('Video duration:', totalDuration);
     setDuration(totalDuration);
   }
 
