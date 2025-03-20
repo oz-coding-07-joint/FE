@@ -34,7 +34,19 @@ const AssignmentList = ({ selectedChapter, setSelectedChapter, setSelectedAssign
       const fetchAssignments = async () => {
         try {
           const response = await api.get(`/assignments/${selectedChapter}/`);
-          setAssignments(response.data.map((assignment: SAssignment) => transformAssignment(assignment)));
+      
+          // ✅ API 응답 구조 확인
+          console.log("📌 API 응답 데이터:", response.data);
+      
+          // ✅ 배열이 있는지 확인하고, 올바르게 가져오기
+          const assignmentList = response.data.assignments || []; // 'assignments' 키에서 데이터 가져오기
+      
+          if (Array.isArray(assignmentList)) {
+            setAssignments(assignmentList.map((assignment: SAssignment) => transformAssignment(assignment)));
+          } else {
+            console.error("⚠️ 예상과 다른 응답 형식입니다. 배열이 아닙니다.", assignmentList);
+            setAssignments([]); // 배열이 아닐 경우 빈 배열로 초기화
+          }
         } catch (error) {
           console.error("❌ 과제 목록을 불러오는 데 실패했습니다:", error);
         }

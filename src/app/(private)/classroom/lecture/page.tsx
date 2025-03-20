@@ -30,7 +30,6 @@ const LecturePage = () => {
     setSelectedLectureTitle(lectureTitle);
     openModal("review"); // 리뷰 작성 모달 열기
   };
-
   return (
     <div className="bg-muted-100 h-screen px-5 pt-5">
       <h1 className="text-3xl font-bold pb-3">수업자료</h1>
@@ -45,6 +44,7 @@ const LecturePage = () => {
             >
               <LectureCard lecture={lecture} type="lecture" />
               <div className="flex gap-2 p-4">
+
                 <Button
                   label="강의상세보기"
                   onClick={() => handleLectureDetail(lecture.id)}
