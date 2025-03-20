@@ -1,18 +1,14 @@
 "use client";
+
 import Modal from "@/components/Modal";
 import Button from "@/components/Button";
+import { useModalStore } from "@/store/useModalStore"; // Zustand 모달 상태 추가
 
-type RegistrationModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-};
+export default function RegistrationModal() {
+  const { closeModal } = useModalStore(); // Zustand 상태 사용
 
-export default function registrationModal({
-  isOpen,
-  onClose,
-}: RegistrationModalProps) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal modalKey="registration">
       <div className="flex flex-col p-6 gap-5 items-center text-muted-600">
         <h2 className="text-4xl">수강신청</h2>
         <span>
@@ -33,7 +29,12 @@ export default function registrationModal({
             <li>주의사항내용</li>
           </ul>
         </div>
-        <Button label="닫기" size="small" variant="outline" onClick={onClose} />
+        <Button
+          label="닫기"
+          size="small"
+          variant="outline"
+          onClick={() => closeModal("registration")} // 모달 닫기
+        />
       </div>
     </Modal>
   );

@@ -24,15 +24,13 @@ export const useKakaoAuth = () => {
   };
 
   // 로그인 후 돌아올 페이지로 이동
-  const handleRedirect = () => {
-    useEffect(() => {
-      const redirectPath = localStorage.getItem("redirect_after_login");
-      if (redirectPath) {
-        router.replace(redirectPath);
-        localStorage.removeItem("redirect_after_login");
-      }
-    }, []);
-  };
+  useEffect(() => {
+    const redirectPath = localStorage.getItem("redirect_after_login");
+    if (redirectPath) {
+      router.replace(redirectPath);
+      localStorage.removeItem("redirect_after_login");
+    }
+  }, [router]); // useEffect를 Hook 내부에서 실행
 
-  return { loginWithKakao, handleRedirect };
+  return { loginWithKakao };
 };
