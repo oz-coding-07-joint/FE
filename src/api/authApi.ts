@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 
 // 카카오 로그인
 export const postKakaoLogin = async (code: string): Promise<User> => {
-    const response = await api.post<{ access: string; user: SUser }>("/users/kakao-login/", code);
+    const response = await api.post<{ access: string; user: SUser }>("/users/kakao-login/", {code});
     // 액세스 토큰을 쿠키에 저장
     Cookies.set("access_token", response.data.access, {
         expires: 0.01, // 15분 (1일 = 24시간, 0.01일 ≈ 15분)
