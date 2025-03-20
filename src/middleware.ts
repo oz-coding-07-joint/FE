@@ -1,12 +1,19 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
- 
-// This function can be marked `async` if using `await` inside
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+
 export function middleware(request: NextRequest) {
-  return NextResponse.redirect(new URL('/home', request.url))
+  const cookieHeader = request.headers.get("cookie") || "";
+  const hasAccessToken = cookieHeader.includes("access_token=");
+
+  if (!hasAccessToken) {
+    const redirectUrl = new URL("/", request.url);
+    redirectUrl.searchParams.set("login_required", "true"); // 첫 리디렉트 감지용 쿼리 추가
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  return NextResponse.next();
 }
- 
-// See "Matching Paths" below to learn more
+
 export const config = {
-  matcher: '/classroom/:path*',
-}
+  matcher: ["/classroom/:path*", "/mypage/:path*"], // 보호된 경로 설정
+};

@@ -56,9 +56,10 @@ export const useLogin = () => {
     mutationFn: postLogin,
     onSuccess: async (user) => {
       if (user) {
-        console.log("로그인 성공:", user);
+        //console.log("로그인 성공:", user);
         login(user); // 로그인 성공 시 zustand 업데이트
         await queryClient.invalidateQueries({ queryKey: ["user"] });
+        window.location.reload();//새로고침
       } else {
         console.error("로그인 실패: 사용자 정보가 없습니다.");
       }
@@ -73,6 +74,7 @@ export const useLogin = () => {
 export const useLogout = () => {
   const { logout } = useAuthStore();
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: postLogout,
@@ -80,7 +82,8 @@ export const useLogout = () => {
       Cookies.remove("access_token"); // 쿠키에서 토큰 삭제
       logout(); // zustand 상태 초기화
       await queryClient.invalidateQueries({ queryKey: ["user"] });
-      window.location.reload();
+      
+      router.push("/");
     },
     onError: (error) => {
       console.error("로그아웃 실패:", error);

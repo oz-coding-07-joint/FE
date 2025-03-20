@@ -1,6 +1,6 @@
 export default function Features() {
   return (
-    <div className="w-dvw h-[1080px] flex flex-col justify-center items-center gap-[50px] pt-[100px] text-white">
+    <div className="w-vw h-[1080px] flex flex-col justify-center items-center gap-[50px] pt-[100px] text-white">
       <div className="text-4xl text-center flex flex-col">
         <span>상상上上을</span>
         <span>상상想像하는</span>
