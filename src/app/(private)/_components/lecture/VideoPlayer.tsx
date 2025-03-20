@@ -1,4 +1,5 @@
 import { useGetVideoProgress, useUpdateVideoProgress } from '@/api/lectureDetailApi';
+import Button from '@/components/Button';
 import Modal from '@/components/Modal';
 import { throttle } from '@/utils/throttle';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -102,7 +103,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
       const playedSeconds = state.playedSeconds;
       progressRef.current = playedSeconds;
 
-      if (!continueModal &&chapterVideoId && !progressData?.isCompleted && playedSeconds > (calculatedLastWatchedTime || 0)) {
+      if (!continueModal && chapterVideoId && !progressData?.isCompleted && playedSeconds > (calculatedLastWatchedTime || 0)) {
         updateProgress.mutate({
           chapterVideoId,
           lastWatchedTime: playedSeconds,
@@ -136,9 +137,11 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
           />
 
           <Modal isOpen={continueModal} onClose={() => setContinueModal(false)}>
-            <p>이어서 보시겠습니까?</p>
-            <button onClick={handleContinue}> 이어보기 </button>
-            <button onClick={handleBegin}> 처음부터 </button>
+            <p className='flex justify-center mb-10'>이어서 보시겠습니까?</p>
+            <div className='w-full flex justify-center gap-10'>
+              <Button onClick={handleBegin} size='small' variant='outline' label='처음부터' />
+              <Button onClick={handleContinue} size='small' label='이어보기' />
+            </div>
           </Modal>
         </div>
       )}
