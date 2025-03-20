@@ -8,6 +8,7 @@ import DetailContainer from '@/app/(private)/_components/ui/DetailContainer';
 import SelectBox from '@/app/(private)/_components/ui/SelectBox';
 import Button from '@/components/Button';
 import LoadingSkeleton from '@/components/LoadingSkeleton';
+import { useLectureListStore } from '@/store/useLectureListStore';
 import { useLectureStore } from '@/store/useLectureStore';
 import { Video } from '@/types/video';
 import clsx from 'clsx';
@@ -23,11 +24,14 @@ const LectureDetailPage = () => {
   const params = useParams();
   const lectureId = Number(params.lectureId);
   const [activeTab, setActiveTab] = useState<'lecture' | 'materials'>('lecture');
-
+  
+  const lectures = useLectureListStore((state) => state.lectures)
   const { selectedChapterId, selectedVideoId, setSelectedChapterId, setSelectedVideoId, } = useLectureStore();
-
+  
   const { data: chapters } = useChapters(lectureId);
   const { data: chapterDetails } = useChapterVideo(selectedVideoId ?? 1);
+  
+  const selectedLecture = lectures.find((lecture) => lecture.id === lectureId);
 
   useEffect(() => {
     if(chapters && chapters.length > 0) {
@@ -52,7 +56,7 @@ const LectureDetailPage = () => {
     <div className='bg-muted-100 h-screen px-5 pt-5'>
       {lectureId && (
         <>
-          <h1 className='text-3xl font-bold pb-3'>title</h1>
+          <h1 className='text-3xl font-bold pb-3'>{selectedLecture?.title}</h1>
           <div className='flex gap-5'>
             <DetailContainer
               leftTab={
