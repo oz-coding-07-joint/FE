@@ -1,11 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useEffect } from "react";
+import LoadingSkeleton from '@/components/LoadingSkeleton';
+import Page from "@/components/Page";
 import { useAssignmentStore } from "@/store/useAssignmentStore";
 import clsx from 'clsx';
-import { Suspense } from 'react';
-import LoadingSkeleton from '@/components/LoadingSkeleton';
+import { Suspense, useEffect } from "react";
 
 export default function AssignmentsPage() {
   const { assignments, isLoading, fetchAssignments } = useAssignmentStore();
@@ -15,8 +15,7 @@ export default function AssignmentsPage() {
   }, [fetchAssignments]);
 
   return (
-    <div className="bg-muted-100 h-screen px-5 pt-5">
-      <h1 className="text-3xl font-bold pb-3">과제 목록</h1>
+    <Page title="과제 목록">
       {isLoading ? (
         <Suspense fallback={<LoadingSkeleton />}>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,300px))] gap-4 justify-items-center">
@@ -59,6 +58,6 @@ export default function AssignmentsPage() {
           ))}
         </div>
       )}
-    </div>
+    </Page>
   );
 }

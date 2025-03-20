@@ -1,14 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { useEffect, useState } from 'react';
+import Button from '@/components/Button';
+import LoadingSkeleton from '@/components/LoadingSkeleton';
+import Modal from '@/components/Modal';
+import Page from '@/components/Page';
 import { useLectureListStore } from '@/store/useLectureListStore';
 import clsx from 'clsx';
-import { Suspense } from 'react';
-import LoadingSkeleton from '@/components/LoadingSkeleton';
-import Button from '@/components/Button';
-import Modal from '@/components/Modal';
 import Link from 'next/link';
+import { Suspense, useEffect, useState } from 'react';
+import LectureCardSkeleton from './_components/LectureCardSkeleton';
+
 
 const LecturePage = () => {
   const { lectures, lectureDetail, fetchLectures, fetchLectureDetail, submitReview } = useLectureListStore();
@@ -56,15 +58,12 @@ const LecturePage = () => {
   };
 
   return (
-    <div className="bg-muted-100 h-screen px-5 pt-5">
-      <h1 className="text-3xl font-bold pb-3">강의 목록</h1>
+    <Page title='강의 목록'>
       {lectures.length === 0 ? (
         <Suspense fallback={<LoadingSkeleton />}>
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,300px))] gap-4 justify-items-center">
-            {Array(3).fill(null).map((_, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-md w-full min-w-[250px] max-w-[300px] h-[300px]">
-                <LoadingSkeleton />
-              </div>
+          <div className="flex gap-5 flex-wrap">
+            {Array(13).fill(null).map((_, index) => (
+              <LectureCardSkeleton key={index}/>
             ))}
           </div>
         </Suspense>
@@ -116,23 +115,23 @@ const LecturePage = () => {
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {lectureDetail && (
           <div className="p-6">
-            <h2 className="text-xl font-bold text-gray-800 mb-6">수업정보</h2>
-            <div className="w-full border-b-2 border-gray-600 mt-1 mb-4"></div>
+            <h2 className="text-2xl font-bold text-gray-800">수업정보</h2>
+            <div className="w-full border-b border-gray-600 my-5"></div>
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-1">강의명</label>
-              <p className="text-gray-600">{lectureDetail.title}</p>
+              <label className="block text-sm font-semibold text-gray-500 mb-1">강의명</label>
+              <p className="text-lg font-medium text-gray-800">{lectureDetail.title}</p>
             </div>
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-1">강의소개</label>
-              <p className="text-gray-600">{lectureDetail.introduction}</p>
+              <label className="block text-sm font-semibold text-gray-500 mb-1">강의소개</label>
+              <p className="text-lg font-medium text-gray-800">{lectureDetail.introduction}</p>
             </div>
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-1">학습목표</label>
-              <p className="text-gray-600">{lectureDetail.learning_objective}</p>
+              <label className="block text-sm font-semibold text-gray-500 mb-1">학습목표</label>
+              <p className="text-lg font-medium text-gray-800">{lectureDetail.learning_objective}</p>
             </div>
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-1">강사</label>
-              <p className="text-gray-600">{lectureDetail.instructor?.experience || "정보 없음"}</p>
+              <label className="block text-sm font-semibold text-gray-500 mb-1">강사</label>
+              <p className="text-lg font-medium text-gray-800">{lectureDetail.instructor?.experience || "정보 없음"}</p>
             </div>
             <div className="mt-6">
               <div className="flex justify-end gap-2">
@@ -193,7 +192,7 @@ const LecturePage = () => {
           </div>
         </div>
       </Modal>
-    </div>
+    </Page>
   );
 };
 

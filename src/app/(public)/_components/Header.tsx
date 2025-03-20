@@ -13,9 +13,9 @@ const Header = () => {
   const { user } = useAuthStore(); // 로그인한 유저 정보 가져오기
 
   return (
-    <header className="bg-[#131723] w-full h-24 text-center fixed flex items-center justify-between bg-opacity-90 text-white z-10 px-10 box-border">
+    <header className="bg-[#131723] w-full h-20 text-center fixed flex items-center justify-between bg-opacity-90 text-white z-10 px-10 box-border">
       <Link href="/" className="cursor-pointer">
-        <Image src={Logoimg} alt="Logo" className="w-32" />
+        <Image src={Logoimg} alt="Logo" className="w-20" />
       </Link>
 
       <nav className="flex gap-3 items-center">

@@ -8,6 +8,7 @@ import DetailContainer from '@/app/(private)/_components/ui/DetailContainer';
 import SelectBox from '@/app/(private)/_components/ui/SelectBox';
 import Button from '@/components/Button';
 import LoadingSkeleton from '@/components/LoadingSkeleton';
+import Page from '@/components/Page';
 import { useLectureListStore } from '@/store/useLectureListStore';
 import { useLectureStore } from '@/store/useLectureStore';
 import { Video } from '@/types/video';
@@ -53,10 +54,9 @@ const LectureDetailPage = () => {
     clsx('h-max', activeTab === tab ? 'font-bold text-primary-900' : 'text-muted-400')
 
   return (
-    <div className='bg-muted-100 h-screen px-5 pt-5'>
+    <Page title={selectedLecture?.title || ""}>
       {lectureId && (
         <>
-          <h1 className='text-3xl font-bold pb-3'>{selectedLecture?.title}</h1>
           <div className='flex gap-5'>
             <DetailContainer
               leftTab={
@@ -109,7 +109,7 @@ const LectureDetailPage = () => {
           </div>
         </>
       )}
-    </div>
+    </Page>
   )
 };
 

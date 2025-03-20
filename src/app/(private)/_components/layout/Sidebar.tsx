@@ -1,9 +1,11 @@
 "use client";
 
-import { Archive, ClipboardText } from "phosphor-react";
-import Link from "next/link";
-import React, { useState } from "react";
+import Logoimg from "@/assets/images/logo.png";
 import clsx from "clsx";
+import Image from "next/image";
+import Link from "next/link";
+import { Archive, ClipboardText } from "phosphor-react";
+import { useState } from "react";
 
 const Sidebar = () => {
   const [activeTab, setActiveTab] = useState<'lecture' | 'assignment'>('lecture');
@@ -14,10 +16,12 @@ const Sidebar = () => {
   return (
     <aside className="w-60 min-w-[160px] bg-gray-800 text-white relative">
       <div className="flex flex-col justify-center">
-        <h2 className="text-2xl h-16 flex justify-center items-center border-b border-[#3B4861]">
-          소리상상 강의실
+        <h2 className="text-xl h-20 flex justify-center items-center border-b border-[#3B4861] font-bold">
+          <Link href={"/"}>
+          <Image src={Logoimg} alt="Logo" className="w-20" />
+          </Link>
         </h2>
-        <ul className="flex flex-col mt-10 ml-6 gap-4">
+        <ul className="flex flex-col mt-10 ml-6 gap-6">
           <li>
             <Link href="/classroom/lecture" className={tabClassName('lecture')}
               onClick={() => setActiveTab('lecture')}>

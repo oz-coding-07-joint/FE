@@ -260,6 +260,7 @@ const MyPage = () => {
             <Input 
               type="text" 
               value={verificationCode} 
+              placeholder="인증번호를 입력해 주세요"
               onChange={(e) => setVerificationCode(e.target.value)}
               button={<Button label="인증번호 확인" onClick={handleCheckVerificationCode} size="small" variant="primary" />}
             />

@@ -25,9 +25,9 @@ export default function Button({
 
   // 버튼 스타일 설정
   const variantClasses = {
-    primary: "bg-primary-900 text-white",
-    secondary: "bg-muted-500 text-white",
-    outline: "bg-white border border-muted-200 text-muted-400",
+    primary: "bg-primary-900 text-white hover:brightness-105 active:brightness-110",
+    secondary: "bg-muted-500 text-white hover:bg-muted-550 active:bg-muted-600",
+    outline: "bg-white border border-muted-200 text-muted-400 hover:brightness-95 active:brightness-90",
   };
 
   return (
