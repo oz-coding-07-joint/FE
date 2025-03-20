@@ -39,7 +39,7 @@ api.interceptors.response.use(
 
       try {
         const refreshResponse = await axios.post(
-          "/users/refresh-token",
+          "/users/token-refresh/",
           {},
           { withCredentials: true } // 리프레시 토큰을 쿠키에서 자동 전송
         );
