@@ -65,6 +65,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
   }, [playing]);
 
   const handleContinue = () => {
+    console.log(progressData?.progress)
     if (progressData?.progress !== '0.00' && duration > 0) {
       const progressAsNumber = Number(progressData?.progress);
       const lastWatchedTime = (progressAsNumber / 100) * duration;
