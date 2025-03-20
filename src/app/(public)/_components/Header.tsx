@@ -1,15 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Logoimg from "@/assets/images/logo.png";
-import LoginModal from "@/app/(auth)/_components/LoginModal";
 import UserMenu from "@/components/UserMenu";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useModalStore } from "@/store/useModalStore";
 
 const Header = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { openModal } = useModalStore();
   const { user } = useAuthStore(); // 로그인한 유저 정보 가져오기
 
   return (
@@ -29,13 +28,11 @@ const Header = () => {
         {user ? (
           <UserMenu />
         ) : (
-          <button onClick={() => setIsModalOpen(true)} className="hover:text-gray-400">
+          <button onClick={() => openModal("login")} className="hover:text-gray-400">
             로그인
           </button>
         )}
       </nav>
-
-      <LoginModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </header>
   );
 };

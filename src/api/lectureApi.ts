@@ -1,13 +1,14 @@
 import { AxiosError } from "axios";
 import api from "./api";
-import { Chapter, Lecture, LectureDetail, ReviewResponse } from "@/types/lectureDetail"; // 경로 조정 필요
+import { Lecture, SLecture, transformLecture } from "@/types/class";
+import { Chapter, SChapter, transformChapter } from "@/types/video";
 
 // 강의 목록 조회
 export const fetchLectures = async (): Promise<Lecture[]> => {
   try {
-    const response = await api.get('/courses/lecture/');
+    const response = await api.get<{ lectures: SLecture[] }>('/courses/lecture/');
     console.log("fetchLectures API 응답 데이터:", response.data.lectures.length);
-    return response.data.lectures;
+    return response.data.lectures.map((lecture: SLecture) => transformLecture(lecture));
   } catch (error) {
     const axiosError = error as AxiosError;
     if (axiosError.response) {
@@ -24,11 +25,11 @@ export const fetchLectures = async (): Promise<Lecture[]> => {
 };
 
 // 강의 상세 정보 조회
-export const fetchLectureDetail = async (lectureId: number): Promise<LectureDetail | null> => {
+export const fetchLectureDetail = async (lectureId: number): Promise<Lecture | null> => {
   try {
-    const response = await api.get(`/courses/lecture/${lectureId}/`);
+    const response = await api.get<SLecture>(`/courses/lecture/${lectureId}/`);
     console.log("fetchLectureDetail API 응답 데이터:", response.data);
-    return response.data as LectureDetail;
+    return transformLecture(response.data);
   } catch (error) {
     const axiosError = error as AxiosError;
     if (axiosError.response) {
@@ -45,11 +46,11 @@ export const fetchLectureDetail = async (lectureId: number): Promise<LectureDeta
 };
 
 // 후기 제출
-export const submitReview = async (lectureId: number, reviewData: { star: number; content: string }): Promise<ReviewResponse> => {
+export const submitReview = async (lectureId: number, reviewData: { star: number; content: string }): Promise<boolean> => {
   try {
-    const response = await api.post(`/reviews/${lectureId}/`, reviewData);
-    console.log("submitReview API 응답 데이터:", response.data);
-    return response.data as ReviewResponse;
+    await api.post(`/reviews/${lectureId}/`, reviewData);
+    console.log("후기 제출 완료");
+    return true; // 성공 시 true 반환
   } catch (error) {
     const axiosError = error as AxiosError;
     if (axiosError.response) {
@@ -65,12 +66,13 @@ export const submitReview = async (lectureId: number, reviewData: { star: number
   }
 };
 
+
 // 챕터 목록 조회
 export const fetchChapters = async (lectureId: number): Promise<Chapter[]> => {
   try {
     const response = await api.get(`/courses/lecture_chapter/${lectureId}/`);
     console.log("fetchChapters API 응답 데이터:", response.data);
-    return response.data as Chapter[];
+    return response.data.lectures.map((chapter: SChapter) => transformChapter(chapter)); 
   } catch (error) {
     const axiosError = error as AxiosError;
     if (axiosError.response) {
@@ -89,9 +91,9 @@ export const fetchChapters = async (lectureId: number): Promise<Chapter[]> => {
 // 챕터 상세 정보 조회
 export const fetchChapterDetails = async (lectureId: number, chapterId: number): Promise<Chapter | null> => {
   try {
-    const response = await api.get(`/courses/lecture/${lectureId}/chapter/${chapterId}/`);
+    const response = await api.get<SChapter>(`/courses/lecture/${lectureId}/chapter/${chapterId}/`);
     console.log("fetchChapterDetails API 응답 데이터:", response.data);
-    return response.data as Chapter;
+    return transformChapter(response.data);
   } catch (error) {
     const axiosError = error as AxiosError;
     if (axiosError.response) {

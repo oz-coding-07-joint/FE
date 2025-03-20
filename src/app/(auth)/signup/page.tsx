@@ -11,6 +11,7 @@ import { Term } from "@/types/auth";
 import Logoimg from "@/assets/images/logo.png";
 import Link from "next/link";
 import Image from "next/image";
+import { useModalStore } from "@/store/useModalStore";
 
 const SignupPage = () => {
   const [email, setEmail] = useState("");
@@ -23,9 +24,13 @@ const SignupPage = () => {
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const { data: terms, isLoading: isTermsLoading } = useGetTerms();
   const [agreedTerms, setAgreedTerms] = useState<{ [key: number]: boolean }>({});
-  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
   const [selectedTerm, setSelectedTerm] = useState<Term | null>(null);
+
+  const { openModal } = useModalStore();
   
+  //타이머 추가
+  const [countdown, setCountdown] = useState(0);
+  const [timerActive, setTimerActive] = useState(false);
 
 
   const handleToggleAgreement = (termId: number) => {
@@ -42,6 +47,7 @@ const SignupPage = () => {
     password: "",
     confirmPassword: "",
     phoneNumber: "",
+    verificationCode: "",
   });
 
   const signupMutation = useSignup();
@@ -54,10 +60,37 @@ const SignupPage = () => {
     }
   }, [signupMutation.isError]);
 
+  //타이머 시작 함수
+  const startCountdown = () => {
+    if (timerActive) return; 
+    console.log("타이머시작");
+    setCountdown(300); // 5분 (300초)
+    setTimerActive(true);
+  };
+
+  //타이머 작동 함수
+  useEffect(() => {
+    if (timerActive && countdown > 0) {
+      const timer = setInterval(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+    if (countdown === 0) {
+      setTimerActive(false);
+    }
+  }, [countdown, timerActive]);
+
   /* 이메일 인증 요청 */
   const handleCheckEmail = async () => {
     if (!email) {
       setErrors((prev) => ({ ...prev, email: "이메일을 입력하세요." }));
+      return;
+    }
+
+    if (timerActive) {
+      alert("이미 인증번호가 전송되었습니다. 5분 후 다시 시도해주세요.");
       return;
     }
 
@@ -66,6 +99,8 @@ const SignupPage = () => {
       alert(response?.message);
 
       setErrors((prev) => ({ ...prev, email: "" }));
+
+      startCountdown();
     } catch {
       setErrors((prev) => ({ ...prev, email: "이메일 인증 요청에 실패했습니다." }));
     }
@@ -83,19 +118,22 @@ const SignupPage = () => {
       alert(response?.message);
 
       setIsEmailVerified(true);
-
       setErrors((prev) => ({ ...prev, verificationCode: "" }));
+      
+      setIsEmailVerified(true); // 인증 완료 상태 변경
+      setCountdown(0); // 타이머 숨기기
+      setTimerActive(false); //타이머 종료
+
     } catch (error: unknown) {
-      const axiosError = error as AxiosError<{ message?: string }>; // `AxiosError`로 타입 캐스팅
+      const axiosError = error as AxiosError<{ message?: string }>;
 
       console.error("인증 실패:", axiosError.response?.data || axiosError.message);
 
-      // 서버 응답에서 오류 메시지를 가져오기
-      const errorMessage =
-        axiosError.response?.data?.message || "인증번호가 올바르지 않습니다.";
+      const errorMessage = axiosError.response?.data?.message || "인증번호가 올바르지 않습니다.";
 
       if (errorMessage.includes("expired")) {
         alert("인증 코드가 만료되었습니다. 다시 요청해주세요.");
+        setTimerActive(false);
       }
 
       setErrors((prev) => ({
@@ -148,6 +186,7 @@ const SignupPage = () => {
       password: "",
       confirmPassword: "",
       phoneNumber: "",
+      verificationCode: "",
     });
   
     // 필수 약관 동의 확인
@@ -235,7 +274,13 @@ const SignupPage = () => {
               disabled={isEmailVerified}
               button={<Button label="인증번호 확인" onClick={handleCheckVerificationCode} size="small" variant="primary" disabled={isEmailVerified} />}
             />
+            {countdown > 0 && (
+              <p className="text-xs text-muted-400">
+                인증번호 유효시간 : {Math.floor(countdown / 60)}분{countdown % 60}초
+              </p>
+            )}
             {errors.email && <p className="text-secondary-500 text-xs">{errors.email}</p>}
+            {errors.verificationCode && <p className="text-secondary-500 text-xs">{errors.verificationCode}</p>}
           </div>
 
           {/* 닉네임 */}
@@ -286,7 +331,7 @@ const SignupPage = () => {
                   <span
                     onClick={() => {
                       setSelectedTerm(term);
-                      setIsTermsModalOpen(true);
+                      openModal("termsModal");
                     }}
                     className="text-sm text-muted-300 underline cursor-pointer"
                   >
@@ -302,7 +347,7 @@ const SignupPage = () => {
         </div>
       </div>
        {/* 약관 모달 (분리된 컴포넌트 사용) */}
-      <TermsModal isOpen={isTermsModalOpen} onClose={() => setIsTermsModalOpen(false)} term={selectedTerm} />
+      <TermsModal term={selectedTerm} />
     </div>
   );
 };

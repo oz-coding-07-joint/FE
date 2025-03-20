@@ -10,6 +10,7 @@ import TermsModal from "../_components/TermModal";
 import Logoimg from "@/assets/images/logo.png";
 import Link from "next/link";
 import Image from "next/image";
+import { useModalStore } from "@/store/useModalStore";
 
 const SocialSignupPage = () => {
   const [nickname, setNickname] = useState("");
@@ -17,8 +18,9 @@ const SocialSignupPage = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const { data: terms, isLoading: isTermsLoading } = useGetTerms();
   const [agreedTerms, setAgreedTerms] = useState<{ [key: number]: boolean }>({});
-  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
   const [selectedTerm, setSelectedTerm] = useState<Term | null>(null);
+
+  const { openModal } = useModalStore();
   
   
   const handleToggleAgreement = (termId: number) => {
@@ -166,7 +168,7 @@ const SocialSignupPage = () => {
                   <span
                     onClick={() => {
                       setSelectedTerm(term);
-                      setIsTermsModalOpen(true);
+                      openModal("termsModal");
                     }}
                     className="text-sm text-muted-300 underline cursor-pointer"
                   >
@@ -182,7 +184,7 @@ const SocialSignupPage = () => {
         </div>
       </div>
       {/* 약관 모달 (분리된 컴포넌트 사용) */}
-      <TermsModal isOpen={isTermsModalOpen} onClose={() => setIsTermsModalOpen(false)} term={selectedTerm} />
+      <TermsModal term={selectedTerm} />
     </div>
   );
 };
