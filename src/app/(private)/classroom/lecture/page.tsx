@@ -8,6 +8,7 @@ import { Suspense } from 'react';
 import LoadingSkeleton from '@/components/LoadingSkeleton';
 import Button from '@/components/Button';
 import Modal from '@/components/Modal';
+import Link from 'next/link';
 
 const LecturePage = () => {
   const { lectures, lectureDetail, fetchLectures, fetchLectureDetail, submitReview } = useLectureListStore();
@@ -52,7 +53,7 @@ const LecturePage = () => {
     } else {
       alert("별점과 후기 내용을 입력해 주세요.");
     }
-  }; 
+  };
 
   return (
     <div className="bg-muted-100 h-screen px-5 pt-5">
@@ -74,11 +75,13 @@ const LecturePage = () => {
               key={lecture.id}
               className={clsx('bg-white rounded-lg shadow-md w-full min-w-[250px] max-w-[300px]', 'hover:shadow-lg transition-shadow')}
             >
-              <img
-                src={lecture.thumbnail || "/assets/images/no-img.png"}
-                alt={lecture.title}
-                className="w-full h-48 object-cover rounded-t-lg"
-              />
+              <Link href={`/classroom/lecture/${lecture.id}`}>
+                <img
+                  src={lecture.thumbnail || "/assets/images/no-img.png"}
+                  alt={lecture.title}
+                  className="w-full h-48 object-cover rounded-t-lg"
+                />
+              </Link>
               <div className="p-4">
                 <h3 className="text-lg font-bold text-gray-800 mb-2">{lecture.title}</h3>
                 <div className="w-full bg-gray-200 h-2 rounded-full">
