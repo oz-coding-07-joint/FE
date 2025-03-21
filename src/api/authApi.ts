@@ -4,10 +4,10 @@ import Cookies from "js-cookie";
 
 // 카카오 로그인
 export const postKakaoLogin = async (code: string): Promise<User> => {
-    const response = await api.post<{ access: string; user: SUser }>("/users/kakao-login/", code);
+    const response = await api.post<{ access: string; user: SUser }>("/users/kakao-login/", {code});
     // 액세스 토큰을 쿠키에 저장
     Cookies.set("access_token", response.data.access, {
-        expires: 1, // 1일 후 만료
+        expires: 0.01, // 15분 (1일 = 24시간, 0.01일 ≈ 15분)
         secure: true, // HTTPS 환경에서만 전송
         sameSite: "Strict", // CSRF 보호
     });
@@ -115,3 +115,4 @@ export const getTerms = async (): Promise<Term[]> => {
         .filter(term => term.is_active) // 활성화된 약관만 필터링
         .map(transformTerm);
 };
+

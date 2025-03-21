@@ -10,11 +10,7 @@ import { useLogin } from "@/hooks/useAuth";
 import { AxiosError } from "axios";
 import { isValidEmail } from "@/utils/validation"; // 이메일 유효성 검사 추가
 import { useKakaoAuth } from "@/hooks/useKakaoAuth";
-
-type LoginModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-};
+import { useModalStore } from "@/store/useModalStore"; // Zustand 모달 상태 추가
 
 // 서버에서 반환하는 에러 응답 타입 정의
 interface ErrorResponse {
@@ -22,7 +18,8 @@ interface ErrorResponse {
   error?: string;  // 서버가 반환하는 오류 메시지
 }
 
-const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
+const LoginModal = () => {
+  const { closeModal } = useModalStore(); // Zustand 상태 사용
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -65,8 +62,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
       {
         onSuccess: () => {
           console.log("로그인 성공!");
-          onClose(); // 로그인 성공 시에만 모달 닫기
-          isOpen = false;
+          closeModal("login"); // 로그인 성공 시 모달 닫기
         },
         onError: (error) => {
           console.error("로그인 실패:", error);
@@ -87,7 +83,6 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
     );
   };
 
-  
   // 입력값 변경 시 해당 필드의 에러 초기화
   const handleChange = (field: "email" | "password", value: string) => {
     if (field === "email") {
@@ -101,7 +96,7 @@ const LoginModal = ({ isOpen, onClose }: LoginModalProps) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal modalKey="login">
       <h2 className="text-4xl font-bold text-center mt-10 mb-6 text-muted-600">로그인</h2>
       <div className="space-y-4">
         {/* 이메일 입력 */}

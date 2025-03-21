@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import api from "./api";
-import { Assignment } from "@/types/lectureDetail";
+import { Assignment } from "@/types/assignment";
 
 // 과제 목록 조회
 export async function fetchAssignments(): Promise<Assignment[]> {

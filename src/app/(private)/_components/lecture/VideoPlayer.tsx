@@ -1,6 +1,7 @@
 import { useGetVideoProgress, useUpdateVideoProgress } from '@/api/lectureDetailApi';
 import Button from '@/components/Button';
 import Modal from '@/components/Modal';
+import { useModalStore } from '@/store/useModalStore';
 import { throttle } from '@/utils/throttle';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type ReactPlayerType from 'react-player';
@@ -24,9 +25,10 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
   const [duration, setDuration] = useState(0);
   const progressRef = useRef(0);
   const playerRef = useRef<ReactPlayerType | null>(null);
-  const [continueModal, setContinueModal] = useState(false);
   const [calculatedLastWatchedTime, setCalculatedLastWatchedTime] = useState<number>(0)
   const [hasPlayed, setHasPlayed] = useState(false)
+
+  const { openModal, closeModal } = useModalStore();
 
   const updateProgress = useUpdateVideoProgress();
   const { data: progressData, refetch, isLoading: getProgressLoading } = useGetVideoProgress(chapterVideoId)
@@ -73,12 +75,12 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
     } else {
       console.log('handleContinue error')
     }
-    setContinueModal(false);
+    closeModal("continueVideo");
     setPlaying(true);
   }
 
   const handleBegin = () => {
-    setContinueModal(false);
+    closeModal("continueVideo");
     setPlaying(true);
   }
 
@@ -95,7 +97,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
 
   const handleEnded = async () => {
     setPlaying(false);
-    setContinueModal(false)
+    closeModal("continueVideo");
     await updateProgress.mutateAsync({ chapterVideoId, lastWatchedTime: duration, duration });
   };
 
