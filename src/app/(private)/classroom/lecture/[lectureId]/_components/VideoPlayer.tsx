@@ -26,7 +26,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
   const [hasPlayed, setHasPlayed] = useState(false)
 
   const { openModal, closeModal } = useModalStore();
-  const {playing, duration, setPlaying, setDuration} = useVideoStore()
+  const { playing, duration, setPlaying, setDuration } = useVideoStore()
 
   const updateProgress = useUpdateVideoProgress();
   const { data: progressData, refetch, isLoading: getProgressLoading } = useGetVideoProgress(chapterVideoId)
@@ -108,7 +108,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
             width='100%'
             height='100%'
           />
-          <VideoContinueModal progressData={progressData ?? undefined} playerRef={playerRef}/>
+          <VideoContinueModal progressData={progressData ?? undefined} playerRef={playerRef} />
         </div>
       )}
     </>
