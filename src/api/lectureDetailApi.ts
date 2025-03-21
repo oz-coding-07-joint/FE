@@ -23,7 +23,7 @@ export const useChapters = (lectureId: number) =>
   });
 
 // 비디오 정보 id, title, videoUrl
-export const useChapterVideo = (chapterVideoId: number) =>
+export const useChapterVideo = (chapterVideoId: number | null) =>
   useQuery({
     queryKey: ["chapterVideo", chapterVideoId],
     queryFn: async () => {
@@ -32,6 +32,7 @@ export const useChapterVideo = (chapterVideoId: number) =>
       );
       return transformVideo(response.data);
     },
+    enabled: !!chapterVideoId,
   });
 
 export const useGetVideoProgress = (chapterVideoId: number | null) => {

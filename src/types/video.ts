@@ -3,7 +3,7 @@ export interface SChapter {
     lecture_id: number;
     title: string;
     material_info: {
-        url: string,
+        download_url: string,
         file_name: string,
     }
     chapter_video_titles: SVideo[];
@@ -14,7 +14,7 @@ export interface Chapter {
     lectureId: number;
     title: string;
     materialInfo: {
-        url: string,
+        downloadUrl: string,
         fileName: string,
     }
     chapterVideoTitles: Video[];
@@ -26,7 +26,7 @@ export interface Chapter {
         lectureId: chapter.lecture_id,
         title: chapter.title,
         materialInfo: {
-            url: chapter.material_info.url,
+            downloadUrl: chapter.material_info.download_url,
             fileName: chapter.material_info.file_name,
         },
         chapterVideoTitles: chapter.chapter_video_titles.map(transformVideo),

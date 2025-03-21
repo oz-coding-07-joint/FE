@@ -29,9 +29,10 @@ const LectureDetailPage = () => {
   const { selectedChapterId, selectedVideoId, setSelectedChapterId, setSelectedVideoId, } = useLectureStore();
   
   const { data: chapters } = useChapters(lectureId);
-  const { data: chapterDetails } = useChapterVideo(selectedVideoId ?? 1);
+  const { data: chapterDetails } = useChapterVideo(selectedVideoId);
   
   const selectedLecture = lectures.find((lecture) => lecture.id === lectureId);
+  console.log('chapters', chapters)
 
   useEffect(() => {
     if(chapters && chapters.length > 0) {

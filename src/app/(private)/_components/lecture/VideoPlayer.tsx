@@ -25,7 +25,6 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
   const [duration, setDuration] = useState(0);
   const progressRef = useRef(0);
   const playerRef = useRef<ReactPlayerType | null>(null);
-  const [calculatedLastWatchedTime, setCalculatedLastWatchedTime] = useState<number>(0)
   const [hasPlayed, setHasPlayed] = useState(false)
 
   const { openModal, closeModal } = useModalStore();
@@ -41,33 +40,20 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
   useEffect(() => {
     progressRef.current = 0;
     setPlaying(false);
-    setCalculatedLastWatchedTime(0);
     setHasPlayed(false);
   }, [videoUrl]);
-
-  // lastWatchedTime계산
-  useEffect(() => {
-    if (progressData?.progress !== '0.00' && !progressData?.isCompleted && duration > 0) {
-      const progressAsNumber = Number(progressData?.progress);
-
-      if (!isNaN(progressAsNumber) && progressAsNumber > 0) {
-        const lastWatchedTime = (progressAsNumber / 100) * duration;
-        setCalculatedLastWatchedTime(lastWatchedTime);
-      }
-    }
-  }, [progressData?.progress])
 
   // 모달
   useEffect(() => {
     if (playing && !hasPlayed && progressData?.progress !== '0.00' && !progressData?.isCompleted && duration > 0) {
-      setContinueModal(true);
+      // setContinueModal(true);
+      openModal('continueVideo')
       setPlaying(false);
       setHasPlayed(true);
     }
   }, [playing]);
 
   const handleContinue = () => {
-    console.log(progressData?.progress)
     if (progressData?.progress !== '0.00' && duration > 0) {
       const progressAsNumber = Number(progressData?.progress);
       const lastWatchedTime = (progressAsNumber / 100) * duration;
@@ -91,14 +77,14 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
     setPlaying(true)
   }
 
-  const handlePause = async () => {
+  const handlePause = () => {
     setPlaying(false);
   }
 
-  const handleEnded = async () => {
+  const handleEnded = () => {
     setPlaying(false);
     closeModal("continueVideo");
-    await updateProgress.mutateAsync({ chapterVideoId, lastWatchedTime: duration, duration });
+    updateProgress.mutateAsync({ chapterVideoId, lastWatchedTime: duration, duration });
   };
 
   const handleProgress = useCallback(
@@ -106,7 +92,10 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
       const playedSeconds = state.playedSeconds;
       progressRef.current = playedSeconds;
 
-      if (!continueModal && chapterVideoId && !progressData?.isCompleted && playedSeconds > (calculatedLastWatchedTime || 0)) {
+      const progressAsNumber = Number(progressData?.progress);
+      const lastWatchedTime = (progressAsNumber / 100) * duration;
+
+      if (chapterVideoId && !progressData?.isCompleted && playedSeconds > (lastWatchedTime || 0)) {
         updateProgress.mutate({
           chapterVideoId,
           lastWatchedTime: playedSeconds,
@@ -114,7 +103,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
         });
       }
     }, 3000),
-    [playing, chapterVideoId, calculatedLastWatchedTime, duration]
+    [chapterVideoId, duration]
   );
 
   const handleDuration = (totalDuration: number) => {
@@ -139,7 +128,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
             height='100%'
           />
 
-          <Modal isOpen={continueModal} onClose={() => setContinueModal(false)}>
+          <Modal modalKey={'continueVideo'}>
             <p className='flex justify-center mb-10'>이어서 보시겠습니까?</p>
             <div className='w-full flex justify-center gap-10'>
               <Button onClick={handleBegin} size='small' variant='outline' label='처음부터' />
