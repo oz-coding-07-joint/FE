@@ -1,8 +1,8 @@
 'use client'
 
 import { useChapters, useChapterVideo } from '@/api/lectureDetailApi';
-import MaterialList from '@/app/(private)/_components/lecture/MaterialList';
-import VideoPlayer from '@/app/(private)/_components/lecture/VideoPlayer';
+import MaterialList from '@/app/(private)/classroom/lecture/[lectureId]/_components/MaterialList';
+import VideoPlayer from '@/app/(private)/classroom/lecture/[lectureId]/_components/VideoPlayer';
 import { ChapterItemList } from '@/app/(private)/_components/ui/ChapterItemList';
 import DetailContainer from '@/app/(private)/_components/ui/DetailContainer';
 import SelectBox from '@/app/(private)/_components/ui/SelectBox';

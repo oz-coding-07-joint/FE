@@ -1,11 +1,11 @@
 import { useGetVideoProgress, useUpdateVideoProgress } from '@/api/lectureDetailApi';
-import Button from '@/components/Button';
-import Modal from '@/components/Modal';
 import { useModalStore } from '@/store/useModalStore';
 import { throttle } from '@/utils/throttle';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type ReactPlayerType from 'react-player';
 import ReactPlayer from 'react-player';
+import VideoContinueModal from './VideoContinueModal';
+import { useVideoStore } from '@/store/useLectureStore';
 
 type VideoPlayerProps = {
   videoUrl: string;
@@ -21,13 +21,12 @@ type ProgressState = {
 
 const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
   const [isWindow, setIsWindow] = useState(false)
-  const [playing, setPlaying] = useState(false);
-  const [duration, setDuration] = useState(0);
   const progressRef = useRef(0);
   const playerRef = useRef<ReactPlayerType | null>(null);
   const [hasPlayed, setHasPlayed] = useState(false)
 
   const { openModal, closeModal } = useModalStore();
+  const {playing, duration, setPlaying, setDuration} = useVideoStore()
 
   const updateProgress = useUpdateVideoProgress();
   const { data: progressData, refetch, isLoading: getProgressLoading } = useGetVideoProgress(chapterVideoId)
@@ -46,29 +45,11 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
   // 모달
   useEffect(() => {
     if (playing && !hasPlayed && progressData?.progress !== '0.00' && !progressData?.isCompleted && duration > 0) {
-      // setContinueModal(true);
       openModal('continueVideo')
       setPlaying(false);
       setHasPlayed(true);
     }
   }, [playing]);
-
-  const handleContinue = () => {
-    if (progressData?.progress !== '0.00' && duration > 0) {
-      const progressAsNumber = Number(progressData?.progress);
-      const lastWatchedTime = (progressAsNumber / 100) * duration;
-      playerRef.current?.seekTo(lastWatchedTime, 'seconds')
-    } else {
-      console.log('handleContinue error')
-    }
-    closeModal("continueVideo");
-    setPlaying(true);
-  }
-
-  const handleBegin = () => {
-    closeModal("continueVideo");
-    setPlaying(true);
-  }
 
   const handlePlay = async () => {
     if (getProgressLoading) return;
@@ -127,14 +108,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
             width='100%'
             height='100%'
           />
-
-          <Modal modalKey={'continueVideo'}>
-            <p className='flex justify-center mb-10'>이어서 보시겠습니까?</p>
-            <div className='w-full flex justify-center gap-10'>
-              <Button onClick={handleBegin} size='small' variant='outline' label='처음부터' />
-              <Button onClick={handleContinue} size='small' label='이어보기' />
-            </div>
-          </Modal>
+          <VideoContinueModal progressData={progressData ?? undefined} playerRef={playerRef}/>
         </div>
       )}
     </>
