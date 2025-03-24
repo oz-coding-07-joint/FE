@@ -32,18 +32,19 @@ api.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-
+    
     // 401 에러 처리: 리프레시 토큰을 사용해 재시도
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true; // 무한 루프 방지
 
       try {
         const refreshResponse = await axios.post(
-          "/users/token-refresh/",
+          "api/v1/users/token-refresh/",
           {},
           { withCredentials: true } // 리프레시 토큰을 쿠키에서 자동 전송
         );
 
+        console.log(refreshResponse);
         if (refreshResponse.data?.access) {
           Cookies.set("access_token", refreshResponse.data.access, {
             expires: 0.01, // 15분

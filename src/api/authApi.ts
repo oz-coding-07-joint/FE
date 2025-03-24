@@ -11,26 +11,28 @@ import Cookies from "js-cookie";
 
 // 카카오 로그인
 type KakaoLoginResponse = {
-  require_additional_info?: boolean;
-  access: string;
-  user: User;
+    require_additional_info?: boolean;
+    access: string;
+    user: SUser;
 };
 
 export const postKakaoLogin = async (
-  code: string
-): Promise<KakaoLoginResponse> => {
-  const response = await api.post<KakaoLoginResponse>("/users/kakao-auth/", {
-    code,
-  });
+    code: string
+): Promise<{ require_additional_info?: boolean; access: string; user: User }> => {
+    const response = await api.post<KakaoLoginResponse>("/users/kakao-auth/", { code });
 
-  // 액세스 토큰을 쿠키에 저장
-  Cookies.set("access_token", response.data.access, {
-    expires: 0.01, // 15분 (1일 = 24시간, 0.01일 ≈ 15분)
-    secure: true, // HTTPS 환경에서만 전송
-    sameSite: "Strict", // CSRF 보호
-  });
+    // 액세스 토큰을 쿠키에 저장
+    Cookies.set("access_token", response.data.access, {
+        expires: 0.01,
+        secure: true,
+        sameSite: "Strict",
+    });
 
-  return response.data;
+    return {
+        access: response.data.access,
+        require_additional_info: response.data.require_additional_info,
+        user: transformUser(response.data.user),
+    };
 };
 
 //로그인
@@ -111,23 +113,23 @@ export const verifyEmailCode = async (emailCodeData: {
 };
 
 // 회원가입
-export const postSignup = async (userData: {
-  email: string;
-  password: string;
-  name: string;
-  nickname: string;
-  phone_number: string;
-  agreements: { terms_id: number; is_agree: boolean }[];
+export const postSignup = async (userData: { 
+    email: string;
+    password: string;
+    name: string;
+    nickname: string;
+    phone_number: string;
+    terms_agreements: { terms: number; is_agree: boolean }[];
 }): Promise<void> => {
   await api.post("/users/signup/", userData); // 회원가입 요청 후 응답 데이터 불필요
 };
 
 // 소셜 로그인 시 프로필 생성
 export const postSocialSignup = async (socialProfileData: {
-  name: string;
-  nickname: string;
-  phone_number: string;
-  agreements: { terms_id: number; is_agree: boolean }[];
+    name: string;
+    nickname: string;
+    phone_number: string;
+    terms_agreements: { terms: number; is_agree: boolean }[];
 }) => {
   const response = await api.post(
     "/users/social-signup-complete/",

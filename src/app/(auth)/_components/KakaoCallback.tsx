@@ -11,31 +11,35 @@ const KakaoCallback = () => {
   const { login } = useAuthStore();
 
   useEffect(() => {
+    console.log("카카오로그인시도");
     const fetchKakaoToken = async () => {
       const code = searchParams.get("code");
+
       if (!code) {
-        console.error("인가 코드 없음.");
+        console.error("카카오 인가 코드가 없습니다.");
         router.push("/");
         return;
       }
 
       try {
-        const response = await postKakaoLogin(code);
+        const { user } = await postKakaoLogin(code);
 
-        if (response.require_additional_info) {
-          login(response.user);
+        //console.log(user)
+        // 로그인 처리 (Zustand 스토어에 저장)
+        login(user);
+
+        // 추가 정보가 필요한 경우
+        if (!user.isActive) {
           router.push("/social-signup");
-          return; // ❗ redirect 후 아래 코드 실행 방지
+          return;
         }
 
-        login(response.user);
-
-        const redirectPath =
-          localStorage.getItem("redirect_after_login") || "/";
+        // 이전에 저장된 리다이렉트 경로로 이동
+        const redirectPath = localStorage.getItem("redirect_after_login") || "/";
         localStorage.removeItem("redirect_after_login");
         router.replace(redirectPath);
       } catch (error) {
-        console.error("카카오 로그인 실패:", error);
+        console.error("카카오 로그인 중 오류 발생:", error);
         router.push("/");
       }
     };
@@ -43,7 +47,7 @@ const KakaoCallback = () => {
     fetchKakaoToken();
   }, [searchParams, router, login]);
 
-  return <p>카카오 로그인 중...</p>;
+  return <p>카카오 로그인 중입니다...</p>;
 };
 
 export default KakaoCallback;

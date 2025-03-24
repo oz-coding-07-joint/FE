@@ -3,6 +3,7 @@
 const API_SERVER_BASE_URL = "https://api.umdoong.shop/api/v1";
 
 const nextConfig = {
+  reactStrictMode: false,
   rewrites: async () => {
     return {
       fallback: [
