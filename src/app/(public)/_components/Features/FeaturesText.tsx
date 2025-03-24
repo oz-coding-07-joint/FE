@@ -19,7 +19,7 @@ const FeatureText = ({
         alignRight ? "items-end text-right" : "items-start text-left"
       }`}
     >
-      <span className="italic opacity-80">"{quote}"</span>
+      <span className="italic opacity-80">{`"${quote}"`}</span>
       <span className="text-sm opacity-60">{author}</span>
       <span className="text-accent-500 text-2xl font-semibold pt-5">
         {title}
