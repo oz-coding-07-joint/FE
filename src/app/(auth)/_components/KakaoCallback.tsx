@@ -30,10 +30,10 @@ const KakaoCallback = () => {
 
         login(response.user);
 
-        const redirectPath = localStorage.getItem("redirect_after_login") || "/";
+        const redirectPath =
+          localStorage.getItem("redirect_after_login") || "/";
         localStorage.removeItem("redirect_after_login");
         router.replace(redirectPath);
-
       } catch (error) {
         console.error("카카오 로그인 실패:", error);
         router.push("/");
