@@ -32,6 +32,7 @@ const config: Config = {
           200: "#FFD92C",
           300: "#F6B500",
           400: "#F6A818",
+          500: "#3ECDFF", // 랜딩포인트 컬러
         }, // 옐로우(강조)
 
         muted: {
@@ -45,10 +46,13 @@ const config: Config = {
       },
       fontFamily: {
         Pretendard: ["var(--font-pretendard)", "sans-serif"],
+        potta: ["Potta One", "sans-serif"], // 'Potta One' 폰트 추가
       },
       backgroundImage: {
         mainImage: "url('../assets/images/main.jpg')",
-        landingImage: "url('../assets/images/explanationImg.jpg')",
+        landingImage: "url('../assets/images/bg2.png')",
+        FeaturesImage: "url('../assets/images/classimg.jpg')",
+        footImage: "url('../assets/images/footimg.png')",
       },
     },
   },

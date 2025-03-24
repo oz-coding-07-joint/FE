@@ -1,15 +1,16 @@
 export default function Explanation() {
   return (
-    <div className="relative h-[1080px] flex flex-col justify-center items-center gap-16 tracking-tighter">
+    <div className="relative h-[800px] flex flex-col justify-center items-center gap-16 tracking-tighter">
       {/* 배경 이미지 + 투명도 적용 */}
-      <div className="absolute inset-0 bg-landingImage bg-cover bg-no-repeat bg-center opacity-30"></div>
+      <div className="absolute inset-0 bg-blue-700 bg-cover bg-center opacity-30"></div>
+      <div className="absolute inset-0 bg-landingImage bg-cover bg-no-repeat bg-center"></div>
 
-      <div className="relative flex flex-col items-center text-white font-normal text-8xl leading-tight">
-        <p>화성학,</p>
-        <p>처음 만나도.</p>
-        <p>다시 만나도.</p>
+      <div className="relative flex flex-col items-center text-white font-normal gap-2">
+        <p className="font-bold text-6xl mb-5">화성학,</p>
+        <p className="text-5xl">처음 만나도.</p>
+        <p className="text-5xl">다시 만나도.</p>
       </div>
-      <span className="relative flex text-center font-normal text-2xl text-white leading-9 ">
+      <span className="relative flex text-center font-normal text-xl text-white leading-7">
         소리상상은 클래식 기반 화성학 온라인 교육 사이트입니다.
         <br />
         누구나 시간과 장소의 제약 없이 화성학을 배우고, 실력을 키울 수 있도록

@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import Logoimg from "@/assets/images/logo.png";
+import Logoimg from "@/assets/images/sangsangLogo.png";
+import LoginModal from "@/app/(auth)/_components/LoginModal";
 import UserMenu from "@/components/UserMenu";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useModalStore } from "@/store/useModalStore";
@@ -12,9 +13,9 @@ const Header = () => {
   const { user } = useAuthStore(); // 로그인한 유저 정보 가져오기
 
   return (
-    <header className="bg-[#131723] w-full h-24 text-center fixed flex items-center justify-between bg-opacity-90 text-white z-10 px-10 box-border">
+    <header className="bg-[#131723] w-full h-16 text-center fixed flex items-center justify-between bg-opacity-90 text-white z-10 px-8 box-border">
       <Link href="/" className="cursor-pointer">
-        <Image src={Logoimg} alt="Logo" className="w-32" />
+        <Image src={Logoimg} alt="Logo" className="w-24" />
       </Link>
 
       <nav className="flex gap-3 items-center">
@@ -28,7 +29,10 @@ const Header = () => {
         {user ? (
           <UserMenu />
         ) : (
-          <button onClick={() => openModal("login")} className="hover:text-gray-400">
+          <button
+            onClick={() => openModal("login")}
+            className="hover:text-gray-400"
+          >
             로그인
           </button>
         )}
