@@ -73,7 +73,7 @@ const LectureDetailPage = () => {
                 >학습자료</button>
               }
               width='max-w-sm'
-              height='h-[700px]'
+              height='h-[800px]'
             >
               <div className='flex justify-center m-[1rem]'>
                 {chaptersLoading ? (
@@ -99,7 +99,7 @@ const LectureDetailPage = () => {
                 )}
               </div>
             </DetailContainer>
-            <div className='bg-white w-full h-[700px] rounded-md shadow-md flex flex-col items-center gap-[10px]'>
+            <div className='bg-white w-full h-[800px] rounded-md shadow-md flex flex-col items-center gap-[10px]'>
               {chaptersLoading || videoLoading ? (
                 <LoadingSkeleton container='w-[95%] aspect-video mt-5 flex items-center justify-center' />
               ) : (
