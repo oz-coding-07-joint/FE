@@ -28,7 +28,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
   const [calculatedLastWatchedTime, setCalculatedLastWatchedTime] = useState<number>(0)
   const [hasPlayed, setHasPlayed] = useState(false)
 
-  const { openModal, closeModal } = useModalStore();
+  const { openModal, closeModal, modals } = useModalStore();
 
   const updateProgress = useUpdateVideoProgress();
   const { data: progressData, refetch, isLoading: getProgressLoading } = useGetVideoProgress(chapterVideoId)
@@ -60,7 +60,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
   // 모달
   useEffect(() => {
     if (playing && !hasPlayed && progressData?.progress !== '0.00' && !progressData?.isCompleted && duration > 0) {
-      setContinueModal(true);
+      openModal("continueVideo");
       setPlaying(false);
       setHasPlayed(true);
     }
@@ -104,8 +104,9 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
     throttle((state: ProgressState) => {
       const playedSeconds = state.playedSeconds;
       progressRef.current = playedSeconds;
+      const isContinueModalOpen = modals['continueVideo'];
 
-      if (!continueModal && chapterVideoId && !progressData?.isCompleted && playedSeconds > (calculatedLastWatchedTime || 0)) {
+      if (!isContinueModalOpen && chapterVideoId && !progressData?.isCompleted && playedSeconds > (calculatedLastWatchedTime || 0)) {
         updateProgress.mutate({
           chapterVideoId,
           lastWatchedTime: playedSeconds,
@@ -138,7 +139,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
             height='100%'
           />
 
-          <Modal isOpen={continueModal} onClose={() => setContinueModal(false)}>
+          <Modal modalKey="continueVideo">
             <p className='flex justify-center mb-10'>이어서 보시겠습니까?</p>
             <div className='w-full flex justify-center gap-10'>
               <Button onClick={handleBegin} size='small' variant='outline' label='처음부터' />
