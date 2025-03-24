@@ -1,17 +1,15 @@
 "use client";
 import Mainpage from "./_components/Mainpage";
 import Features from "./_components/Features/Features";
-// import Teacher from "./_components/Teacher";
-// import Class from "./_components/Class";
 import Review from "./_components/Review/Review";
 import Footer from "./_components/Footer";
 import Explanation from "./_components/Explanation";
-import { useEffect } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
-import { useModalStore } from "@/store/useModalStore";
 import Wishlist from "./_components/Wishlist";
 import Learn from "./_components/Learn/Learn";
 import Bottom from "./_components/Bottom";
+import { useEffect } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useModalStore } from "@/store/useModalStore";
 
 export default function MainPage() {
   const searchParams = useSearchParams();
@@ -37,8 +35,6 @@ export default function MainPage() {
       <Wishlist />
       <Features />
       <Learn />
-      {/* <Teacher /> */}
-      {/* <Class /> */}
       <Review />
       <Bottom />
       <Footer />
