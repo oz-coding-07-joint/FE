@@ -3,6 +3,7 @@ import api from "./api";
 import Cookies from "js-cookie"; 
 
 // 카카오 로그인
+<<<<<<< Updated upstream
 type KakaoLoginResponse = {
     require_additional_info?: boolean;
     access: string;
@@ -12,6 +13,10 @@ type KakaoLoginResponse = {
 export const postKakaoLogin = async (code: string): Promise<KakaoLoginResponse> => {
     const response = await api.post<KakaoLoginResponse>("/users/kakao-auth/", { code });
 
+=======
+export const postKakaoLogin = async (code: string): Promise<User> => {
+    const response = await api.post<{ access: string; user: SUser }>("/users/kakao-auth/", {code});
+>>>>>>> Stashed changes
     // 액세스 토큰을 쿠키에 저장
     Cookies.set("access_token", response.data.access, {
         expires: 0.01, // 15분 (1일 = 24시간, 0.01일 ≈ 15분)
