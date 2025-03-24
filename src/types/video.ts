@@ -3,10 +3,9 @@ export interface SChapter {
     lecture_id: number;
     title: string;
     material_info: {
-        url: string,
+        download_url: string,
         file_name: string,
     }
-    // material_url: string;
     chapter_video_titles: SVideo[];
 }
 
@@ -15,10 +14,9 @@ export interface Chapter {
     lectureId: number;
     title: string;
     materialInfo: {
-        url: string,
+        downloadUrl: string,
         fileName: string,
     }
-    // materialUrl: string;
     chapterVideoTitles: Video[];
   }
 
@@ -28,10 +26,9 @@ export interface Chapter {
         lectureId: chapter.lecture_id,
         title: chapter.title,
         materialInfo: {
-            url: chapter.material_info.url,
+            downloadUrl: chapter.material_info.download_url,
             fileName: chapter.material_info.file_name,
         },
-        // materialUrl: chapter.material_url,
         chapterVideoTitles: chapter.chapter_video_titles.map(transformVideo),
     };
 }
@@ -40,26 +37,16 @@ interface SVideo {
     id: number;
     title?: string;
     video_url?: string;
-    progress: {
-        last_watched_time: number,
-        progress: number,
-        is_completed: boolean,
-    };
-    // is_completed?: boolean;
-    // last_watched_time?: string;
+    is_completed: boolean;
+    progress: string;
 }
 
 export interface Video {
     id: number;
     title?: string;
     videoUrl?: string;
-    progress: {
-        lastWatchedTime: number,
-        progress: number,
-        isCompleted: boolean,
-    };
-    // isCompleted?: boolean;
-    // lastWatchedTime?: string;
+    isCompleted: boolean;
+    progress: string;
 }
 
 export function transformVideo(video: SVideo): Video {
@@ -67,10 +54,7 @@ export function transformVideo(video: SVideo): Video {
         id: video.id,
         title: video.title,
         videoUrl: video.video_url,
-        progress: {
-            lastWatchedTime: video.progress?.last_watched_time,
-            progress: video.progress?.progress,
-            isCompleted: video.progress?.is_completed,
-        }
+        isCompleted: video.is_completed,
+        progress: video.progress,
     };
 }
