@@ -9,8 +9,8 @@ import Image from "next/image";
 import { useLogin } from "@/hooks/useAuth";
 import { AxiosError } from "axios";
 import { isValidEmail } from "@/utils/validation"; // 이메일 유효성 검사 추가
-import { useKakaoAuth } from "@/hooks/useKakaoAuth";
 import { useModalStore } from "@/store/useModalStore"; // Zustand 모달 상태 추가
+import { useSocialAuth } from "@/hooks/useSocialAuth";
 
 // 서버에서 반환하는 에러 응답 타입 정의
 interface ErrorResponse {
@@ -31,7 +31,7 @@ const LoginModal = () => {
 
   // 로그인 mutation
   const loginMutation = useLogin();
-  const { loginWithKakao } = useKakaoAuth();
+  const { loginWithKakao } = useSocialAuth();
 
   // 로그인 요청 핸들러
   const handleLogin = () => {
