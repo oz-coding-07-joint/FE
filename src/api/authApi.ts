@@ -3,8 +3,15 @@ import api from "./api";
 import Cookies from "js-cookie"; 
 
 // 카카오 로그인
-export const postKakaoLogin = async (code: string): Promise<User> => {
-    const response = await api.post<{ access: string; user: SUser }>("/users/kakao-auth/", {code});
+type KakaoLoginResponse = {
+    require_additional_info?: boolean;
+    access: string;
+    user: User;
+};
+
+export const postKakaoLogin = async (code: string): Promise<KakaoLoginResponse> => {
+    const response = await api.post<KakaoLoginResponse>("/users/kakao-auth/", { code });
+
     // 액세스 토큰을 쿠키에 저장
     Cookies.set("access_token", response.data.access, {
         expires: 0.01, // 15분 (1일 = 24시간, 0.01일 ≈ 15분)
@@ -12,7 +19,7 @@ export const postKakaoLogin = async (code: string): Promise<User> => {
         sameSite: "Strict", // CSRF 보호
     });
 
-    return transformUser(response.data.user); // 유저 데이터 변환 후 반환
+    return response.data;
 };
 
 //로그인
@@ -87,18 +94,19 @@ export const postSignup = async (userData: {
     name: string;
     nickname: string;
     phone_number: string;
-    terms_agreements: { terms: number; is_agree: boolean }[];
+    agreements: { terms_id: number; is_agree: boolean }[];
 }): Promise<void> => {
     await api.post("/users/signup/", userData); // 회원가입 요청 후 응답 데이터 불필요
 };
 
 // 소셜 로그인 시 프로필 생성
-export const postSocialProfileCreate = async (socialProfileData: {
+export const postSocialSignup = async (socialProfileData: {
     name: string;
     nickname: string;
     phone_number: string;
+    agreements: { terms_id: number; is_agree: boolean }[];
 }) => {
-    const response = await api.post("/users/social-profile-create/", socialProfileData);
+    const response = await api.post("/users/social-signup-complete/", socialProfileData);
     return response.data;
 };
 

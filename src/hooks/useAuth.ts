@@ -8,10 +8,10 @@ import {
   updateUserInfo,
   changePassword,
   postSignup,
-  postSocialProfileCreate,
   postEmailVerification,
   verifyEmailCode,
   getTerms,
+  postSocialSignup,
 } from "@/api/authApi";
 import { Term, User } from "@/types/auth";
 import { useRouter } from "next/navigation";
@@ -146,7 +146,7 @@ export const useSignup = () => {
       name: string;
       nickname: string;
       phone_number: string;
-      terms_agreements: { terms: number; is_agree: boolean }[];
+      agreements: { terms_id: number; is_agree: boolean }[];
     }) => {
       await postSignup(userData); // 회원가입 요청
       return await postLogin({ email: userData.email, password: userData.password }); // 회원가입 후 자동 로그인
@@ -167,11 +167,22 @@ export const useSignup = () => {
 };
 
 
-// 소셜 로그인 후 프로필 생성
-export const useSocialProfileCreate = () => {
+// 소셜 로그인 후 유저정보 업데이트
+export const useSocialSignup = () => {
+  const { user, login, logout } = useAuthStore()
+
   return useMutation({
-    mutationFn: postSocialProfileCreate,
-    onSuccess: () => {},
+    mutationFn: postSocialSignup,
+    onSuccess: () => {
+      if (user) {
+        login(user); // Zustand 상태 업데이트
+        console.log("Zustand 상태 업데이트 완료:", user);
+      } 
+    },
+    onError: (error) => {
+      console.error("소셜 회원가입:", error);
+      logout();
+    },
   });
 };
 

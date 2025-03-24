@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import { isValidName, isValidPhoneNumber } from "@/utils/validation";
-import { useGetTerms, useSocialProfileCreate } from "@/hooks/useAuth";
+import { useGetTerms, useSocialSignup } from "@/hooks/useAuth";
 import { Term } from "@/types/auth";
 import TermsModal from "../_components/TermModal";
 import Logoimg from "@/assets/images/logo.png";
@@ -38,7 +38,7 @@ const SocialSignupPage = () => {
     phoneNumber: "",
   });
 
-  const socialSignUpMutation = useSocialProfileCreate();
+  const socialSignUpMutation = useSocialSignup();
 
   useEffect(() => {
     if (socialSignUpMutation.isError) {
@@ -82,7 +82,7 @@ const SocialSignupPage = () => {
 
     const termsAgreements = terms
       ? terms.map((term) => ({
-          terms: term.id,
+          terms_id: term.id,
           is_agree: !!agreedTerms[term.id],
         }))
       : [];
@@ -91,15 +91,14 @@ const SocialSignupPage = () => {
       name,
       nickname,
       phone_number: phoneNumber,
-      terms_agreements: termsAgreements,
+      agreements: termsAgreements,
     };
   
-    //console.log("회원가입 요청 데이터:", userData);
+    console.log("회원가입 요청 데이터:", socialProfileData);
   
     socialSignUpMutation.mutate(socialProfileData, {
       onSuccess: () => {
-        //console.log("회원가입 및 자동 로그인 완료:", data);
-        alert("회원가입 성공! 자동으로 로그인됩니다.");
+        alert("소셜 로그인 회원가입 성공!");
       },
       onError: (error) => {
         console.error("회원가입 실패:", error);
