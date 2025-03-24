@@ -46,12 +46,12 @@ const LecturePage = () => {
               <div className="flex gap-2 p-4">
 
                 <Button
-                  label="강의상세보기"
+                  label="강의 상세보기"
                   onClick={() => handleLectureDetail(lecture.id)}
                   variant="primary"
                 />
                 <Button
-                  label="리뷰 작성"
+                  label="강의 리뷰작성" 
                   onClick={() => handleReviewClick(lecture.id, lecture.title)}
                   variant="outline"
                 />

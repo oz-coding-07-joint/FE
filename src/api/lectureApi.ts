@@ -6,9 +6,9 @@ import { Chapter, SChapter, transformChapter } from "@/types/video";
 // 강의 목록 조회
 export const fetchLectures = async (): Promise<Lecture[]> => {
   try {
-    const response = await api.get<{ lectures: SLecture[] }>('/courses/lecture/');
-    console.log("fetchLectures API 응답 데이터:", response.data.lectures.length);
-    return response.data.lectures.map((lecture: SLecture) => transformLecture(lecture));
+    const response = await api.get('/courses/lecture/');
+    console.log("fetchLectures API 응답 데이터:", response);
+    return response.data.map((lecture: SLecture) => transformLecture(lecture));
   } catch (error) {
     const axiosError = error as AxiosError;
     if (axiosError.response) {

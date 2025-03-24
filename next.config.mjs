@@ -13,6 +13,13 @@ const nextConfig = {
       ],
     };
   },
+  images: {
+    remotePatterns: [
+      {
+        hostname: "kr.object.ncloudstorage.com",
+      }
+    ]
+  }
 };
 
 export default nextConfig;
