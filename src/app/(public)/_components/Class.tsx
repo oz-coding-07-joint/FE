@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Classimg from "../../../assets/images/classimg.jpg";
 import { useState } from "react";
-import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import { CaretDown } from "phosphor-react";
 // import VideoPlayer from "@/app/(private)/_components/lecture/VideoPlayer";
 
 export default function Class() {
@@ -39,7 +39,10 @@ export default function Class() {
   ];
 
   return (
-    <div className="h-[1080px] flex flex-col justify-center items-center gap-5">
+    <div
+      className="h-[1080px] flex flex-col justify-center items-center gap-5
+   "
+    >
       <span className="text-white text-4xl mb-10">온라인 음악교육 클래스</span>
       <div className="flex flex-col text-white w-[700px] lg:w-[1080px]">
         <span className="text-2xl lg:text-3xl mb-3">화성학</span>
@@ -86,7 +89,7 @@ export default function Class() {
                     className="w-full h-[50px] px-5 rounded-sm border border-white text-white font-normal text-left flex justify-between items-center"
                   >
                     {course.title}
-                    <ChevronDownIcon
+                    <CaretDown
                       className={`w-6 h-6 text-white transform transition-transform ${
                         openIndex === index ? "rotate-180" : "rotate-0"
                       }`}
