@@ -1,3 +1,5 @@
+'use client'
+
 import { useGetVideoProgress, useUpdateVideoProgress } from '@/api/lectureDetailApi';
 import { useModalStore } from '@/store/useModalStore';
 import { throttle } from '@/utils/throttle';
@@ -94,20 +96,20 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
   return (
     <>
       {isWindow && (
-        <div className='w-[95%] aspect-video mt-5 flex items-center justify-center bg-gray-200'>
-          <ReactPlayer
-            ref={playerRef}
-            url={videoUrl}
-            playing={playing}
-            onDuration={handleDuration}
-            controls={true}
-            onProgress={handleProgress}
-            onPause={handlePause}
-            onPlay={handlePlay}
-            onEnded={handleEnded}
-            width='100%'
-            height='100%'
-          />
+        <div className='w-[95%] aspect-video mt-5 flex items-center justify-center'>
+            <ReactPlayer
+              ref={playerRef}
+              url={videoUrl}
+              playing={playing}
+              onDuration={handleDuration}
+              controls={true}
+              onProgress={handleProgress}
+              onPause={handlePause}
+              onPlay={handlePlay}
+              onEnded={handleEnded}
+              width='100%'
+              height='100%'
+            />
           <VideoContinueModal progressData={progressData ?? undefined} playerRef={playerRef} />
         </div>
       )}
