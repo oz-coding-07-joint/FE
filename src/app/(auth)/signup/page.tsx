@@ -200,7 +200,7 @@ const SignupPage = () => {
   
     const termsAgreements = terms
       ? terms.map((term) => ({
-          terms: term.id,
+          terms_id: term.id,
           is_agree: !!agreedTerms[term.id],
         }))
       : [];
@@ -211,7 +211,7 @@ const SignupPage = () => {
       name,
       nickname,
       phone_number: phoneNumber,
-      terms_agreements: termsAgreements,
+      agreements: termsAgreements,
     };
   
     // 회원가입 API 요청
@@ -220,7 +220,7 @@ const SignupPage = () => {
         alert("회원가입 성공! 자동으로 로그인됩니다.");
       },
       onError: (error) => {
-        const axiosError = error as AxiosError<{ [key: string]: string[] }>; // ✅ 백엔드에서 받은 에러를 객체로 변환
+        const axiosError = error as AxiosError<{ [key: string]: string[] }>; // 백엔드에서 받은 에러를 객체로 변환
         if (axiosError.response?.data) {
           const errorData = axiosError.response.data;
   

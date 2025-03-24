@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import Logoimg from "@/assets/images/sangsangLogo.png";
-import LoginModal from "@/app/(auth)/_components/LoginModal";
 import UserMenu from "@/components/UserMenu";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useModalStore } from "@/store/useModalStore";
