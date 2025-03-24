@@ -107,15 +107,6 @@ const SocialSignupPage = () => {
     });
   };
   
-  
-
-
-
-  const isFormValid =
-    name &&
-    nickname &&
-    phoneNumber &&
-    !Object.values(errors).some((error) => error !== "");
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-primary-900 space-y-4">
@@ -179,7 +170,7 @@ const SocialSignupPage = () => {
           </div>
 
           {/* 회원가입 버튼 */}
-          <Button label="회원가입" size="full" variant="primary" onClick={handleSocialSignUp} disabled={!isFormValid} />
+          <Button label="회원가입" size="full" variant="primary" onClick={handleSocialSignUp} />
         </div>
       </div>
       {/* 약관 모달 (분리된 컴포넌트 사용) */}
