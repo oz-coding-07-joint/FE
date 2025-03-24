@@ -146,7 +146,7 @@ export const useSignup = () => {
       name: string;
       nickname: string;
       phone_number: string;
-      agreements: { terms_id: number; is_agree: boolean }[];
+      terms_agreements: { terms: number; is_agree: boolean }[];
     }) => {
       await postSignup(userData); // 회원가입 요청
       return await postLogin({ email: userData.email, password: userData.password }); // 회원가입 후 자동 로그인
@@ -169,14 +169,16 @@ export const useSignup = () => {
 
 // 소셜 로그인 후 유저정보 업데이트
 export const useSocialSignup = () => {
-  const { user, login, logout } = useAuthStore()
+  const { user, logout, restoreUser } = useAuthStore()
+  const router = useRouter();
 
   return useMutation({
     mutationFn: postSocialSignup,
     onSuccess: () => {
       if (user) {
-        login(user); // Zustand 상태 업데이트
+        restoreUser(); // Zustand 상태 업데이트
         console.log("Zustand 상태 업데이트 완료:", user);
+        router.push("/"); // 홈으로 이동
       } 
     },
     onError: (error) => {

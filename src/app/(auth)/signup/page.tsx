@@ -200,7 +200,7 @@ const SignupPage = () => {
   
     const termsAgreements = terms
       ? terms.map((term) => ({
-          terms_id: term.id,
+          terms: term.id,
           is_agree: !!agreedTerms[term.id],
         }))
       : [];
@@ -211,7 +211,7 @@ const SignupPage = () => {
       name,
       nickname,
       phone_number: phoneNumber,
-      agreements: termsAgreements,
+      terms_agreements: termsAgreements,
     };
   
     // 회원가입 API 요청

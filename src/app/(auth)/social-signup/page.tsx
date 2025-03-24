@@ -82,7 +82,7 @@ const SocialSignupPage = () => {
 
     const termsAgreements = terms
       ? terms.map((term) => ({
-          terms_id: term.id,
+        terms: term.id,
           is_agree: !!agreedTerms[term.id],
         }))
       : [];
@@ -91,7 +91,7 @@ const SocialSignupPage = () => {
       name,
       nickname,
       phone_number: phoneNumber,
-      agreements: termsAgreements,
+      terms_agreements: termsAgreements,
     };
   
     console.log("회원가입 요청 데이터:", socialProfileData);

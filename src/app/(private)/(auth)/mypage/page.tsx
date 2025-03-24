@@ -19,11 +19,15 @@ const MyPage = () => {
   const [name, setName] = useState(user?.name || "");
   const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || "");
   const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [socialEmail, setSocialEmail] = useState("");
 
   useEffect(() => {
     if (user) {
-      setName(user.name || "");
+      if (user.provider !== "LOCAL") {
+        setSocialEmail("소셜 로그인 회원은 이메일 변경이 불가능합니다.");
+      }
       setEmail(user.email || "");
+      setName(user.name || "");
       setNickname(user.nickname || "");
       setPhoneNumber(user.phoneNumber || "");
     }
@@ -251,19 +255,25 @@ const MyPage = () => {
 
           <div className="space-y-1">
             <label className="block text-sm font-semibold">이메일</label>
-            <Input 
-              type="email" 
-              value={email} 
-              onChange={(e) => handleChange("email", e.target.value)}
-              button={<Button label="인증번호 요청" onClick={handleCheckEmail} size="small" variant="secondary" />}
-            />
-            <Input 
-              type="text" 
-              value={verificationCode} 
-              onChange={(e) => setVerificationCode(e.target.value)}
-              button={<Button label="인증번호 확인" onClick={handleCheckVerificationCode} size="small" variant="primary" />}
-            />
-            {errors.email && <p className="text-secondary-500 text-xs">{errors.email}</p>}
+            {user?.provider !== "LOCAL" ? (
+                <Input type="email" value={socialEmail} disabled onChange={(e) => handleChange("email", e.target.value)} />
+            ) : (
+              <>
+                <Input 
+                  type="email" 
+                  value={email} 
+                  onChange={(e) => handleChange("email", e.target.value)}
+                  button={<Button label="인증번호 요청" onClick={handleCheckEmail} size="small" variant="secondary" />}
+                />
+                <Input 
+                  type="text" 
+                  value={verificationCode} 
+                  onChange={(e) => setVerificationCode(e.target.value)}
+                  button={<Button label="인증번호 확인" onClick={handleCheckVerificationCode} size="small" variant="primary" />}
+                />
+                {errors.email && <p className="text-secondary-500 text-xs">{errors.email}</p>}
+              </>
+            )}
           </div>
 
           <div className="space-y-1">
