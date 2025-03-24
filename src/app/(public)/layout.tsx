@@ -1,6 +1,7 @@
 import React from "react";
-import Header from "./_components/Header";
+import Header from "./_components/layout/Header";
 import RegistrationModal from "./_components/RegistrationModal";
+import Footer from "./_components/layout/Footer";
 
 export default function MainLayout({
   children,
@@ -11,6 +12,7 @@ export default function MainLayout({
     <div>
       <Header />
       <main>{children}</main>
+      <Footer />
       <RegistrationModal />
     </div>
   );

@@ -26,7 +26,7 @@ const Sidebar = () => {
           </li>
           <li className={tabClassName('assignment')}
             onClick={() => setActiveTab('assignment')}>
-            <Link href="/classroom/assignments" className={tabClassName('assignment')}
+            <Link href="/classroom/assignment" className={tabClassName('assignment')}
               onClick={() => setActiveTab('assignment')}>
               <ClipboardText size={20} /> 과제
             </Link>
