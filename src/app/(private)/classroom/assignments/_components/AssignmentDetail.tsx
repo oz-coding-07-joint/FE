@@ -1,3 +1,5 @@
+"use client";
+
 interface AssignmentData {
   id: number;
   title: string;
@@ -13,10 +15,16 @@ const AssignmentDetail = ({ selectedAssignment }: AssignmentDetailProps) => {
   return (
     <div className="bg-white rounded-md shadow-md overflow-hidden flex-1 h-[75vh] flex flex-col">
       <div className="bg-[#F5F9FF] p-4 h-16 border border-gray-300">
-        <h2 className="text-xl font-semibold text-black">{selectedAssignment ? selectedAssignment.title : "과제 내용"}</h2>
+        <h2 className="text-xl font-semibold text-black">
+          {selectedAssignment ? selectedAssignment.title : "과제 내용"}
+        </h2>
       </div>
       <div className="p-4 overflow-y-auto flex-1">
-        {selectedAssignment ? <p className="text-gray-700">{selectedAssignment.content}</p> : <p>과제를 선택해주세요.</p>}
+        {selectedAssignment ? (
+          <p className="text-gray-700">{selectedAssignment.content}</p>
+        ) : (
+          <p>과제를 선택해주세요.</p>
+        )}
       </div>
       <div className="p-4 border-t bg-white">
         {selectedAssignment?.file_url ? (

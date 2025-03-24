@@ -85,6 +85,7 @@ export const useCreateVideoProgress = () => {
           `/courses/chapter_video/${chapterVideoId}/progress/`,
           { last_watched_time: lastWatchedTime, total_duration: duration }
         );
+        console.log('post', response.data)
         return response.data;
       } catch (error) {
         console.error("비디오 상태 만들기 오류", error);
@@ -139,7 +140,7 @@ export const useUpdateVideoProgress = () => {
   });
 };
 
-export const useGetMultipleVideoProgress = (chapterItems: { id: number }[]) => {
+export const useGetMultipleVideoProgress = (chapterItems: { id: number }[] = []) => {
   return useQueries({
     queries: chapterItems
       .filter((item) => !!item.id) // null 체크

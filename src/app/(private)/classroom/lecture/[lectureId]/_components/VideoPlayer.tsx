@@ -1,17 +1,20 @@
 'use client'
 
 import { useGetVideoProgress, useUpdateVideoProgress } from '@/api/lectureDetailApi';
+import Button from '@/components/Button';
+import { useVideoStore } from '@/store/useLectureStore';
 import { useModalStore } from '@/store/useModalStore';
 import { throttle } from '@/utils/throttle';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type ReactPlayerType from 'react-player';
 import ReactPlayer from 'react-player';
 import VideoContinueModal from './VideoContinueModal';
-import { useVideoStore } from '@/store/useLectureStore';
 
 type VideoPlayerProps = {
   videoUrl: string;
   chapterVideoId: number | null;
+  lectureId: number;
 }
 
 type ProgressState = {
@@ -21,11 +24,12 @@ type ProgressState = {
   loadedSeconds: number;
 };
 
-const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
+const VideoPlayer = ({ videoUrl, chapterVideoId, lectureId }: VideoPlayerProps) => {
   const [isWindow, setIsWindow] = useState(false)
   const progressRef = useRef(0);
   const playerRef = useRef<ReactPlayerType | null>(null);
   const [hasPlayed, setHasPlayed] = useState(false)
+  const router = useRouter()
 
   const { openModal, closeModal } = useModalStore();
   const { playing, duration, setPlaying, setDuration } = useVideoStore()
@@ -93,23 +97,32 @@ const VideoPlayer = ({ videoUrl, chapterVideoId }: VideoPlayerProps) => {
     setDuration(totalDuration);
   }
 
+  const handleAssignment = () => {
+    router.push(`/classroom/assignments/${lectureId}`)
+  }
+
   return (
     <>
       {isWindow && (
-        <div className='w-[95%] aspect-video mt-5 flex items-center justify-center'>
-            <ReactPlayer
-              ref={playerRef}
-              url={videoUrl}
-              playing={playing}
-              onDuration={handleDuration}
-              controls={true}
-              onProgress={handleProgress}
-              onPause={handlePause}
-              onPlay={handlePlay}
-              onEnded={handleEnded}
-              width='100%'
-              height='100%'
-            />
+        <div className='w-[95%] aspect-video mt-5 flex flex-col items-center justify-center gap-5'>
+          <ReactPlayer
+            ref={playerRef}
+            url={videoUrl}
+            playing={playing}
+            onDuration={handleDuration}
+            controls={true}
+            onProgress={handleProgress}
+            onPause={handlePause}
+            onPlay={handlePlay}
+            onEnded={handleEnded}
+            width='100%'
+            height='100%'
+          />
+          {progressData?.isCompleted && (
+          <div className='w-full flex justify-end'>
+            <Button label='과제하러가기' onClick={handleAssignment} />
+          </div>
+          )}
           <VideoContinueModal progressData={progressData ?? undefined} playerRef={playerRef} />
         </div>
       )}

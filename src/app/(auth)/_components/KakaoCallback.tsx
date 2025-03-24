@@ -38,7 +38,6 @@ const KakaoCallback = () => {
         const redirectPath = localStorage.getItem("redirect_after_login") || "/";
         localStorage.removeItem("redirect_after_login");
         router.replace(redirectPath);
-
       } catch (error) {
         console.error("카카오 로그인 중 오류 발생:", error);
         router.push("/");

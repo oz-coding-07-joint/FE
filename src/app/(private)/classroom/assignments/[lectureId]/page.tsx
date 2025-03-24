@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import AssignmentList from "@/app/(private)/_components/ui/AssignmentList";
-import AssignmentDetail from "@/app/(private)/_components/ui/AssignmentDetail";
-import AssignmentFeedback from "@/app/(private)/_components/ui/AssignmentFeedback";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import AssignmentList from "../_components/AssignmentList";
+import AssignmentDetail from "../_components/AssignmentDetail";
+import AssignmentFeedback from "../_components/AssignmentFeedback";
 import api from "@/api/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Assignment } from "@/types/assignment";
@@ -34,12 +35,15 @@ const AssignmentPage = () => {
   });
 
   const { user } = useAuthStore();
+  const params = useParams();
+  const lectureId = params.lectureId;
 
-  // 📌 강의 상세 정보 가져오기
+  // 📌 강의 정보 불러오기
   useEffect(() => {
+    if (!lectureId) return;
     const fetchLecture = async () => {
       try {
-        const response = await api.get(`/courses/lecture/1/`);
+        const response = await api.get(`/courses/lecture/${lectureId}/`);
         setLecture(response.data);
       } catch (error) {
         console.error("❌ 강의 정보를 불러오는 데 실패했습니다:", error);
@@ -47,25 +51,25 @@ const AssignmentPage = () => {
     };
 
     fetchLecture();
-  }, [user]);
+  }, [user, lectureId]);
 
   return (
     <div className="p-8">
-      {/* 📌 강의 제목을 동적으로 표시 */}
+      {/* 강의 제목 표시 */}
       <h1 className="text-3xl font-bold mb-8">{lecture.title}</h1>
 
       <div className="flex gap-6">
-        {/* 📌 과제 목록 */}
+        {/* 과제 목록 */}
         <AssignmentList
           selectedChapter={selectedChapter}
           setSelectedChapter={setSelectedChapter}
           setSelectedAssignment={setSelectedAssignment}
         />
 
-        {/* 📌 과제 내용 */}
+        {/* 과제 상세 */}
         <AssignmentDetail selectedAssignment={selectedAssignment} />
 
-        {/* 📌 과제 피드백 */}
+        {/* 과제 피드백 */}
         <AssignmentFeedback selectedAssignment={selectedAssignment} />
       </div>
     </div>
