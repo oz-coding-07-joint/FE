@@ -16,7 +16,9 @@ const FeatureText = ({
   return (
     <div
       className={`text-lg flex flex-col ${
-        alignRight ? "items-end text-right" : "items-start text-left"
+        alignRight
+          ? "items-start text-left lg:items-end lg:text-right"
+          : "items-start text-left"
       }`}
     >
       <span className="italic opacity-80">{`"${quote}"`}</span>

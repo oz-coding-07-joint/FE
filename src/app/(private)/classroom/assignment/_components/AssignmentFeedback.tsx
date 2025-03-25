@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import api from "@/api/api";
 import { Assignment, AssignmentComment, transformAssignmentComment } from "@/types/assignment";
@@ -57,7 +59,11 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
         )}
       </div>
       <div className="p-4 border-t bg-white">
-        <AssignmentCommentForm onSubmit={submitComment} assignmentId={selectedAssignment?.id || 0} parentId={null} />
+        <AssignmentCommentForm
+          onSubmit={submitComment}
+          assignmentId={selectedAssignment?.id || 0}
+          parentId={null}
+        />
       </div>
     </div>
   );

@@ -27,3 +27,8 @@ export const isRequired = (value: string): boolean => {
   return value.trim().length > 0;
 };
   
+//닉네임 유효성 검사 (한글, 영문, 언더바, 숫자 허용)
+export const isValidNickname = (nickname: string): boolean => {
+  const nicknameRegex = /^[a-zA-Z0-9가-힣_]+$/;
+  return nicknameRegex.test(nickname);
+};

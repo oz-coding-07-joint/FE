@@ -5,11 +5,11 @@ interface CustomInputProps {
   type: "text" | "email" | "password" | "number";
   placeholder?: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; // ✅ optional로 변경
   disabled?: boolean;
   button?: React.ReactElement<typeof Button>;
-  error?: boolean; // 부모 컴포넌트에서 전달하는 에러 여부 (true/false)
-  onEnterPress?: () => void; // Enter 키 입력 시 실행할 함수 추가
+  error?: boolean;
+  onEnterPress?: () => void;
 }
 
 export default function Input({
@@ -24,16 +24,14 @@ export default function Input({
 }: CustomInputProps) {
   const [hasError, setHasError] = useState<boolean>(false);
 
-  // 외부에서 전달된 error 값이 변경되면 내부 상태 업데이트
   useEffect(() => {
     setHasError(error);
   }, [error]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(e);
+    onChange?.(e);
   };
 
-  // Enter 키 입력 시 실행할 핸들러
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && onEnterPress) {
       onEnterPress();
