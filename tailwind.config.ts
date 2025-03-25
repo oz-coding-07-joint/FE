@@ -43,6 +43,11 @@ const config: Config = {
           500: "#444444",
           600: "#222222",
         }, // 그레이
+
+        danger: {
+          light: "#FF6666",
+          500: "#FF4444",
+        }, //레드
       },
       fontFamily: {
         Pretendard: ["var(--font-pretendard)", "sans-serif"],

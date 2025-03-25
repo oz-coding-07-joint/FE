@@ -4,6 +4,8 @@ import { Archive, ClipboardText } from "phosphor-react";
 import Link from "next/link";
 import React, { useState } from "react";
 import clsx from "clsx";
+import Image from "next/image";
+import Logoimg from "@/assets/images/sangsangLogo.png";
 
 const Sidebar = () => {
   const [activeTab, setActiveTab] = useState<'lecture' | 'assignment'>('lecture');
@@ -15,7 +17,9 @@ const Sidebar = () => {
     <aside className="w-60 min-w-[160px] bg-gray-800 text-white relative">
       <div className="flex flex-col justify-center">
         <h2 className="text-2xl h-16 flex justify-center items-center border-b border-[#3B4861]">
-          소리상상 강의실
+        <Link href="/" className="cursor-pointer">
+          <Image src={Logoimg} alt="Logo" className="w-24" />
+        </Link>
         </h2>
         <ul className="flex flex-col mt-10 ml-6 gap-4">
           <li>

@@ -2,7 +2,7 @@ interface CustomButtonProps {
   label?: string;
   onClick?: () => void;
   size?: "large" | "medium" | "small" | "full";
-  variant?: "primary" | "secondary" | "outline";
+  variant?: "primary" | "secondary" | "outline" | "danger";
   disabled?: boolean;
   type?: "button" | "submit";
 }
@@ -28,6 +28,7 @@ export default function Button({
     primary: "bg-primary-900 text-white",
     secondary: "bg-muted-500 text-white",
     outline: "bg-white border border-muted-200 text-muted-400",
+    danger: "bg-danger-500 text-white",
   };
 
   return (
