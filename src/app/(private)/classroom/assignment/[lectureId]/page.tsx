@@ -36,7 +36,7 @@ const AssignmentPage = () => {
 
   const { user } = useAuthStore();
   const params = useParams();
-  const lectureId = params.lectureId;
+  const lectureId = Number(params.lectureId); // 문자열 → 숫자 변환
 
   // 📌 강의 정보 불러오기
   useEffect(() => {
@@ -58,12 +58,13 @@ const AssignmentPage = () => {
       {/* 강의 제목 표시 */}
       <h1 className="text-3xl font-semibold mb-5">{lecture.title}</h1>
 
-      <div className="flex gap-6 items-stretch">
+      <div className="flex gap-5 items-stretch">
         {/* 과제 목록 */}
         <AssignmentList
           selectedChapter={selectedChapter}
           setSelectedChapter={setSelectedChapter}
           setSelectedAssignment={setSelectedAssignment}
+          lectureId={lectureId}
         />
 
         {/* 과제 상세 */}

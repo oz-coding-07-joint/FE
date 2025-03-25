@@ -1,4 +1,3 @@
-import { User } from "./auth";
 
 interface SAssignmentList {
     lecture_chapter_id: number;
@@ -49,14 +48,14 @@ export function transformAssignment(assignment: SAssignment): Assignment {
     };
 }
 
-interface SAssignmentComment {
+export interface SAssignmentComment {
     id: number;
     parent_id?: number; // 피드백이면 parentId 있음
     assignment_id: number; // 과제 ID 추가
     file_url: string;
     content: string;
     created_at: Date;
-    user: User;
+    nickname: string;
 }
 
 export interface AssignmentComment {
@@ -77,6 +76,6 @@ export function transformAssignmentComment(comment: SAssignmentComment): Assignm
         fileUrl: comment.file_url,
         content: comment.content,
         createdAt: comment.created_at,
-        userNickname: comment.user.nickname,
+        userNickname: comment.nickname,
     };
 }

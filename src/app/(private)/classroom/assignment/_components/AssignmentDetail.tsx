@@ -1,14 +1,9 @@
 "use client";
 
-interface AssignmentData {
-  id: number;
-  title: string;
-  content: string;
-  file_url?: string;
-}
+import { Assignment } from "@/types/assignment";
 
 interface AssignmentDetailProps {
-  selectedAssignment: AssignmentData | null;
+  selectedAssignment: Assignment | null;
 }
 
 const AssignmentDetail = ({ selectedAssignment }: AssignmentDetailProps) => {
@@ -17,18 +12,18 @@ const AssignmentDetail = ({ selectedAssignment }: AssignmentDetailProps) => {
       <div className="bg-[#F5F9FF] h-16 flex items-center w-full px-4">
         <h2 className="h-max w-max font-medium text-primary-900">
           {selectedAssignment ? selectedAssignment.title : "과제 내용"}
-          </h2>
+        </h2>
       </div>
       <div className="p-4 overflow-y-auto flex-1">
         {selectedAssignment ? (
           <p className="text-gray-700">{selectedAssignment.content}</p>
         ) : (
-          <p>과제를 선택해주세요.</p>
+          <p className="text-gray-500 text-center">과제를 선택해주세요.</p>
         )}
       </div>
       <div className="p-4 border-t bg-white">
-        {selectedAssignment?.file_url ? (
-          <a href={selectedAssignment.file_url} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+        {selectedAssignment?.fileUrl ? (
+          <a href={selectedAssignment.fileUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500">
             첨부 파일 보기
           </a>
         ) : (
