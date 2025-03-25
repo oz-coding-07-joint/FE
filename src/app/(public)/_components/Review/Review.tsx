@@ -11,21 +11,31 @@ const reviews = [
   { name: "이OO 수강생", description: "클래식 화성학 2기 수강생" },
 ];
 
+const extendedReviews = [...reviews, ...reviews, ...reviews];
+
 export default function Review() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(reviews.length);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) =>
         prevIndex === reviews.length - 1 ? 0 : prevIndex + 1
       );
-    }, 3000); // 3초마다 자동 슬라이드
+    }, 2000); // 2초마다 자동 슬라이드
 
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    if (currentIndex >= extendedReviews.length - reviews.length) {
+      setTimeout(() => {
+        setCurrentIndex(reviews.length);
+      }, 700);
+    }
+  }, [currentIndex]);
+
   return (
-    <div className="flex flex-row text-white font-normal px-5 md:px-10 lg:px-20 my-32 gap-[180px]">
+    <div className="flex flex-col lg:flex-row text-white font-normal px-5 md:px-10 lg:px-20 my-32 gap-[100px] lg:gap-[180px]">
       {/* 타이틀 */}
       <div className="flex flex-col text-4xl mb-10">
         <span>
@@ -43,10 +53,14 @@ export default function Review() {
           className="flex gap-5 transition-transform duration-700 ease-in-out"
           style={{
             transform: `translateX(-${currentIndex * (440 + 20)}px)`, // 카드 너비 + 간격 만큼 이동
+            transition:
+              currentIndex === reviews.length
+                ? "none"
+                : "transform 0.7s ease-in-out ",
           }}
         >
-          {reviews.map((review, index) => (
-            <ReviewCard key={index} {...review} />
+          {extendedReviews.map((_, index) => (
+            <ReviewCard key={index} {...reviews[index % reviews.length]} />
           ))}
         </div>
       </div>

@@ -9,7 +9,7 @@ export default function Features() {
       <div className="absolute inset-0 bg-FeaturesImage bg-cover before:absolute before:inset-0 before:bg-[#0B1C3D] before:opacity-80 before:content-['']"></div>
 
       {/* 내부 컨텐츠 */}
-      <div className="relative px-5 md:px-10 lg:px-20 my-32 flex flex-row gap-[180px]">
+      <div className="relative px-5 md:px-10 lg:px-20 my-32 flex flex-col lg:flex-row gap-[180px]">
         {/* 타이틀 */}
         <div className="text-4xl flex flex-col text-center md:text-left">
           <span>
