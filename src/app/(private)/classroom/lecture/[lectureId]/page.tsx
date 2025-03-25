@@ -10,7 +10,6 @@ import LoadingSkeleton from '@/components/LoadingSkeleton';
 import { useLectureListStore } from '@/store/useLectureListStore';
 import { useLectureStore } from '@/store/useLectureStore';
 import { Video } from '@/types/video';
-import { AxiosError } from 'axios';
 import clsx from 'clsx';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
