@@ -14,10 +14,10 @@ interface AssignmentDetailProps {
 const AssignmentDetail = ({ selectedAssignment }: AssignmentDetailProps) => {
   return (
     <div className="bg-white rounded-md shadow-md overflow-hidden flex-1 h-[75vh] flex flex-col">
-      <div className="bg-[#F5F9FF] p-4 h-16 border border-gray-300">
-        <h2 className="text-xl font-semibold text-black">
+      <div className="bg-[#F5F9FF] h-16 flex items-center w-full px-4">
+        <h2 className="h-max w-max font-medium text-primary-900">
           {selectedAssignment ? selectedAssignment.title : "과제 내용"}
-        </h2>
+          </h2>
       </div>
       <div className="p-4 overflow-y-auto flex-1">
         {selectedAssignment ? (

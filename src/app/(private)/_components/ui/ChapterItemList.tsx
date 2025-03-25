@@ -25,12 +25,12 @@ export const ChapterItemList = ({ chapterItems, onClick, selectedVideoId }: Chap
         return (
           <div key={index}
             onClick={() => handleClick(item)}
-            className={`border-b-2 h-[84px] flex flex-col justify-center cursor-pointer`}>
-            <div className="flex items-center">
-              {progressData?.isCompleted ? <CheckCircle size={16} color="#666666" weight="fill" /> : <Circle size={16} color="#666666" />}
-              {progressData?.isCompleted ? <span className="ml-[5px] text-base">학습완료</span> : progressData?.progress == '0.00' || !progressData?.progress ? <span className="ml-[5px] text-base">학습전</span> : <span className="ml-[5px] text-base">학습중</span>}
+            className={`border-b-[1px] flex flex-col justify-center cursor-pointer py-3`}>
+            <div className="flex items-center mb-1">
+              {progressData?.isCompleted ? <CheckCircle size={16} className=" text-primary-800" weight="fill" /> : <Circle size={16} className="text-muted-400" />}
+              {progressData?.isCompleted ? <span className="ml-1 text-xs text-primary-800 font-semibold">학습완료</span> : progressData?.progress == '0.00' || !progressData?.progress ? <span className="ml-1 text-xs font-semibold text-muted-400">학습전</span> : <span className="ml-1 text-xs font-semibold text-muted-400">학습중</span>}
             </div>
-            <p className={`text-lg line-clamp-1 ${selectedVideoId === item.id ? 'font-bold' : ''}`}>{item.title}</p>
+            <p className={`text-base line-clamp-1 px-1 ${selectedVideoId === item.id ? 'font-semibold' : ''}`}>{item.title}</p>
           </div>
         )
       })}

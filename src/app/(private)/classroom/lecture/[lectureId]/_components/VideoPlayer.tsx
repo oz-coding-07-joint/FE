@@ -104,7 +104,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId, lectureId }: VideoPlayerProps) 
   return (
     <>
       {isWindow && (
-        <div className='w-[95%] aspect-video mt-5 flex flex-col items-center justify-center gap-5'>
+        <div className='w-full aspect-video flex flex-col items-center justify-center gap-3'>
           <ReactPlayer
             ref={playerRef}
             url={videoUrl}

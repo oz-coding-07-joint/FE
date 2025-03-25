@@ -123,7 +123,7 @@ const MyPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] py-5">
       <div className="bg-white w-[600px] py-10 px-14 rounded-md shadow-md">
         <h2 className="text-4xl font-bold text-center mb-6 text-muted-600">
           마이페이지

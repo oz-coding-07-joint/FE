@@ -52,8 +52,8 @@ const AssignmentList = ({ selectedChapter, setSelectedChapter, setSelectedAssign
 
   return (
     <div className="bg-white rounded-md shadow-md overflow-hidden w-1/4 h-[75vh]">
-      <div className="bg-[#F5F9FF] p-4 h-16 flex items-center justify-start border border-gray-300">
-        <h2 className="text-xl font-semibold text-black">과제 목록</h2>
+      <div className="bg-[#F5F9FF] h-16 flex items-center w-full px-4">
+        <h2 className="h-max w-max font-medium text-primary-900">과제 목록</h2>
       </div>
       <div className="mt-4 px-4">
         <select

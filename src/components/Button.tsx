@@ -5,6 +5,7 @@ interface CustomButtonProps {
   variant?: "primary" | "secondary" | "outline" | "danger";
   disabled?: boolean;
   type?: "button" | "submit";
+  width?: string;
 }
 
 export default function Button({
@@ -14,6 +15,7 @@ export default function Button({
   variant = "primary",
   disabled = false,
   type = "button",
+  width = "w-auto",
 }: CustomButtonProps) {
   // 크기별 스타일 설정
   const sizeClasses = {
@@ -36,7 +38,7 @@ export default function Button({
       onClick={onClick}
       disabled={disabled}
       type={type}
-      className={`w-auto min-w-fit rounded-sm text-center transition duration-200 whitespace-nowrap ${
+      className={`${width} min-w-fit rounded-sm text-center transition duration-200 whitespace-nowrap ${
         sizeClasses[size]
       } ${variantClasses[variant]} ${
         disabled ? "opacity-70 cursor-not-allowed" : ""

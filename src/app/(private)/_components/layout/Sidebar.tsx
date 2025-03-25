@@ -14,7 +14,7 @@ const Sidebar = () => {
     clsx('flex items-center gap-3 hover:text-gray-300 transition-colors', activeTab === tab ? 'text-white' : 'text-white text-opacity-60')
 
   return (
-    <aside className="w-60 min-w-[160px] bg-gray-800 text-white relative">
+    <aside className="w-60 min-w-[140px] bg-gray-800 text-white relative">
       <div className="flex flex-col justify-center">
         <h2 className="text-2xl h-16 flex justify-center items-center border-b border-[#3B4861]">
         <Link href="/" className="cursor-pointer">

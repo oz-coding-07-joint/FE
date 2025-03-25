@@ -9,8 +9,8 @@ export default function AssignmentsPage() {
   const { lectures } = useLectureListStore();
 
   return (
-    <div className="bg-muted-100 h-screen px-5 pt-5">
-      <h1 className="text-3xl font-bold pb-3">과제</h1>
+    <div className="p-8">
+      <h1 className="text-3xl font-semibold mb-5">과제</h1>
       {lectures.length === 0 ? (
         <div className="text-center text-gray-600">수강중인 강의가 없습니다</div>
       ) : (

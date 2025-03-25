@@ -56,11 +56,11 @@ const LectureDetailPage = () => {
     clsx('h-max w-max', activeTab === tab ? 'font-bold text-primary-900' : 'text-muted-400')
 
   return (
-    <div className='bg-muted-100 h-screen px-5 pt-5'>
+    <div className='p-8'>
       {lectureId && (
         <>
-          <h1 className='text-3xl font-bold pb-3'>{selectedLecture?.title ?? 'title'}</h1>
-          <div className='flex gap-5'>
+          <h1 className='text-3xl font-semibold mb-5'>{selectedLecture?.title ?? 'title'}</h1>
+          <div className='flex gap-5 items-stretch '>
             <DetailContainer
               leftTab={
                 <button className={tabClassName('lecture')}
@@ -72,8 +72,8 @@ const LectureDetailPage = () => {
                   onClick={() => setActiveTab('materials')}
                 >학습자료</button>
               }
-              width='max-w-sm'
-              height='h-[800px]'
+              width='max-w-md'
+              height='h-auto'
             >
               <div className='flex justify-center m-[1rem]'>
                 {chaptersLoading ? (
@@ -99,9 +99,9 @@ const LectureDetailPage = () => {
                 )}
               </div>
             </DetailContainer>
-            <div className='bg-white w-full h-[800px] rounded-md shadow-md flex flex-col items-center gap-[10px]'>
+            <div className='bg-white w-full rounded-md shadow-md flex flex-col items-center gap-[10px] p-5'>
               {chaptersLoading || videoLoading ? (
-                <LoadingSkeleton container='w-[95%] aspect-video mt-5 flex items-center justify-center' />
+                <LoadingSkeleton container='w-full aspect-video flex items-center justify-center' />
               ) : (
                 <VideoPlayer videoUrl={chapterDetails?.videoUrl ?? ''} chapterVideoId={selectedVideoId} lectureId={lectureId}/>
               )}

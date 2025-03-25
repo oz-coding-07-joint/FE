@@ -56,9 +56,9 @@ const AssignmentPage = () => {
   return (
     <div className="p-8">
       {/* 강의 제목 표시 */}
-      <h1 className="text-3xl font-bold mb-8">{lecture.title}</h1>
+      <h1 className="text-3xl font-semibold mb-5">{lecture.title}</h1>
 
-      <div className="flex gap-6">
+      <div className="flex gap-6 items-stretch">
         {/* 과제 목록 */}
         <AssignmentList
           selectedChapter={selectedChapter}
