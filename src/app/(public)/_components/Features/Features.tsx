@@ -11,7 +11,7 @@ export default function Features() {
       {/* 내부 컨텐츠 */}
       <div className="relative px-5 md:px-10 lg:px-20 my-32 flex flex-col lg:flex-row gap-[180px]">
         {/* 타이틀 */}
-        <div className="text-4xl flex flex-col text-center md:text-left">
+        <div className="text-4xl flex flex-col">
           <span>
             상상<span className="text-accent-500">上上</span>을
           </span>
