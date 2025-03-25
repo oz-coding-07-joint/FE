@@ -29,7 +29,7 @@ export default function Mainpage() {
   }, [searchParams, pathname]);
 
   return (
-    <div className="bg-primary-900 flex flex-col text-xl font-bold">
+    <div className="bg-primary-900 flex flex-col text-xl font-bold overflow-hidden">
       <div className="relative h-screen flex justify-center items-center ">
         {/* 배경 이미지 + 투명도 적용 */}
         <div className="absolute inset-0 bg-mainImage bg-cover bg-no-repeat bg-center opacity-40"></div>
