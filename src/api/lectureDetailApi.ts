@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import api from "./api";
 import { AxiosError } from "axios";
+import { useEffect } from "react";
 
 // 챕터 리스트
 export const useChapters = (lectureId: number) =>
