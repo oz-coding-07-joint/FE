@@ -5,7 +5,6 @@ import { Assignment, AssignmentComment } from "@/types/assignment";
 import AssignmentCommentForm from "./AssignmentCommentForm";
 import { fetchAssignmentsComment, submitAssignmentComment } from "@/api/assignmentApi";
 import { Paperclip } from "phosphor-react";
-import { useRouter } from "next/router";
 
 interface AssignmentFeedbackProps {
   selectedAssignment: Assignment | null;

@@ -1,4 +1,3 @@
-import { User } from "./auth";
 
 interface SAssignmentList {
     lecture_chapter_id: number;
