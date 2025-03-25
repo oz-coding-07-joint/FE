@@ -10,6 +10,9 @@ interface LectureCardProps {
 }
 
 const LectureCard = ({ type, lecture }: LectureCardProps) => {
+  // progressRate를 정수로 변환
+  const roundedProgressRate = Math.round(lecture.progressRate || 0);
+
   return (
     <>
       {/* 썸네일 및 제목 클릭 시 상세 페이지 이동 */}
@@ -27,10 +30,12 @@ const LectureCard = ({ type, lecture }: LectureCardProps) => {
             <div className="w-full bg-gray-200 h-2 rounded-full">
               <div
                 className="bg-primary-600 h-2 rounded-full"
-                style={{ width: `${lecture.progressRate}%` }}
+                style={{ width: `${roundedProgressRate}%` }} // 진행 바도 정수로
               ></div>
             </div>
-            <p className="text-gray-500 text-sm mt-1">{lecture.progressRate}% 강좌 완료</p>
+            <p className="text-gray-500 text-sm mt-1">
+              {roundedProgressRate}% 강좌 완료
+            </p>
           </div>
         </div>
       </Link>
