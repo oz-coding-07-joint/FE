@@ -20,7 +20,7 @@ export default function AssignmentsPage() {
               key={lecture.id}
               className="bg-white rounded-lg shadow-md w-full min-w-[250px] max-w-[300px] hover:shadow-lg transition-shadow"
             >
-              <LectureCard lecture={lecture} type="assignments" />
+              <LectureCard lecture={lecture} type="assignment" />
             </div>
           ))}
         </div>

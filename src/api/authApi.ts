@@ -139,8 +139,8 @@ export const postSocialSignup = async (socialProfileData: {
 };
 
 // 회원 탈퇴
-export const postUserDelete = async () => {
-  const response = await api.post("/users/withdrawal/");
+export const deleteUser = async () => {
+  const response = await api.delete("/users/withdrawal/");
   return response.data;
 };
 

@@ -12,6 +12,7 @@ import {
   verifyEmailCode,
   getTerms,
   postSocialSignup,
+  deleteUser,
 } from "@/api/authApi";
 import { Term, User } from "@/types/auth";
 import { useRouter } from "next/navigation";
@@ -169,17 +170,19 @@ export const useSignup = () => {
 
 // 소셜 로그인 후 유저정보 업데이트
 export const useSocialSignup = () => {
-  const { user, logout, restoreUser } = useAuthStore()
+  const { logout, login } = useAuthStore()
   const router = useRouter();
 
   return useMutation({
     mutationFn: postSocialSignup,
     onSuccess: () => {
-      if (user) {
-        restoreUser(); // Zustand 상태 업데이트
-        console.log("Zustand 상태 업데이트 완료:", user);
-        router.push("/"); // 홈으로 이동
-      } 
+      const currentUser = useAuthStore.getState().user;
+    
+      if (currentUser) {
+        login(currentUser);
+        console.log("Zustand 상태 업데이트 완료:", currentUser);
+        router.push("/");
+      }
     },
     onError: (error) => {
       console.error("소셜 회원가입:", error);
@@ -193,5 +196,24 @@ export const useGetTerms = () => {
   return useQuery<Term[]>({
     queryKey: ["terms"],
     queryFn: getTerms,
+  });
+};
+
+// 회원탈퇴
+export const useDeleteUser = () => {
+  const { logout } = useAuthStore();
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  return useMutation({
+    mutationFn: async () => {
+      await deleteUser(); // 회원탈퇴 요청
+      logout(); // Zustand 상태 초기화
+      await queryClient.invalidateQueries({ queryKey: ["user"] }); // 유저 정보 다시 불러오기
+      router.push("/"); // 메인으로 이동
+    },
+    onError: (error) => {
+      console.error("회원탈퇴 실패:", error);
+    },
   });
 };

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useLogout } from "@/hooks/useAuth";
-import { UserCircle } from "phosphor-react";
+import { SignOut, User, UserCircle } from "phosphor-react";
 import { useAuthStore } from "@/store/useAuthStore";
 
 const UserMenu = () => {
@@ -30,19 +30,21 @@ const UserMenu = () => {
           </button>
 
           {menuOpen && (
-            <div className="absolute right-0 mt-2 w-40 bg-white text-black shadow-lg rounded-md py-2">
+            <div className="absolute text-left right-0 mt-2 w-32 bg-white text-black shadow-lg rounded-md py-2">
               <Link
                 href="/mypage"
-                className="block px-4 py-2 hover:bg-gray-200"
+                className="flex gap-1 items-center px-4 py-2 text-sm hover:bg-gray-200"
                 onClick={() => setMenuOpen(false)}
               >
+                <User size={18}  className="text-muted-400" />
                 내 정보 수정
               </Link>
               <button
                 onClick={handleLogout}
-                className="block w-full text-left px-4 py-2 hover:bg-gray-200"
+                className="flex gap-1 items-center w-full text-left px-4 py-2 text-sm text-danger-500 hover:bg-gray-200"
                 disabled={isLoading}
               >
+                <SignOut size={18}  className="text-danger-500" />
                 {isLoading ? "로그아웃 중..." : "로그아웃"}
               </button>
             </div>
