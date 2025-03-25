@@ -23,7 +23,7 @@ export default function Features() {
         </div>
 
         {/* 설명 컨텐츠 */}
-        <div className="flex flex-col gap-28 w-[1350px]">
+        <div className="flex flex-col gap-28 w-[800px] lg:w-[1350px]">
           <FeatureText
             quote="...학원을 다니기엔 시간이 맞지 않고, 독학하려니 채점도 안 되고, 맞게 하고 있는지도 모르겠어요..."
             author="10대 예중/예고 진학생"
