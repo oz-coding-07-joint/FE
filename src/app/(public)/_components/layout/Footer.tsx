@@ -3,7 +3,7 @@
 export default function Footer() {
   return (
     <div>
-      <div className="h-[180px] py-5 text-white font-normal bg-black bg-opacity-50 text-sm px-10 flex flex-col gap-5">
+      <div className="h-[180px] py-5 text-white font-normal bg-[#121C30] text-sm px-10 flex flex-col gap-5">
         <div className="flex flex-col leading-6">
           <div>
             <span>사업자명 : 음악 더하기</span>
