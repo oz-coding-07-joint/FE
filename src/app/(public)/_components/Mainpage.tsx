@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
 import Image from "next/image";
 import Logoimg from "../../../assets/images/sangsangLogo.png";
 import Explanation from "./Explanation";
-import Wishlist from "./Wishlist";
+import Wishlist from "./Wishlist/Wishlist";
 import Features from "./Features/Features";
 import Learn from "./Learn/Learn";
 import Review from "./Review/Review";
