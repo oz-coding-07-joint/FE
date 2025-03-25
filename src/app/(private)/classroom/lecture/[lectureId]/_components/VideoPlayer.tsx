@@ -100,7 +100,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId, lectureId }: VideoPlayerProps) 
       setPlaying(true); // 다시 재생
     }
   };
-  
+
   // 다른 영상으로 갔을 때 상태 초기화
   useEffect(() => {
     progressRef.current = 0;
@@ -110,12 +110,14 @@ const VideoPlayer = ({ videoUrl, chapterVideoId, lectureId }: VideoPlayerProps) 
 
   // 모달
   useEffect(() => {
-    if (playing && !hasPlayed && progressData?.progress !== '0.00' && !progressData?.isCompleted && duration > 0) {
-      openModal('continueVideo')
-      setPlaying(false);
-      setHasPlayed(true);
+    if (progressData?.isCompleted === false) {
+      if (!playing && !hasPlayed && progressData?.progress !== '0.00' && duration > 0) {
+        openModal('continueVideo')
+        setPlaying(false);
+        setHasPlayed(true);
+      }
     }
-  }, [playing]);
+  }, [videoUrl]);
 
   const handlePlay = async () => {
     if (getProgressLoading) return;
