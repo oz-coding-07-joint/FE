@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import api from "@/api/api";
-import { Assignment, AssignmentComment, transformAssignmentComment } from "@/types/assignment";
+import { Assignment, AssignmentComment } from "@/types/assignment";
 import AssignmentCommentForm from "./AssignmentCommentForm";
+import { fetchAssignmentsComment, submitAssignmentComment } from "@/api/assignmentApi";
+import { Paperclip } from "phosphor-react";
+import { useRouter } from "next/router";
 
 interface AssignmentFeedbackProps {
   selectedAssignment: Assignment | null;
@@ -13,60 +15,89 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
   const [comments, setComments] = useState<AssignmentComment[]>([]);
 
   useEffect(() => {
-    if (selectedAssignment) {
-      const fetchComments = async () => {
-        try {
-          const response = await api.get(`/assignments/assignment-comment/${selectedAssignment.id}/`);
-          setComments(response.data.map(transformAssignmentComment));
-        } catch (error) {
-          console.error("❌ 댓글을 불러오는 데 실패했습니다:", error);
-        }
-      };
-
-      fetchComments();
-    }
-  }, [selectedAssignment]);
-
-  const submitComment = async (newComment: AssignmentComment) => {
     if (!selectedAssignment) return;
 
+    const fetchComments = async () => {
+      const data = await fetchAssignmentsComment(selectedAssignment.id);
+      setComments(data);
+    };
+
+    fetchComments();
+  }, [selectedAssignment]);
+
+  const submitComment = async (newComment: AssignmentComment, file: File | null) => {
+    if (!selectedAssignment) return;
+  
     try {
-      await api.post(`/assignments/assignment-comment/${selectedAssignment.id}/`, newComment);
-      setComments((prevComments) => [...prevComments, newComment]);
-    } catch (error) {
-      console.error("❌ 댓글 제출에 실패했습니다:", error);
+      const formData = new FormData();
+      formData.append("content", newComment.content);
+      formData.append("parent", newComment.parentId?.toString() || "");
+      formData.append("assignmentId", selectedAssignment.id.toString());
+  
+      if (file) {
+        formData.append("file", file); // 여기에서 파일 실제 업로드
+      }
+  
+      await submitAssignmentComment(selectedAssignment.id, formData);
+  
+      // 업로드 후 댓글 새로고침
+      const updatedComments = await fetchAssignmentsComment(selectedAssignment.id);
+      setComments(updatedComments);
+    } catch (err) {
+      console.error("과제 제출 실패:", err);
     }
   };
+  
 
-  return (
+  return selectedAssignment ? (
     <div className="bg-white rounded-md shadow-md overflow-hidden w-1/4 h-[75vh] flex flex-col">
       <div className="bg-[#F5F9FF] h-16 flex items-center w-full px-4">
-        <h2 className="h-max w-max font-medium text-primary-900">과제 피드백</h2>
+        <h2 className="h-max w-max font-medium text-primary-900">과제피드</h2>
       </div>
-      <div className="p-4 overflow-y-auto flex-1 space-y-2">
+      <div className="px-2 overflow-y-auto flex-1 space-y-2">
         {comments.length > 0 ? (
           comments.map((comment) => (
-            <div key={comment.id} className="border p-2 rounded-md bg-white">
-              <div className="flex justify-between text-sm text-gray-500">
-                <span>{comment.userNickname}</span>
-                <span>{new Date(comment.createdAt).toLocaleString()}</span>
+            <div key={comment.id} className="border-b-[1px] p-2 bg-white">
+              <div className="flex gap-1 items-center">
+                <span className="font-medium">{comment.userNickname}</span>
+                <span className="text-xs text-muted-300">
+                  {new Date(comment.createdAt).toLocaleString()}
+                </span>
               </div>
-              <p className="text-gray-800 mt-2">{comment.content}</p>
+              <p className="text-muted-500 mt-2 text-sm">{comment.content}</p>
+              {comment.fileUrl && (
+                <a
+                  href={comment.fileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center text-sm text-black underline block mt-1"
+                >
+                  <Paperclip size={12} /> 첨부파일
+                </a>
+              )}
             </div>
           ))
         ) : (
-          <p className="text-gray-500 text-center">아직 댓글이 없습니다.</p>
+          <p className="text-gray-500 text-center">과제피드 내역이 없습니다.</p>
         )}
       </div>
       <div className="p-4 border-t bg-white">
         <AssignmentCommentForm
           onSubmit={submitComment}
-          assignmentId={selectedAssignment?.id || 0}
+          assignmentId={selectedAssignment.id}
           parentId={null}
         />
       </div>
     </div>
+  ) : (
+    <div className="bg-white rounded-md shadow-md overflow-hidden w-1/4 h-[75vh] flex flex-col items-center ">
+      <div className="bg-[#F5F9FF] h-16 flex items-center w-full px-4">
+        <h2 className="h-max w-max font-medium text-primary-900">과제피드</h2>
+      </div>
+      <p className="text-gray-500 p-4">과제를 선택해주세요.</p>
+    </div>
   );
+
 };
 
 export default AssignmentFeedback;
