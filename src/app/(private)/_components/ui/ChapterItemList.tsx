@@ -9,17 +9,17 @@ interface ChapterItemListProps {
 }
 
 export const ChapterItemList = ({ chapterItems, onClick, selectedVideoId }: ChapterItemListProps) => {
-
   const progressQueries = useGetMultipleVideoProgress(chapterItems);
-  console.log('progressQueris', progressQueries)
 
   const handleClick = (chapterItem: Video) => {
     onClick(chapterItem);
   }
 
+  const sortedChapterItems = chapterItems.sort((a, b) => a.title.localeCompare(b.title));
+
   return (
     <div className="w-[85%]">
-      {chapterItems.map((item, index) => {
+      {sortedChapterItems.map((item, index) => {
         const progressData = progressQueries[index]?.data;
 
         return (

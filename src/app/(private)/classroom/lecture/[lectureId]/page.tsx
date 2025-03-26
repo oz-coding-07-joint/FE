@@ -93,7 +93,7 @@ const LectureDetailPage = () => {
                 {activeTab === 'lecture' ? (
                   currentChapter && currentChapter?.chapterVideoTitles?.length ? (
                     <ChapterItemList chapterItems={currentChapter?.chapterVideoTitles} onClick={(video: Video) => setSelectedVideoId(video.id)} selectedVideoId={selectedVideoId} />
-                  ) : (<div>Loading...</div>)
+                  ) : null
                 ) : (
                   <MaterialList materialInfo={currentChapter?.materialInfo} />
                 )}

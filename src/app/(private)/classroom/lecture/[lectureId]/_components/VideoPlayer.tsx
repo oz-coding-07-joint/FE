@@ -60,7 +60,6 @@ const VideoPlayer = ({ videoUrl, chapterVideoId, lectureId }: VideoPlayerProps) 
     try {
       const { data: newVideo } = await videoUrlRefetch();
       if (newVideo?.videoUrl) {
-        console.log('new video url', newVideo.videoUrl);
         setCurrentUrl(newVideo.videoUrl);
         setPendingSeekTime(currentTime)
       } else {
@@ -87,14 +86,12 @@ const VideoPlayer = ({ videoUrl, chapterVideoId, lectureId }: VideoPlayerProps) 
   };
 
   const handleSeek = (seekTime: number) => {
-    console.log(`User seeked to: ${seekTime} seconds`);
     progressRef.current = seekTime; // 현재 재생 위치 업데이트
     setPlaying(true); // 영상이 멈추지 않도록 유지
   };
 
   const handleReady = () => {
     if (pendingSeekTime !== null && playerRef.current) {
-      console.log(`Seeking to ${pendingSeekTime} seconds`);
       playerRef.current.seekTo(pendingSeekTime, 'seconds');
       setPendingSeekTime(null); // 적용 후 초기화
       setPlaying(true); // 다시 재생
