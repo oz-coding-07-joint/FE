@@ -12,6 +12,7 @@ import {
 } from "@/api/assignmentApi";
 import { ArrowElbowDownRight, Paperclip } from "phosphor-react";
 import { getFileNameFromUrl } from "@/utils/fileurl";
+import { forceDownload } from "@/utils/forceDownload"; // ✅ 다운로드 유틸 추가
 
 interface AssignmentFeedbackProps {
   selectedAssignment: Assignment | null;
@@ -51,9 +52,10 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
     }
   };
 
+  // ✅ 재귀적으로 댓글과 답글 렌더링
   const renderComment = (comment: AssignmentComment, depth = 0): JSX.Element[] => {
     const isReply = depth > 0;
-  
+
     const parentComment = (
       <div
         key={`comment-${comment.id}`}
@@ -67,27 +69,22 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
           </div>
           <p className="text-muted-500 mt-1">{comment.content}</p>
           {comment.fileUrl && (
-            <a
-              href={comment.fileUrl}
-              download={comment.fileUrl}
-              className="flex text-xs text-black underline mt-1"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => forceDownload(comment.fileUrl, getFileNameFromUrl(comment.fileUrl))}
+              className="flex items-center text-xs text-blue-600 underline mt-1"
             >
               <Paperclip size={12} className="mr-1" />
               {getFileNameFromUrl(comment.fileUrl)}
-            </a>
+            </button>
           )}
         </div>
       </div>
     );
-  
-    const replyComments = comment.replies.flatMap((reply) => renderComment(reply, depth + 1));
-  
+
+    const replyComments = comment.replies?.flatMap((reply) => renderComment(reply, depth + 1)) || [];
+
     return [parentComment, ...replyComments];
   };
-  
-  
 
   return selectedAssignment ? (
     <div className="bg-white rounded-md shadow-md overflow-hidden w-1/4 h-[75vh] flex flex-col">
