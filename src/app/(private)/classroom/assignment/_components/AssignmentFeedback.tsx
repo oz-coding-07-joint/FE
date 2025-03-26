@@ -82,6 +82,7 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
                   rel="noopener noreferrer"
                 >
                   <Paperclip size={12} className="mr-1" />
+                  {getFileNameFromUrl(comment.fileUrl)}
                 </a>
               )}
             </div>
