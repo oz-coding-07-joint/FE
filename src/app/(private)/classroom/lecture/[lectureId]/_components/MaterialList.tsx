@@ -5,8 +5,6 @@ import { useState } from 'react';
 type MaterialListProps = Partial<Pick<Chapter, 'materialInfo'>> 
 
 const MaterialList = ({ materialInfo }: MaterialListProps) => {
-  const [blobUrl, setBlobUrl] = useState<string | null>(null)
-  const [downloading, setDownloading] = useState(false);
 
   if(!materialInfo) return null;
   console.log("Download URL:", materialInfo.downloadUrl);
@@ -17,14 +15,12 @@ const MaterialList = ({ materialInfo }: MaterialListProps) => {
       console.error ('Download URL is missing');
       return;
     }
-    setDownloading(true);
     try {
       const response = await fetch(materialInfo.downloadUrl);
       if(!response.ok) throw new Error('Failed to fetch file');
 
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
-      setBlobUrl(url)
 
       const a = document.createElement('a');
       a.href = url;
@@ -35,8 +31,6 @@ const MaterialList = ({ materialInfo }: MaterialListProps) => {
 
     } catch (error) {
       console.error('Download failed:', error);
-    } finally {
-      setDownloading(false);
     }
   }
 
