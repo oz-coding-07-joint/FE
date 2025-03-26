@@ -73,6 +73,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId, lectureId }: VideoPlayerProps) 
   };
 
   const handleError = async (error: AxiosError) => {
+    console.log('handleError', error);
     if (isUpdatingUrl) return;
     setPlaying(false)
     try {
