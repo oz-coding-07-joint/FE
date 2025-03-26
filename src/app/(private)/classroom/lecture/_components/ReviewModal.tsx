@@ -66,7 +66,9 @@ const ReviewModal = ({ lectureTitle, lectureId }: ReviewModalProps) => {
             className="w-full p-2 border rounded text-black placeholder-gray-400 h-[200px] resize-none"
             placeholder="이 강의에 대한 후기를 작성해 주세요."
           />
-          <Button label="제출하기" onClick={handleReviewSubmit} variant="primary" size="medium" />
+          <div className="flex justify-center">
+            <Button label="제출하기" onClick={handleReviewSubmit} variant="primary" size="small" />
+          </div>
         </div>
       )}
     </Modal>

@@ -94,7 +94,7 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
       <div className="bg-[#F5F9FF] h-16 flex items-center w-full px-4">
         <h2 className="text-xl font-medium text-primary-900">과제피드</h2>
       </div>
-      <div className="px-2 overflow-y-auto flex-1 space-y-2">
+      <div className="p-2 overflow-y-auto flex-1">
         {comments.length > 0 ? (
           comments.map((comment) => renderComment(comment))
         ) : (
