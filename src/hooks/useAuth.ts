@@ -170,7 +170,7 @@ export const useSignup = () => {
 
 // 소셜 로그인 후 유저정보 업데이트
 export const useSocialSignup = () => {
-  const { logout, login, restoreUser } = useAuthStore()
+  const { login, restoreUser } = useAuthStore()
   const router = useRouter();
 
   return useMutation({
@@ -187,7 +187,6 @@ export const useSocialSignup = () => {
     },
     onError: (error) => {
       console.error("소셜 회원가입:", error);
-      logout();
     },
   });
 };
