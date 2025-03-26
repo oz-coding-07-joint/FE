@@ -4,11 +4,15 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   const cookieHeader = request.headers.get("cookie") || "";
   const hasAccessToken = cookieHeader.includes("access_token=");
+  const hasRefreshToken = cookieHeader.includes("refresh_token=");
 
-  if (!hasAccessToken) {
-    const redirectUrl = new URL("/", request.url);
-    redirectUrl.searchParams.set("login_required", "true"); // 첫 리디렉트 감지용 쿼리 추가
-    return NextResponse.redirect(redirectUrl);
+  const url = new URL(request.url);
+  const isRedirected = url.searchParams.get("login_required") === "true";
+
+  if (!hasAccessToken && !hasRefreshToken && !isRedirected) {
+    url.pathname = "/";
+    url.searchParams.set("login_required", "true");
+    return NextResponse.redirect(url);
   }
 
   return NextResponse.next();
