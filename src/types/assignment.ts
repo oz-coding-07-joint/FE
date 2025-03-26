@@ -56,6 +56,7 @@ export interface SAssignmentComment {
     content: string;
     created_at: Date;
     nickname: string;
+    replies: SAssignmentComment[];
 }
 
 export interface AssignmentComment {
@@ -66,6 +67,7 @@ export interface AssignmentComment {
     content: string;
     createdAt: Date;
     userNickname: string;
+    replies: AssignmentComment[];
 }
 
 export function transformAssignmentComment(comment: SAssignmentComment): AssignmentComment {
@@ -77,5 +79,6 @@ export function transformAssignmentComment(comment: SAssignmentComment): Assignm
         content: comment.content,
         createdAt: comment.created_at,
         userNickname: comment.nickname,
+        replies: comment.replies.map(transformAssignmentComment), // replies에 transformAssignmentComment()를 apply
     };
 }

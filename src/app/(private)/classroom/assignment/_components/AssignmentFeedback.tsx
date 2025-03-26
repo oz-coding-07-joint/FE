@@ -45,14 +45,14 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
         formData.append("file_url", file);
       }
       
-      // ✅ forEach 버전으로 대체
+      // forEach 버전으로 대체
       formData.forEach((value, key) => {
         console.log(`🧾 ${key}:`, value);
       });
 
       await submitAssignmentComment(selectedAssignment.id, formData);
 
-      // ✅ 댓글 새로고침
+      // 댓글 새로고침
       await loadComments(selectedAssignment.id);
     } catch (err) {
       console.error("❌ 과제 제출 실패:", err);
