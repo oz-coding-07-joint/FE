@@ -1,5 +1,5 @@
 import { Chapter } from '@/types/video';
-import { FilePdf } from 'phosphor-react';
+import { FileJpg } from 'phosphor-react';
 
 type MaterialListProps = Partial<Pick<Chapter, 'materialInfo'>> 
 
@@ -9,40 +9,19 @@ const MaterialList = ({ materialInfo }: MaterialListProps) => {
   console.log("Download URL:", materialInfo.downloadUrl);
   console.log("Download Name:", materialInfo.fileName);
 
-  const handleDownload = async () => {
-    if(!materialInfo.downloadUrl) {
-      console.error ('Download URL is missing');
-      return;
-    }
-    try {
-      const response = await fetch(materialInfo.downloadUrl);
-      if(!response.ok) throw new Error('Failed to fetch file');
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = materialInfo.fileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-
-    } catch (error) {
-      console.error('Download failed:', error);
-    }
-  }
-
   return (
     <div className='w-[85%]'>
-      <button className='flex items-center gap-3'
-        onClick={handleDownload}
+      <a className='flex items-center gap-3'
+       href={materialInfo.downloadUrl}
+       download={materialInfo.fileName}
+       target='_blank'
+       rel="noopener noreferrer"
       >
-        <FilePdf size={16} />
+        <FileJpg size={25} />
         <p className='w-[200px] line-clamp-1'>
           {materialInfo.fileName}
         </p>
-      </button>
+      </a>
     </div>
   );
 };
