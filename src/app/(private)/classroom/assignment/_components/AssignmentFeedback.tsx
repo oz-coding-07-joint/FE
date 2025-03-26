@@ -72,7 +72,7 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
                 <span>{comment.userNickname}</span>
                 <span>{new Date(comment.createdAt).toLocaleString()}</span>
               </div>
-              <p className="text-gray-800 mt-2">{comment.content}</p>
+              <p className="text-gray-800 mt-1">{comment.content}</p>
               {comment.fileUrl && (
                 <a
                   href={comment.fileUrl}
@@ -91,7 +91,7 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
           <p className="text-gray-500 text-center">과제피드 내역이 없습니다.</p>
         )}
       </div>
-      <div className="p-4 border-t bg-white">
+      <div className="p-4 bg-white">
         <AssignmentCommentForm
           onSubmit={submitComment}
           assignmentId={selectedAssignment.id}

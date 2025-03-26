@@ -28,7 +28,7 @@ const AssignmentDetail = ({ selectedAssignment }: AssignmentDetailProps) => {
         {selectedAssignment?.fileUrl ? (
           <a
             href={selectedAssignment.fileUrl}
-            download={getFileNameFromUrl(selectedAssignment.fileUrl)}
+            download={selectedAssignment.fileUrl}
             className="text-secondary-500 flex items-center gap-1 text-sm"
             rel="noopener noreferrer"
           >
