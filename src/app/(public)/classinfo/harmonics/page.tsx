@@ -20,10 +20,10 @@ const ClassDetailPage = () => {
   const handleRegistrationClick = async () => {
     if (!user) {
       alert("로그인이 필요합니다.");
-      openModal( "login" ); // Zustand 기반 로그인 모달 열기
+      openModal("login"); // Zustand 기반 로그인 모달 열기
       return;
     }
-    
+
     try {
       const response = await api.post<ResponseDataType>(
         "registrations/enrollment/1/"
@@ -61,9 +61,7 @@ const ClassDetailPage = () => {
             // 404 : 요청주소 에러 ( 404, 500 한번에 처리)
             // 500 : 서버 에러
             default:
-              alert(
-                "알수 없는 오류가 발생했습니다. 나중에 다시 시도해주세요"
-              );
+              alert("알수 없는 오류가 발생했습니다. 나중에 다시 시도해주세요");
           }
         } else {
           alert("네트워크 오류가 발생했습니다.");
@@ -134,7 +132,7 @@ const ClassDetailPage = () => {
         </div>
         {/* footer */}
         <div
-          className="sticky bottom-0 text-black bg-white w-[900px] lg:w-[1200px] h-[100px]  my-10 bg-opacity-80
+          className="sticky bottom-0 text-black bg-white w-[900px] lg:w-[1200px] h-[100px]  my-12 bg-opacity-80
         flex justify-center items-center rounded-md gap-52 lg:gap-96"
         >
           <div className="flex flex-col text-2xl">
@@ -142,7 +140,7 @@ const ClassDetailPage = () => {
               화성학 온라인 강의
             </span>
             <span className="text-muted-400 text-lg">
-              수강기간: 2025. 02. 01 ~ 2025. 02.28 / 수강료 330,000원
+              수강기간: 2025. 04. 01 ~ 2025. 04.30 / 수강료 330,000원
             </span>
           </div>
           <Button
