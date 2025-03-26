@@ -11,7 +11,7 @@ type Props = {
   email: string;
   onEmailChange?: (value: string) => void;
   onVerified: () => void;
-  disabled?: boolean; // 소셜 로그인 유저면 true
+  disabled?: boolean;
   showCodeInput?: boolean;
   error?: string;
 };
@@ -47,6 +47,15 @@ const EmailVerificationField = ({
     if (countdown === 0) setTimerActive(false);
   }, [countdown, timerActive]);
 
+  // 🔧 이메일이 바뀔 때 상태 초기화
+  useEffect(() => {
+    setError("");
+    setCode("");
+    setIsVerified(false);
+    setTimerActive(false);
+    setCountdown(0);
+  }, [email]);
+
   const handleSendCode = async () => {
     if (!email) return setError("이메일을 입력하세요.");
     if (!isValidEmail(email)) return setError("올바른 이메일 형식이 아닙니다.");
@@ -60,11 +69,10 @@ const EmailVerificationField = ({
       const axiosError = error as AxiosError<{ error?: string }>;
       const msg = axiosError.response?.data?.error || "이메일 인증 요청에 실패했습니다.";
 
-      // "이미 인증됨" 처리
       if (msg.includes("이미") && msg.includes("인증")) {
         setIsVerified(true);
         setError("이미 인증이 완료된 이메일입니다.");
-        onVerified(); // 콜백 실행
+        onVerified();
       } else {
         setError(msg);
       }
@@ -79,7 +87,7 @@ const EmailVerificationField = ({
       setTimerActive(false);
       setCountdown(0);
       setError("");
-      onVerified(); // 인증 완료 콜백 실행
+      onVerified();
     } catch (error: unknown) {
       const axiosError = error as AxiosError<{ message?: string }>;
       const msg = axiosError.response?.data?.message || "인증에 실패했습니다.";
@@ -107,23 +115,28 @@ const EmailVerificationField = ({
             placeholder="이메일을 입력하세요"
             button={
               !isVerified && (
-                <Button label="인증번호전송" onClick={handleSendCode} size="small" variant="secondary" />
+                <Button
+                  label="인증번호전송"
+                  onClick={handleSendCode}
+                  size="small"
+                  variant="secondary"
+                />
               )
             }
           />
-          {/* 외부 에러 or 내부 에러 메시지 */}
           {(externalError || error) && (
             <p className="text-secondary-500 text-xs mt-1">
               {externalError || error}
             </p>
           )}
           {isVerified && !error && (
-            <p className="text-secondary-500 text-xs mt-1">이메일 인증이 완료되었습니다.</p>
+            <p className="text-secondary-500 text-xs mt-1">
+              이메일 인증이 완료되었습니다.
+            </p>
           )}
         </>
       )}
 
-      {/* 인증번호 입력창 */}
       {showCodeInput && !disabled && !isVerified && (
         <div className="relative w-full flex items-center gap-2 h-12 px-2 border rounded-sm">
           <input

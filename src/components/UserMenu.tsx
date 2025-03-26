@@ -26,7 +26,7 @@ const UserMenu = () => {
             className="flex items-center gap-1 hover:text-gray-400"
           >
             <UserCircle size={28} />
-            <span>{user?.name}님</span>
+            <span>{user?.nickname}님</span>
           </button>
 
           {menuOpen && (
