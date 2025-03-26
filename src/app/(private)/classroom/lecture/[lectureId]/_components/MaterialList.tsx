@@ -1,5 +1,4 @@
 import { Chapter } from '@/types/video';
-import clsx from 'clsx';
 import { FileArrowDown, FileJpg, FilePdf, FilePng } from 'phosphor-react';
 
 type MaterialListProps = Partial<Pick<Chapter, 'materialInfo'>> 

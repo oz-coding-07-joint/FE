@@ -17,9 +17,11 @@ export const ChapterItemList = ({ chapterItems, onClick, selectedVideoId }: Chap
     onClick(chapterItem);
   }
 
+  const sortedChapterItems = chapterItems.sort((a, b) => a.title.localeCompare(b.title));
+
   return (
     <div className="w-[85%]">
-      {chapterItems.map((item, index) => {
+      {sortedChapterItems.map((item, index) => {
         const progressData = progressQueries[index]?.data;
 
         return (
