@@ -12,7 +12,6 @@ import Link from "next/link";
 import Image from "next/image";
 import SignupForm from "../_components/SignupForm";
 import TermsAgreement from "../_components/TermsAgreement";
-import { useRouter } from "next/router";
 
 const SocialSignupPage = () => {
   const [nickname, setNickname] = useState("");
@@ -23,7 +22,6 @@ const SocialSignupPage = () => {
   const [selectedTerm, setSelectedTerm] = useState<Term | null>(null);
 
   const socialSignUpMutation = useSocialSignup();
-  const router = useRouter();
 
   const [errors, setErrors] = useState({
     name: "",
@@ -107,7 +105,6 @@ const SocialSignupPage = () => {
     socialSignUpMutation.mutate(socialProfileData, {
       onSuccess: () => {
         alert("소셜 로그인 회원가입 성공!");
-        router.push("/"); // 메인 페이지로 리디렉트
       },
       onError: (error) => {
         const axiosError = error as AxiosError<{ [key: string]: string[] }>;

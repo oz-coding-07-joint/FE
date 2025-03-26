@@ -56,7 +56,7 @@ export interface SAssignmentComment {
     content: string;
     created_at: Date;
     nickname: string;
-    replies: SAssignmentComment[];
+    replies?: SAssignmentComment[];
 }
 
 export interface AssignmentComment {
@@ -67,7 +67,7 @@ export interface AssignmentComment {
     content: string;
     createdAt: Date;
     userNickname: string;
-    replies: AssignmentComment[];
+    replies?: AssignmentComment[];
 }
 
 export function transformAssignmentComment(comment: SAssignmentComment): AssignmentComment {
