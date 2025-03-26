@@ -1,4 +1,5 @@
 import { Chapter } from '@/types/video';
+import { getFileNameFromUrl } from '@/utils/fileurl';
 import { FilePdf } from 'phosphor-react';
 
 type MaterialListProps = Partial<Pick<Chapter, 'materialInfo'>> 
