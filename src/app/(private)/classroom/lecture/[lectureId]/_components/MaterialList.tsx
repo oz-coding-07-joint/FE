@@ -1,4 +1,5 @@
 import { Chapter } from '@/types/video';
+import { getFileNameFromUrl } from '@/utils/fileurl';
 import { FilePdf } from 'phosphor-react';
 
 type MaterialListProps = Partial<Pick<Chapter, 'materialInfo'>>
@@ -13,7 +14,7 @@ const MaterialList = ({ materialInfo }: MaterialListProps) => {
     <div className='w-[85%]'>
       <a className='flex items-center gap-3'
         href={materialInfo.downloadUrl}
-        download={materialInfo.downloadUrl}
+        download={getFileNameFromUrl(materialInfo.downloadUrl)}
         target='_blank'
         rel="noopener noreferrer"
       >
