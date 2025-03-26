@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import AssignmentList from "../_components/AssignmentList";
 import AssignmentDetail from "../_components/AssignmentDetail";
 import AssignmentFeedback from "../_components/AssignmentFeedback";
 import api from "@/api/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Assignment } from "@/types/assignment";
+import { useParams, useSearchParams } from "next/navigation";
+
 
 interface LectureDetail {
   id: number;
@@ -37,6 +38,24 @@ const AssignmentPage = () => {
   const { user } = useAuthStore();
   const params = useParams();
   const lectureId = Number(params.lectureId); // 문자열 → 숫자 변환
+  const searchParams = useSearchParams();
+  const initialAssignmentId = Number(searchParams.get("chapterVideoId"));
+
+  useEffect(() => {
+    if (!initialAssignmentId || selectedAssignment) return;
+  
+    const fetchAssignment = async () => {
+      try {
+        const res = await api.get(`/assignments/${initialAssignmentId}/`);
+        setSelectedAssignment(res.data);
+      } catch (err) {
+        console.error("❌ 과제 정보 불러오기 실패:", err);
+      }
+    };
+  
+    fetchAssignment();
+  }, [initialAssignmentId]);
+
 
   // 📌 강의 정보 불러오기
   useEffect(() => {

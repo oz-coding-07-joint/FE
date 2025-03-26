@@ -29,11 +29,11 @@ export const useAuthStore = create<AuthState>()((set) => ({
 
   restoreUser: async () => {
     try {
-      const token = Cookies.get("access_token"); // 쿠키에서 토큰 확인
-      if (!token) {
-        set(() => ({ user: null }));
-        return;
-      }
+      // const token = Cookies.get("access_token"); // 쿠키에서 토큰 확인
+      // if (!token) {
+      //   set(() => ({ user: null }));
+      //   return;
+      // }
 
       const user = await getUserInfo();
       console.log("새로고침 후 유저 정보 복원:", user);

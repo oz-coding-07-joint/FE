@@ -159,8 +159,12 @@ const VideoPlayer = ({ videoUrl, chapterVideoId, lectureId }: VideoPlayerProps) 
   }
 
   const handleAssignment = () => {
-    router.push(`/classroom/assignment/${lectureId}`)
-  }
+    const query = new URLSearchParams({
+      chapterVideoId: chapterVideoId?.toString() || "",
+    });
+    router.push(`/classroom/assignment/${lectureId}?${query.toString()}`);
+  };
+  
 
   return (
     <>
