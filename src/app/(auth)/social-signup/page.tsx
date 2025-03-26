@@ -105,7 +105,6 @@ const SocialSignupPage = () => {
     socialSignUpMutation.mutate(socialProfileData, {
       onSuccess: () => {
         alert("소셜 로그인 회원가입 성공!");
-
       },
       onError: (error) => {
         const axiosError = error as AxiosError<{ [key: string]: string[] }>;

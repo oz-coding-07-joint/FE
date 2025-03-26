@@ -10,7 +10,7 @@ import {
   fetchAssignmentsComment,
   submitAssignmentComment,
 } from "@/api/assignmentApi";
-import { Paperclip } from "phosphor-react";
+import { ArrowElbowDownRight, Paperclip } from "phosphor-react";
 import { getFileNameFromUrl } from "@/utils/fileurl";
 
 interface AssignmentFeedbackProps {
@@ -41,23 +41,53 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
       formData.append("assignmentId", selectedAssignment.id.toString());
 
       if (file) {
-        console.log("📎 첨부파일:", file.name);
         formData.append("file_url", file);
       }
-      
-      // ✅ forEach 버전으로 대체
-      formData.forEach((value, key) => {
-        console.log(`🧾 ${key}:`, value);
-      });
 
       await submitAssignmentComment(selectedAssignment.id, formData);
-
-      // ✅ 댓글 새로고침
       await loadComments(selectedAssignment.id);
     } catch (err) {
       console.error("❌ 과제 제출 실패:", err);
     }
   };
+
+  const renderComment = (comment: AssignmentComment, depth = 0): JSX.Element[] => {
+    const isReply = depth > 0;
+  
+    const parentComment = (
+      <div
+        key={`comment-${comment.id}`}
+        className={`border-b p-2 bg-white ${isReply ? "flex gap-2" : ""}`}
+      >
+        {isReply && <ArrowElbowDownRight size={14} className="mt-1" />}
+        <div className="flex-1">
+          <div className="flex gap-1 items-center text-sm">
+            <span>{comment.userNickname}</span>
+            <span className="text-muted-300 text-xs">{new Date(comment.createdAt).toLocaleString()}</span>
+          </div>
+          <p className="text-muted-500 mt-1">{comment.content}</p>
+          {comment.fileUrl && (
+            <a
+              href={comment.fileUrl}
+              download={comment.fileUrl}
+              className="flex text-xs text-black underline mt-1"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Paperclip size={12} className="mr-1" />
+              {getFileNameFromUrl(comment.fileUrl)}
+            </a>
+          )}
+        </div>
+      </div>
+    );
+  
+    const replyComments = comment.replies.flatMap((reply) => renderComment(reply, depth + 1));
+  
+    return [parentComment, ...replyComments];
+  };
+  
+  
 
   return selectedAssignment ? (
     <div className="bg-white rounded-md shadow-md overflow-hidden w-1/4 h-[75vh] flex flex-col">
@@ -66,27 +96,7 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
       </div>
       <div className="px-2 overflow-y-auto flex-1 space-y-2">
         {comments.length > 0 ? (
-          comments.map((comment) => (
-            <div key={comment.id} className="border-b p-2 bg-white">
-              <div className="flex justify-between text-sm text-gray-500">
-                <span>{comment.userNickname}</span>
-                <span>{new Date(comment.createdAt).toLocaleString()}</span>
-              </div>
-              <p className="text-gray-800 mt-1">{comment.content}</p>
-              {comment.fileUrl && (
-                <a
-                  href={comment.fileUrl}
-                  download={comment.fileUrl}
-                  className="flex items-center text-xs text-black underline mt-1"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Paperclip size={12} className="mr-1" />
-                  {getFileNameFromUrl(comment.fileUrl)}
-                </a>
-              )}
-            </div>
-          ))
+          comments.map((comment) => renderComment(comment))
         ) : (
           <p className="text-gray-500 text-center">과제피드 내역이 없습니다.</p>
         )}
