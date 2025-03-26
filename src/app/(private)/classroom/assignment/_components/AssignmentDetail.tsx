@@ -30,7 +30,6 @@ const AssignmentDetail = ({ selectedAssignment }: AssignmentDetailProps) => {
             href={selectedAssignment.fileUrl}
             download={selectedAssignment.fileUrl}
             className="text-secondary-500 flex items-center gap-1 text-sm"
-            rel="noopener noreferrer"
           >
             <Paperclip size={16} className="text-secondary-500" />
             {getFileNameFromUrl(selectedAssignment.fileUrl)}

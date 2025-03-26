@@ -14,11 +14,11 @@ export default function AssignmentsPage() {
       {lectures.length === 0 ? (
         <div className="text-center text-gray-600">수강중인 강의가 없습니다</div>
       ) : (
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,300px))] gap-4 justify-items-center">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,300px))] gap-4 justify-items-center">
           {lectures.map((lecture: Lecture) => (
             <div
               key={lecture.id}
-              className="bg-white rounded-lg shadow-md w-full min-w-[250px] max-w-[300px] hover:shadow-lg transition-shadow"
+              className="bg-white rounded-lg shadow-md w-full min-w-[260px] max-w-[300px] hover:shadow-lg transition-shadow"
             >
               <LectureCard lecture={lecture} type="assignment" />
             </div>

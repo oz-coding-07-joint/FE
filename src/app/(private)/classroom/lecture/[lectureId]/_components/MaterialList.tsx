@@ -14,7 +14,6 @@ const MaterialList = ({ materialInfo }: MaterialListProps) => {
       <a className='flex items-center gap-3'
        href={materialInfo.downloadUrl}
        download={materialInfo.fileName}
-       target='_blank'
        rel="noopener noreferrer"
       >
         <FileJpg size={25} />
