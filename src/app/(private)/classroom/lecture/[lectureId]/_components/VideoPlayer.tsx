@@ -159,7 +159,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId, lectureId }: VideoPlayerProps) 
   }
 
   const handleAssignment = () => {
-    router.push(`/classroom/assignments/${lectureId}`)
+    router.push(`/classroom/assignment/${lectureId}`)
   }
 
   return (
