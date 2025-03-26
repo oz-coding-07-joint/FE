@@ -1,5 +1,6 @@
 import { Chapter } from '@/types/video';
-import { FileJpg } from 'phosphor-react';
+import clsx from 'clsx';
+import { FileArrowDown, FileJpg, FilePdf, FilePng } from 'phosphor-react';
 
 type MaterialListProps = Partial<Pick<Chapter, 'materialInfo'>> 
 
@@ -9,6 +10,8 @@ const MaterialList = ({ materialInfo }: MaterialListProps) => {
   console.log("Download URL:", materialInfo.downloadUrl);
   console.log("Download Name:", materialInfo.fileName);
 
+  const extension = materialInfo.fileName.slice(-3);
+
   return (
     <div className='w-[85%]'>
       <a className='flex items-center gap-3'
@@ -17,7 +20,16 @@ const MaterialList = ({ materialInfo }: MaterialListProps) => {
        target='_blank'
        rel="noopener noreferrer"
       >
-        <FileJpg size={25} />
+        {extension === 'pdf' ? (
+          <FilePdf size={25} />
+        ): extension === 'jpg' || extension === 'jpeg' ? (
+            <FileJpg size={25} />
+          ) : extension === 'png' ? (
+            <FilePng size={25} />
+          ) : (
+            <FileArrowDown size={25} />
+          )
+         }
         <p className='w-[200px] line-clamp-1'>
           {materialInfo.fileName}
         </p>
