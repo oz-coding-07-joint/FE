@@ -11,6 +11,7 @@ import {
   submitAssignmentComment,
 } from "@/api/assignmentApi";
 import { Paperclip } from "phosphor-react";
+import { getFileNameFromUrl } from "@/utils/fileurl";
 
 interface AssignmentFeedbackProps {
   selectedAssignment: Assignment | null;
@@ -75,12 +76,12 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
               {comment.fileUrl && (
                 <a
                   href={comment.fileUrl}
+                  download={getFileNameFromUrl(comment.fileUrl)}
+                  className="flex items-center text-sm text-black underline mt-1"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center text-sm text-blue-600 underline mt-1 gap-1"
                 >
-                  <Paperclip size={14} />
-                  첨부파일
+                  <Paperclip size={12} className="mr-1" />
                 </a>
               )}
             </div>
