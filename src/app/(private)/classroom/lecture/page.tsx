@@ -44,7 +44,7 @@ const LecturePage = () => {
 
   if (lectures.length === 0) {
     return (
-      <div className="bg-muted-100 h-screen px-5 pt-5 flex items-center justify-center">
+      <div className="p-8 flex items-center justify-center">
         <div className="text-center text-gray-600 text-xl">
           수강중인 강의가 없습니다
         </div>
@@ -53,25 +53,29 @@ const LecturePage = () => {
   }
 
   return (
-    <div className="bg-muted-100 h-screen px-5 pt-5">
-      <h1 className="text-3xl font-bold pb-3">수업자료</h1>
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,300px))] gap-4 justify-items-center">
+    <div className="p-8">
+      <h1 className="text-3xl font-semibold mb-5">수업자료</h1>
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,300px))] gap-4 justify-items-center">
         {lectures.map((lecture: Lecture) => (
           <div
             key={lecture.id}
-            className="bg-white rounded-lg shadow-md w-full min-w-[250px] max-w-[300px] hover:shadow-lg transition-shadow"
+            className="bg-white rounded-lg shadow-md w-full min-w-[260px] max-w-[300px] hover:shadow-lg transition-shadow"
           >
             <LectureCard lecture={lecture} type="lecture" />
-            <div className="flex gap-2 p-4">
+            <div className="flex gap-2 px-4 pb-4 justify-around">
               <Button
                 label="강의 상세보기"
                 onClick={() => handleLectureDetail(lecture.id)}
-                variant="primary"
+                variant="outline"
+                size="small"
+                width="w-1/2"
               />
               <Button
                 label="강의 리뷰작성"
                 onClick={() => handleReviewClick(lecture.id, lecture.title)}
-                variant="outline"
+                variant="secondary"
+                size="small"
+                width="w-1/2"
               />
             </div>
           </div>
