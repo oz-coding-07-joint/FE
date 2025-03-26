@@ -9,9 +9,7 @@ interface ChapterItemListProps {
 }
 
 export const ChapterItemList = ({ chapterItems, onClick, selectedVideoId }: ChapterItemListProps) => {
-
   const progressQueries = useGetMultipleVideoProgress(chapterItems);
-  console.log('progressQueris', progressQueries)
 
   const handleClick = (chapterItem: Video) => {
     onClick(chapterItem);
