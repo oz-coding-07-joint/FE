@@ -76,8 +76,8 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
               {comment.fileUrl && (
                 <a
                   href={comment.fileUrl}
-                  download={getFileNameFromUrl(comment.fileUrl)}
-                  className="flex items-center text-sm text-black underline mt-1"
+                  download={comment.fileUrl}
+                  className="flex items-center text-xs text-black underline mt-1"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
