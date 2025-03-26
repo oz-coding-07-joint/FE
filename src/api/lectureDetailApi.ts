@@ -16,7 +16,8 @@ export const useChapters = (lectureId: number) =>
       const response = await api.get(`/courses/lecture_chapter/${lectureId}/`);
       const transformedChapter = response.data.map((chapter: SChapter) =>
         transformChapter(chapter)
-      );
+    );
+    console.log(transformedChapter)
       return transformedChapter;
     },
     staleTime: 1000 * 60 * 10,
