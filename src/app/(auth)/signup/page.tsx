@@ -119,7 +119,7 @@ const SignupPage = () => {
         alert("회원가입 성공! 자동으로 로그인됩니다.");
       },
       onError: (error) => {
-        const axiosError = error as AxiosError<{ [key: string]: string }>;
+        const axiosError = error as AxiosError<{ error: string }>;
       
         // 필드 에러 초기화
         setErrors({
@@ -135,7 +135,7 @@ const SignupPage = () => {
         if (axiosError.response?.data) {
           const errorData = axiosError.response.data;
           const message =
-            errorData.message || errorData.detail || errorData.error || "회원가입에 실패했습니다.";
+            errorData.error || "회원가입에 실패했습니다.";
       
           // 메시지 내용 기반으로 특정 필드에 에러 전달
           if (message.includes("이메일")) {

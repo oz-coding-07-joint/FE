@@ -96,7 +96,7 @@ const SocialSignupPage = () => {
         alert("소셜 로그인 회원가입 성공!");
       },
       onError: (error) => {
-        const axiosError = error as AxiosError<{ [key: string]: string }>;
+        const axiosError = error as AxiosError<{ error: string }>;
 
         setErrors({
           name: "",
@@ -107,7 +107,7 @@ const SocialSignupPage = () => {
 
         if (axiosError.response?.data) {
           const errorData = axiosError.response.data;
-          const raw = errorData.error || errorData.message || errorData.detail || [];
+          const raw = errorData.error || [];
 
           const messages = Array.isArray(raw) ? raw : [raw];
           const newErrors = { ...errors };

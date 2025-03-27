@@ -121,9 +121,9 @@ const MyPage = () => {
   
       alert("회원정보가 수정되었습니다.");
     } catch (error) {
-      const axiosError = error as AxiosError<{ [key: string]: string }>;
+      const axiosError = error as AxiosError<{ error: string }>;
       const errorData = axiosError.response?.data;
-      const raw = errorData?.error || errorData?.message || errorData?.detail || [];
+      const raw = errorData?.error || [];
   
       const messages = Array.isArray(raw) ? raw : [raw];
       const newErrors = { name: "", email: "", phoneNumber: "" };
@@ -133,7 +133,7 @@ const MyPage = () => {
         if (typeof msg !== "string") return;
   
         if (msg.includes("이메일")) newErrors.email = msg;
-        else if (msg.includes("전화번호")) newErrors.phoneNumber = msg;
+        else if (msg.includes("휴대폰")) newErrors.phoneNumber = msg;
         else if (msg.includes("이름")) newErrors.name = msg;
         else unassignedMessages.push(msg);
       });
