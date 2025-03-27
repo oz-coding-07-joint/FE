@@ -12,7 +12,7 @@ import {
 } from "@/api/assignmentApi";
 import { ArrowElbowDownRight, Paperclip } from "phosphor-react";
 import { getFileNameFromUrl } from "@/utils/fileurl";
-import { forceDownload } from "@/utils/forceDownload"; // ✅ 다운로드 유틸 추가
+import { downloadFileBlob } from "@/utils/downloadBlob";
 
 interface AssignmentFeedbackProps {
   selectedAssignment: Assignment | null;
@@ -52,9 +52,11 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
     }
   };
 
-  // ✅ 재귀적으로 댓글과 답글 렌더링
   const renderComment = (comment: AssignmentComment, depth = 0): JSX.Element[] => {
     const isReply = depth > 0;
+    const fileUrl = comment.fileUrl;
+    const fileName = getFileNameFromUrl(fileUrl || "");
+    const displayName = fileName.split("_")[0] + "." + fileName.split(".").pop();
 
     const parentComment = (
       <div
@@ -65,16 +67,18 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
         <div className="flex-1">
           <div className="flex gap-1 items-center text-sm">
             <span>{comment.userNickname}</span>
-            <span className="text-muted-300 text-xs">{new Date(comment.createdAt).toLocaleString()}</span>
+            <span className="text-muted-300 text-xs">
+              {new Date(comment.createdAt).toLocaleString()}
+            </span>
           </div>
           <p className="text-muted-500 mt-1">{comment.content}</p>
-          {comment.fileUrl && (
+          {fileUrl && (
             <button
-              onClick={() => forceDownload(comment.fileUrl, getFileNameFromUrl(comment.fileUrl))}
+              onClick={() => downloadFileBlob(fileUrl, fileName)}
               className="flex items-center text-xs text-blue-600 underline mt-1"
             >
               <Paperclip size={12} className="mr-1" />
-              {getFileNameFromUrl(comment.fileUrl)}
+              {displayName}
             </button>
           )}
         </div>
@@ -91,7 +95,7 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
       <div className="bg-[#F5F9FF] h-16 flex items-center w-full px-4">
         <h2 className="text-xl font-medium text-primary-900">과제피드</h2>
       </div>
-      <div className="p-2 overflow-y-auto flex-1">
+      <div className="px-2 overflow-y-auto flex-1 space-y-2">
         {comments.length > 0 ? (
           comments.map((comment) => renderComment(comment))
         ) : (
