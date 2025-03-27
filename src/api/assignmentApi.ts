@@ -21,6 +21,9 @@ export const fetchAssignments = async (
     const assignments = response.data.assignments || [];
     //console.log("✅ fetchAssignments API 응답:", assignments);
 
+    console.log('fetchAssignments:', assignments)
+    const test = assignments.map(transformAssignment)
+    console.log('test', test)
     return assignments.map(transformAssignment);
   } catch (error) {
     const axiosError = error as AxiosError;

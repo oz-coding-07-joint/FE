@@ -103,7 +103,7 @@ const LectureDetailPage = () => {
               {chaptersLoading || videoLoading ? (
                 <LoadingSkeleton container='w-full aspect-video flex items-center justify-center' />
               ) : (
-                <VideoPlayer videoUrl={chapterDetails?.videoUrl ?? ''} chapterVideoId={selectedVideoId} lectureId={lectureId}/>
+                <VideoPlayer videoUrl={chapterDetails?.videoUrl ?? ''} chapterVideoId={selectedVideoId} lectureId={lectureId} chapterId={selectedChapterId}/>
               )}
             </div>
           </div>

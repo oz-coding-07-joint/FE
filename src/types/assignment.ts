@@ -18,7 +18,7 @@ export function transformAssignmentList(assignmentList: SAssignmentList): Assign
 
 export interface SAssignment {
     id: number;
-    chapter_video_id: number;
+    chapter_video: number;
     title: string;
     content: string;
     file_url: string;
@@ -39,7 +39,7 @@ export interface Assignment {
 export function transformAssignment(assignment: SAssignment): Assignment {
     return {
         id: assignment.id,
-        videoId: assignment.chapter_video_id,
+        videoId: assignment.chapter_video,
         title: assignment.title,
         content: assignment.content,
         fileUrl: assignment.file_url,
