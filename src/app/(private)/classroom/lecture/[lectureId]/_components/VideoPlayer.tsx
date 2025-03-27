@@ -32,9 +32,9 @@ const VideoPlayer = ({ videoUrl, lectureId }: VideoPlayerProps) => {
   
   const router = useRouter()
   const progressRef = useRef(0);
+  const playerRef = useRef<ReactPlayerType | null>(null);
   
   const [isWindow, setIsWindow] = useState(false)
-  const playerRef = useRef<ReactPlayerType | null>(null);
   const [hasPlayed, setHasPlayed] = useState(false)
   const [pendingSeekTime, setPendingSeekTime] = useState<number | null>(null)
   
