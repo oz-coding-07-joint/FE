@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Button from "@/components/Button";
 import { isValidName, isValidNickname, isValidPhoneNumber } from "@/utils/validation";
 import { useGetTerms, useSocialSignup } from "@/hooks/useAuth";
@@ -17,6 +17,8 @@ const SocialSignupPage = () => {
   const [nickname, setNickname] = useState("");
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [formError, setFormError] = useState("");
+
   const { data: terms, isLoading: isTermsLoading } = useGetTerms();
   const [agreedTerms, setAgreedTerms] = useState<{ [key: number]: boolean }>({});
   const [selectedTerm, setSelectedTerm] = useState<Term | null>(null);
@@ -29,14 +31,9 @@ const SocialSignupPage = () => {
     phoneNumber: "",
   });
 
-  useEffect(() => {
-    if (socialSignUpMutation.isError) {
-      setErrors((prev) => ({ ...prev, error: "회원가입에 실패했습니다. 입력정보를 확인하세요." }));
-    }
-  }, [socialSignUpMutation.isError]);
-
   const handleChange = (field: string, value: string) => {
     setErrors((prev) => ({ ...prev, [field]: "" }));
+    setFormError("");
 
     switch (field) {
       case "name":
@@ -65,12 +62,18 @@ const SocialSignupPage = () => {
 
   const handleSocialSignUp = () => {
     socialSignUpMutation.reset();
+    setFormError("");
+    setErrors({
+      name: "",
+      nickname: "",
+      phoneNumber: "",
+    });
 
     const requiredTerms = terms?.filter((term) => term.isRequired) || [];
     const allRequiredAgreed = requiredTerms.every((term) => agreedTerms[term.id]);
 
     if (!allRequiredAgreed) {
-      alert("모든 필수 약관에 동의해야 회원가입이 가능합니다.");
+      setFormError("모든 필수 약관에 동의해야 회원가입이 가능합니다.");
       return;
     }
 
@@ -80,8 +83,6 @@ const SocialSignupPage = () => {
           is_agree: !!agreedTerms[term.id],
         }))
       : [];
-
-    
 
     const socialProfileData = {
       name,
@@ -95,19 +96,39 @@ const SocialSignupPage = () => {
         alert("소셜 로그인 회원가입 성공!");
       },
       onError: (error) => {
-        const axiosError = error as AxiosError<{ [key: string]: string[] }>;
+        const axiosError = error as AxiosError<{ [key: string]: string }>;
+
+        setErrors({
+          name: "",
+          nickname: "",
+          phoneNumber: "",
+        });
+        setFormError("");
+
         if (axiosError.response?.data) {
           const errorData = axiosError.response.data;
-      
-          setErrors((prev) => ({
-            ...prev,
-            email: errorData.email ? (errorData.email[0]) : "",
-            name: errorData.name ? (errorData.name[0]) : "",
-            nickname: errorData.nickname ? (errorData.nickname[0]) : "",
-            phoneNumber: errorData.phone_number ? (errorData.phone_number[0]) : "",
-          }));
+          const raw = errorData.error || errorData.message || errorData.detail || [];
+
+          const messages = Array.isArray(raw) ? raw : [raw];
+          const newErrors = { ...errors };
+          const unassignedMessages: string[] = [];
+
+          messages.forEach((msg: string) => {
+            if (typeof msg !== "string") return;
+
+            if (msg.includes("전화번호")) newErrors.phoneNumber = msg;
+            else if (msg.includes("닉네임")) newErrors.nickname = msg;
+            else if (msg.includes("이름")) newErrors.name = msg;
+            else unassignedMessages.push(msg);
+          });
+
+          setErrors(newErrors);
+
+          if (unassignedMessages.length) {
+            setFormError(unassignedMessages.join("\n"));
+          }
         } else {
-          alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+          setFormError("회원가입에 실패했습니다. 다시 시도해주세요.");
         }
       },
     });
@@ -142,6 +163,12 @@ const SocialSignupPage = () => {
           />
 
           <Button label="회원가입" size="full" variant="primary" onClick={handleSocialSignUp} />
+
+          {formError && (
+            <div className="text-secondary-500 text-sm text-center mt-2 whitespace-pre-line">
+              {formError}
+            </div>
+          )}
         </div>
       </div>
       <TermsModal term={selectedTerm} />
