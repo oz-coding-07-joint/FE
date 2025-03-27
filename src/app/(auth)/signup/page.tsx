@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Button from "@/components/Button";
 import { isValidEmail, isValidPassword, isValidPhoneNumber, isValidNickname } from "@/utils/validation";
 import { useGetTerms, useSignup } from "@/hooks/useAuth";
@@ -24,6 +24,7 @@ const SignupPage = () => {
   const { data: terms, isLoading: isTermsLoading } = useGetTerms();
   const [agreedTerms, setAgreedTerms] = useState<{ [key: number]: boolean }>({});
   const [selectedTerm, setSelectedTerm] = useState<Term | null>(null);
+  const [formError, setFormError] = useState("");
 
   const [errors, setErrors] = useState({
     email: "",
@@ -36,12 +37,6 @@ const SignupPage = () => {
 
   const signupMutation = useSignup();
 
-  useEffect(() => {
-    if (signupMutation.isError) {
-      setErrors((prev) => ({ ...prev, error: "회원가입에 실패했습니다. 입력정보를 확인하세요." }));
-    }
-  }, [signupMutation.isError]);
-
   const handleToggleAgreement = (termId: number) => {
     setAgreedTerms((prev) => ({
       ...prev,
@@ -51,6 +46,7 @@ const SignupPage = () => {
 
   const handleChange = (field: string, value: string) => {
     setErrors((prev) => ({ ...prev, [field]: "" }));
+    setFormError(""); // 필드 입력 시 전체 에러 초기화
 
     switch (field) {
       case "name":
@@ -82,9 +78,9 @@ const SignupPage = () => {
     }
   };
 
-
   const handleSignUp = () => {
     signupMutation.reset();
+    setFormError("");
     setErrors({
       email: "",
       name: "",
@@ -98,7 +94,7 @@ const SignupPage = () => {
     const allRequiredAgreed = requiredTerms.every((term) => !!agreedTerms[term.id]);
 
     if (!allRequiredAgreed) {
-      alert("모든 필수 약관에 동의해야 회원가입이 가능합니다.");
+      setFormError("모든 필수 약관에 동의해야 회원가입이 가능합니다.");
       return;
     }
 
@@ -118,29 +114,48 @@ const SignupPage = () => {
       terms_agreements: termsAgreements,
     };
 
-
     signupMutation.mutate(userData, {
       onSuccess: () => {
         alert("회원가입 성공! 자동으로 로그인됩니다.");
       },
       onError: (error) => {
-        const axiosError = error as AxiosError<{ [key: string]: string[] }>;
+        const axiosError = error as AxiosError<{ [key: string]: string }>;
+      
+        // 필드 에러 초기화
+        setErrors({
+          email: "",
+          name: "",
+          nickname: "",
+          password: "",
+          confirmPassword: "",
+          phoneNumber: "",
+        });
+        setFormError("");
+      
         if (axiosError.response?.data) {
           const errorData = axiosError.response.data;
+          const message =
+            errorData.message || errorData.detail || errorData.error || "회원가입에 실패했습니다.";
       
-          setErrors((prev) => ({
-            ...prev,
-            email: errorData.email?.[0] || "",
-            name: errorData.name?.[0] || "",
-            nickname: errorData.nickname?.[0] || "",
-            password: errorData.password?.[0] || "",
-            phoneNumber: errorData.phone_number?.[0] || "",
-          }));
+          // 메시지 내용 기반으로 특정 필드에 에러 전달
+          if (message.includes("이메일")) {
+            setErrors((prev) => ({ ...prev, email: message }));
+          } else if (message.includes("비밀번호")) {
+            setErrors((prev) => ({ ...prev, password: message }));
+          } else if (message.includes("전화번호")) {
+            setErrors((prev) => ({ ...prev, phoneNumber: message }));
+          } else if (message.includes("닉네임")) {
+            setErrors((prev) => ({ ...prev, nickname: message }));
+          } else if (message.includes("이름")) {
+            setErrors((prev) => ({ ...prev, name: message }));
+          } else {
+            // 어디에도 해당되지 않으면 공통 에러 메시지로
+            setFormError(message);
+          }
         } else {
-          alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+          setFormError("회원가입에 실패했습니다. 다시 시도해주세요.");
         }
-      },
-      
+      },      
     });
   };
 
@@ -180,6 +195,10 @@ const SignupPage = () => {
           />
 
           <Button label="회원가입" size="full" variant="primary" onClick={handleSignUp} />
+
+          {formError && (
+            <p className="text-secondary-500 text-sm text-center mt-2">{formError}</p>
+          )}
         </div>
       </div>
       <TermsModal term={selectedTerm} />

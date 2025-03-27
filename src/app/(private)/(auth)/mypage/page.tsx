@@ -14,6 +14,7 @@ import {
 } from "@/hooks/useAuth";
 import UserInfoForm from "./_components/UserInfoForm";
 import PasswordChangeForm from "./_components/PasswordChangeForm";
+import { AxiosError } from "axios";
 
 const MyPage = () => {
   const { user } = useAuthStore();
@@ -32,7 +33,9 @@ const MyPage = () => {
     phoneNumber: "",
   });
 
-  const updateUserInfo = useUpdateUserInfo();
+  const [formError, setFormError] = useState("");
+
+  const updateUserInfoMutation = useUpdateUserInfo();
   const deleteUserMutation = useDeleteUser();
   const isSocialUser = user?.provider !== "LOCAL";
 
@@ -62,7 +65,7 @@ const MyPage = () => {
 
   const handleEmailChange = (value: string) => {
     setEmail(value);
-    setIsEmailVerified(false); // 이메일 바뀌면 인증 다시
+    setIsEmailVerified(false); // 이메일 바뀌면 인증 다시 필요
     setErrors((prev) => ({ ...prev, email: "" }));
   };
 
@@ -101,19 +104,48 @@ const MyPage = () => {
 
   const handleSubmit = async () => {
     if (!validate()) return;
-
+  
+    setFormError("");
+    setErrors({
+      name: "",
+      email: "",
+      phoneNumber: "",
+    });
+  
     try {
-      await updateUserInfo.mutateAsync({
+      await updateUserInfoMutation.mutateAsync({
         name,
         email,
         phone_number: phoneNumber,
       });
+  
       alert("회원정보가 수정되었습니다.");
     } catch (error) {
-      console.error("회원정보 수정 실패:", error);
-      alert("회원정보 수정에 실패했습니다.");
+      const axiosError = error as AxiosError<{ [key: string]: string }>;
+      const errorData = axiosError.response?.data;
+      const raw = errorData?.error || errorData?.message || errorData?.detail || [];
+  
+      const messages = Array.isArray(raw) ? raw : [raw];
+      const newErrors = { name: "", email: "", phoneNumber: "" };
+      const unassignedMessages: string[] = [];
+  
+      messages.forEach((msg: string) => {
+        if (typeof msg !== "string") return;
+  
+        if (msg.includes("이메일")) newErrors.email = msg;
+        else if (msg.includes("전화번호")) newErrors.phoneNumber = msg;
+        else if (msg.includes("이름")) newErrors.name = msg;
+        else unassignedMessages.push(msg);
+      });
+  
+      setErrors(newErrors);
+  
+      if (unassignedMessages.length) {
+        setFormError(unassignedMessages.join("\n"));
+      }
     }
   };
+  
 
   const handleDeleteUser = () => {
     const confirmed = confirm("정말로 회원탈퇴 하시겠습니까?");
@@ -143,6 +175,14 @@ const MyPage = () => {
               onEmailChange={handleEmailChange}
               onVerified={() => setIsEmailVerified(true)}
             />
+
+            {/* 전체 에러 메시지 출력 */}
+            {formError && (
+              <p className="text-sm text-secondary-500 text-center mt-2 whitespace-pre-line">
+                {formError}
+              </p>
+            )}
+
 
             {/* 버튼 그룹 */}
             <div className="flex justify-center gap-2 mt-6">

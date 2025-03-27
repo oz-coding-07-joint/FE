@@ -66,8 +66,12 @@ const EmailVerificationField = ({
       setError("");
       startCountdown();
     } catch (error: unknown) {
-      const axiosError = error as AxiosError<{ error?: string }>;
-      const msg = axiosError.response?.data?.error || "이메일 인증 요청에 실패했습니다.";
+      const axiosError = error as AxiosError<{ message?: string; error?: string; detail?: string; }>;
+      const msg =
+        axiosError.response?.data?.message ||
+        axiosError.response?.data?.error ||
+        axiosError.response?.data?.detail ||
+        "이메일 인증 요청에 실패했습니다.";
 
       if (msg.includes("이미") && msg.includes("인증")) {
         setIsVerified(true);
@@ -89,15 +93,18 @@ const EmailVerificationField = ({
       setError("");
       onVerified();
     } catch (error: unknown) {
-      const axiosError = error as AxiosError<{ message?: string }>;
-      const msg = axiosError.response?.data?.message || "인증에 실패했습니다.";
+      const axiosError = error as AxiosError<{ message?: string; error?: string }>;
+      const msg =
+        axiosError.response?.data?.message ||
+        axiosError.response?.data?.error ||
+        "인증에 실패했습니다.";
       setError(msg);
     }
   };
 
   return (
     <div className="space-y-1">
-      <label className="block text-sm font-semibold">이메일</label>
+      <label className="block text-sm">이메일</label>
 
       {disabled ? (
         <Input
@@ -124,11 +131,6 @@ const EmailVerificationField = ({
               )
             }
           />
-          {(externalError || error) && (
-            <p className="text-secondary-500 text-xs mt-1">
-              {externalError || error}
-            </p>
-          )}
           {isVerified && !error && (
             <p className="text-secondary-500 text-xs mt-1">
               이메일 인증이 완료되었습니다.
@@ -152,6 +154,11 @@ const EmailVerificationField = ({
           )}
           <Button label="인증번호확인" onClick={handleVerifyCode} size="small" />
         </div>
+      )}
+      {(externalError || error) && (
+        <p className="text-secondary-500 text-xs mt-1">
+          {externalError || error}
+        </p>
       )}
     </div>
   );
