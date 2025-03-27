@@ -12,7 +12,6 @@ import {
 } from "@/api/assignmentApi";
 import { ArrowElbowDownRight, Paperclip } from "phosphor-react";
 import { getFileNameFromUrl } from "@/utils/fileurl";
-import { downloadFileBlob } from "@/utils/downloadBlob";
 
 interface AssignmentFeedbackProps {
   selectedAssignment: Assignment | null;
@@ -54,8 +53,8 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
 
   const renderComment = (comment: AssignmentComment, depth = 0): JSX.Element[] => {
     const isReply = depth > 0;
-    const fileUrl = comment.fileUrl;
-    const fileName = getFileNameFromUrl(fileUrl || "");
+    const fileUrl = comment.downloadInfo?.download_url || comment.fileUrl;
+    const fileName = comment.downloadInfo?.file_name || getFileNameFromUrl(fileUrl || "");
     const displayName = fileName.split("_")[0] + "." + fileName.split(".").pop();
 
     const parentComment = (
@@ -73,13 +72,15 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
           </div>
           <p className="text-muted-500 mt-1">{comment.content}</p>
           {fileUrl && (
-            <button
-              onClick={() => downloadFileBlob(fileUrl, fileName)}
+            <a
+              href={fileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center text-xs text-blue-600 underline mt-1"
             >
               <Paperclip size={12} className="mr-1" />
-              {displayName}
-            </button>
+              {fileName}
+            </a>
           )}
         </div>
       </div>
