@@ -97,7 +97,7 @@ const EmailVerificationField = ({
 
   return (
     <div className="space-y-1">
-      <label className="block text-sm font-semibold">이메일</label>
+      <label className="block text-sm">이메일</label>
 
       {disabled ? (
         <Input
