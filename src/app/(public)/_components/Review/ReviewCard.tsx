@@ -11,14 +11,15 @@ const pottaOne = Potta_One({
 interface ReviewProps {
   name: string;
   description: string;
+  content: string;
 }
 
-const ReviewCard = ({ name, description }: ReviewProps) => {
+const ReviewCard = ({ name, description, content }: ReviewProps) => {
   return (
     <div className="flex flex-col items-center">
       {/* 리뷰 박스 */}
       <div className="flex flex-col justify-center items-center mb-0">
-        <div className="relative w-[440px] h-[240px] bg-[#303D58] rounded-md p-4 flex flex-col justify-center z-10">
+        <div className="relative w-[27.5rem] h-[15rem] bg-[#303D58] rounded-md p-4 flex flex-col justify-center z-10">
           <div className="text-primary-900 flex items-start">
             <p
               className={`${pottaOne.className} text-7xl leading-3 absolute top-10 left-5`}
@@ -26,14 +27,9 @@ const ReviewCard = ({ name, description }: ReviewProps) => {
               “
             </p>
           </div>
-          <div className="text-lg px-4 mt-7">
-            <span>
-              강의에 대한 평가 내용이 들어갑니다. 이내용은 길어질수도 있고
-              짧아질 수 도 있습니다. 한번에 몇명이나 표시하는게 좋을까요..강의에
-              대한 평가 내용이 들어갑니다. 이내용은 길어질수도 있고 짧아질 수 도
-              있습니다.한번에 몇명이나 표시하는게 좋을까요..강의에 대한 평가
-              내용이 들어갑니다.
-            </span>
+          {/* 리뷰내용 */}
+          <div className="text-lg px-4 mt-7 overflow-hidden text-ellipsis line-clamp-5">
+            <span>{content}</span>
           </div>
         </div>
 
