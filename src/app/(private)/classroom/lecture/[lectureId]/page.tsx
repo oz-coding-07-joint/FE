@@ -28,10 +28,13 @@ const LectureDetailPage = () => {
 
   const { data: chapters, isLoading: chaptersLoading } = useChapters(lectureId);
   const { data: chapterDetails, isLoading: videoLoading } = useChapterVideo(selectedVideoId);
+  console.log('chapterDetails', chapterDetails)
+  console.log('chapter', chapters)
 
   const currentChapter = chapters?.find((ch: ParamIdTitle) => ch.id === selectedChapterId)
   const {lectures, fetchLectures} = useLectureListStore()
   const selectedLecture = lectures.find((lecture) => lecture.id === lectureId);
+  console.log('selectedChapterId', selectedChapterId)
 
   useEffect(() => {
     if(!selectedLecture){
@@ -103,7 +106,7 @@ const LectureDetailPage = () => {
               {chaptersLoading || videoLoading ? (
                 <LoadingSkeleton container='w-full aspect-video flex items-center justify-center' />
               ) : (
-                <VideoPlayer videoUrl={chapterDetails?.videoUrl ?? ''} chapterVideoId={selectedVideoId} lectureId={lectureId}/>
+                <VideoPlayer videoUrl={chapterDetails?.videoUrl ?? ''} chapterVideoId={selectedVideoId} lectureId={lectureId} chapterId={selectedChapterId}/>
               )}
             </div>
           </div>

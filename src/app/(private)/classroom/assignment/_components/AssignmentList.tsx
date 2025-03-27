@@ -4,9 +4,11 @@ import { useEffect } from "react";
 import { Assignment } from "@/types/assignment";
 import { useChapters } from "@/api/lectureDetailApi";
 import { useAssignmentStore } from "@/store/useAssignmentStore";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface AssignmentListProps {
   selectedChapter: number | null;
+  selectedAssignment: Assignment | null;
   setSelectedChapter: (id: number) => void;
   setSelectedAssignment: (assignment: Assignment) => void;
   lectureId: number;
@@ -14,19 +16,38 @@ interface AssignmentListProps {
 
 const AssignmentList = ({
   selectedChapter,
+  selectedAssignment,
   setSelectedChapter,
   setSelectedAssignment,
   lectureId,
 }: AssignmentListProps) => {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const chapterIdFromUrl = searchParams.get('chapterId')
+  const videoIdFromUrl = searchParams.get('videoId')
+
   const { data: chapters = [], isLoading: chaptersLoading } = useChapters(lectureId);
   const { assignments, isLoading: assignmentsLoading, fetchAssignments } = useAssignmentStore();
 
   // 챕터 목록이 로딩되고 첫 챕터가 있으면 자동 선택
   useEffect(() => {
-    if (!selectedChapter && chapters.length > 0) {
+    if (chapterIdFromUrl) {
+      setSelectedChapter(Number(chapterIdFromUrl))
+    } else if (!selectedChapter && chapters.length > 0) {
       setSelectedChapter(chapters[0].id);
+      router.push(`/classroom/assignment/${lectureId}?chapterId=${chapters[0].id}`)
     }
   }, [chapters]);
+
+  useEffect(() => {
+    if (videoIdFromUrl && assignments.length > 0) {
+      const matchedAssignment = assignments.find(a => a.videoId === Number(videoIdFromUrl));
+      if (matchedAssignment) {
+        setSelectedAssignment(matchedAssignment);
+      }
+    }
+  }, [videoIdFromUrl, assignments]);
 
   // 챕터 선택 시 과제 목록 불러오기
   useEffect(() => {
@@ -34,6 +55,12 @@ const AssignmentList = ({
       fetchAssignments(selectedChapter);
     }
   }, [selectedChapter]);
+
+  useEffect(() => {
+    if (selectedChapter && selectedAssignment) {
+      router.push(`/classroom/assignment/${lectureId}?chapterId=${selectedChapter}&videoId=${selectedAssignment?.videoId}`)
+    }
+  }, [selectedAssignment])
 
   return (
     <div className="bg-white rounded-md shadow-md overflow-hidden w-1/4 h-[75vh]">

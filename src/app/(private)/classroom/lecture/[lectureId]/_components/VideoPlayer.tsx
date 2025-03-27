@@ -16,6 +16,7 @@ type VideoPlayerProps = {
   videoUrl: string;
   chapterVideoId: number | null;
   lectureId: number;
+  chapterId: number;
 }
 
 type ProgressState = {
@@ -25,7 +26,7 @@ type ProgressState = {
   loadedSeconds: number;
 };
 
-const VideoPlayer = ({ videoUrl, chapterVideoId, lectureId }: VideoPlayerProps) => {
+const VideoPlayer = ({ videoUrl, chapterVideoId, lectureId, chapterId }: VideoPlayerProps) => {
   const [isWindow, setIsWindow] = useState(false)
   const progressRef = useRef(0);
   const playerRef = useRef<ReactPlayerType | null>(null);
@@ -156,7 +157,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId, lectureId }: VideoPlayerProps) 
   }
 
   const handleAssignment = () => {
-    router.push(`/classroom/assignment/${lectureId}`)
+    router.push(`/classroom/assignment/${lectureId}?chapterId=${chapterId}&videoId=${chapterVideoId}`)
   }
 
   return (

@@ -62,6 +62,7 @@ const AssignmentPage = () => {
         {/* 과제 목록 */}
         <AssignmentList
           selectedChapter={selectedChapter}
+          selectedAssignment={selectedAssignment}
           setSelectedChapter={setSelectedChapter}
           setSelectedAssignment={setSelectedAssignment}
           lectureId={lectureId}
