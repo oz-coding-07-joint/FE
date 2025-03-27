@@ -2,7 +2,7 @@ export interface SChapter {
     id: number;
     lecture_id: number;
     title: string;
-    material_info: {
+    material_info?: {
         download_url: string,
         file_name: string,
     }
@@ -13,7 +13,7 @@ export interface Chapter {
     id: number;
     lectureId: number;
     title: string;
-    materialInfo: {
+    materialInfo?: {
         downloadUrl: string,
         fileName: string,
     }
@@ -25,10 +25,12 @@ export interface Chapter {
         id: chapter.id,
         lectureId: chapter.lecture_id,
         title: chapter.title,
-        materialInfo: {
+        materialInfo: chapter.material_info
+        ?{
             downloadUrl: chapter.material_info.download_url,
             fileName: chapter.material_info.file_name,
-        },
+        }
+        : undefined,
         chapterVideoTitles: chapter.chapter_video_titles.map(transformVideo),
     };
 }

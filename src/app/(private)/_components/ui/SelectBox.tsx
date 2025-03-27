@@ -17,7 +17,7 @@ const SelectBox = ({options, selectedChapterId, onChange}: SelectBoxProps) => {
       value={selectedChapterId ?? ''}
       onChange={(e) => onChange(Number(e.target.value))}
       >
-        {options.map((option, index) => (
+        {options?.map((option, index) => (
           <option key={index} value={option.id}>
             {option.title}
           </option>

@@ -80,7 +80,7 @@ const LectureDetailPage = () => {
                   <LoadingSkeleton container='w-[310px] min-w-0 h-[50px]' styles='rounded-md' />
                 ) : (
                   <SelectBox
-                    options={chapters.map((ch: ParamIdTitle) => ({ id: ch.id, title: ch.title }))}
+                    options={chapters?.map((ch: ParamIdTitle) => ({ id: ch.id, title: ch.title }))}
                     selectedChapterId={selectedChapterId}
                     onChange={(id) => {
                       setSelectedChapterId(id);
@@ -95,7 +95,16 @@ const LectureDetailPage = () => {
                     <ChapterItemList chapterItems={currentChapter?.chapterVideoTitles} onClick={(video: Video) => setSelectedVideoId(video.id)} selectedVideoId={selectedVideoId} />
                   ) : null
                 ) : (
-                  <MaterialList materialInfo={currentChapter?.materialInfo} />
+                  currentChapter ? (
+                    currentChapter?.materialInfo ? (
+                      <MaterialList materialInfo={currentChapter?.materialInfo} />
+                    ) : (
+                      <div> 학습 자료가 없습니다. </div>
+                    )
+                  ) : (
+                    <div> 학습 자료가 없습니다. </div>
+                  )
+
                 )}
               </div>
             </DetailContainer>
