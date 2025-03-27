@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Button from "@/components/Button";
-import { isValidEmail, isValidPassword, isValidName, isValidPhoneNumber, isValidNickname } from "@/utils/validation";
+import { isValidEmail, isValidPassword, isValidPhoneNumber, isValidNickname } from "@/utils/validation";
 import { useGetTerms, useSignup } from "@/hooks/useAuth";
 import { AxiosError } from "axios";
 import TermsModal from "../_components/TermModal";
@@ -55,7 +55,7 @@ const SignupPage = () => {
     switch (field) {
       case "name":
         setName(value);
-        if (!isValidName(value)) setErrors((prev) => ({ ...prev, name: "이름을 입력해주세요." }));
+        if (!isValidNickname(value)) setErrors((prev) => ({ ...prev, name: "이름을 입력해주세요." }));
         break;
       case "nickname":
         setNickname(value);
@@ -82,19 +82,6 @@ const SignupPage = () => {
     }
   };
 
-  // 에러 메시지 한국어 변환
-  const translateErrorMessage = (message: string): string => {
-    if (message.includes("phone number") && message.includes("already exists")) {
-      return "이미 등록된 휴대폰 번호입니다.";
-    }
-    if (message.includes("nickname") && message.includes("already exists")) {
-      return "이미 사용 중인 닉네임입니다.";
-    }
-    if (message.includes("email") && message.includes("already exists")) {
-      return "이미 가입된 이메일입니다.";
-    }
-    return message; // 기본 메시지는 그대로 반환
-  };
 
   const handleSignUp = () => {
     signupMutation.reset();
@@ -143,12 +130,12 @@ const SignupPage = () => {
       
           setErrors((prev) => ({
             ...prev,
-            email: errorData.email ? translateErrorMessage(errorData.email[0]) : "",
-            name: errorData.name ? translateErrorMessage(errorData.name[0]) : "",
-            nickname: errorData.nickname ? translateErrorMessage(errorData.nickname[0]) : "",
-            password: errorData.password ? translateErrorMessage(errorData.password[0]) : "",
-            confirmPassword: errorData.confirmPassword ? translateErrorMessage(errorData.confirmPassword[0]) : "",
-            phoneNumber: errorData.phone_number ? translateErrorMessage(errorData.phone_number[0]) : "",
+            email: errorData.email ? (errorData.email[0]) : "",
+            name: errorData.name ? (errorData.name[0]) : "",
+            nickname: errorData.nickname ? (errorData.nickname[0]) : "",
+            password: errorData.password ? (errorData.password[0]) : "",
+            confirmPassword: errorData.confirmPassword ? (errorData.confirmPassword[0]) : "",
+            phoneNumber: errorData.phone_number ? (errorData.phone_number[0]) : "",
           }));
         } else {
           alert("회원가입에 실패했습니다. 다시 시도해주세요.");
