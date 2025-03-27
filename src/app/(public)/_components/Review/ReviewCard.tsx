@@ -11,9 +11,10 @@ const pottaOne = Potta_One({
 interface ReviewProps {
   name: string;
   description: string;
+  content: string;
 }
 
-const ReviewCard = ({ name, description }: ReviewProps) => {
+const ReviewCard = ({ name, description, content }: ReviewProps) => {
   return (
     <div className="flex flex-col items-center">
       {/* 리뷰 박스 */}
@@ -26,14 +27,9 @@ const ReviewCard = ({ name, description }: ReviewProps) => {
               “
             </p>
           </div>
-          <div className="text-lg px-4 mt-7">
-            <span>
-              강의에 대한 평가 내용이 들어갑니다. 이내용은 길어질수도 있고
-              짧아질 수 도 있습니다. 한번에 몇명이나 표시하는게 좋을까요..강의에
-              대한 평가 내용이 들어갑니다. 이내용은 길어질수도 있고 짧아질 수 도
-              있습니다.한번에 몇명이나 표시하는게 좋을까요..강의에 대한 평가
-              내용이 들어갑니다.
-            </span>
+          {/* 리뷰내용 */}
+          <div className="text-lg px-4 mt-7 overflow-hidden text-ellipsis line-clamp-5">
+            <span>{content}</span>
           </div>
         </div>
 
