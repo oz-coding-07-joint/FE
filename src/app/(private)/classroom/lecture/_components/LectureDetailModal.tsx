@@ -22,7 +22,9 @@ const LectureDetailModal = ({ lectureId }: LectureDetailModalProps) => {
         <p className="text-gray-600 mb-4">강의소개: {lectureDetail?.introduction || "정보 없음"}</p>
         <p className="text-gray-600 mb-4">학습목표: {lectureDetail?.learningObjectives || "정보 없음"}</p>
         <p className="text-gray-600 mb-4">강사: {lectureDetail?.instructor?.experience || "정보 없음"}</p>
-        <Button label="닫기" onClick={() => closeModal("lectureDetail")} variant="primary" size="medium" />
+        <div className="flex justify-center">
+          <Button label="닫기" onClick={() => closeModal("lectureDetail")} variant="outline" size="small" />
+        </div>
       </div>
     </Modal>
   );
