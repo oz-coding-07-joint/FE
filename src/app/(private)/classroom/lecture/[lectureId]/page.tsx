@@ -21,6 +21,7 @@ interface ParamIdTitle {
 
 const LectureDetailPage = () => {
   const { selectedChapterId, selectedVideoId, setSelectedChapterId, setSelectedVideoId, } = useLectureStore();
+  const { lectures, fetchLectures } = useLectureListStore()
 
   const params = useParams();
   const lectureId = Number(params.lectureId);
@@ -30,11 +31,10 @@ const LectureDetailPage = () => {
   const { data: chapterDetails, isLoading: videoLoading } = useChapterVideo(selectedVideoId);
 
   const currentChapter = chapters?.find((ch: ParamIdTitle) => ch.id === selectedChapterId)
-  const {lectures, fetchLectures} = useLectureListStore()
   const selectedLecture = lectures.find((lecture) => lecture.id === lectureId);
 
   useEffect(() => {
-    if(!selectedLecture){
+    if (!selectedLecture) {
       fetchLectures()
     }
   }, [selectedLecture])
@@ -103,7 +103,7 @@ const LectureDetailPage = () => {
               {chaptersLoading || videoLoading ? (
                 <LoadingSkeleton container='w-full aspect-video flex items-center justify-center' />
               ) : (
-                <VideoPlayer videoUrl={chapterDetails?.videoUrl ?? ''} chapterVideoId={selectedVideoId} lectureId={lectureId} chapterId={selectedChapterId}/>
+                <VideoPlayer videoUrl={chapterDetails?.videoUrl ?? ''} lectureId={lectureId} />
               )}
             </div>
           </div>

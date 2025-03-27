@@ -1,8 +1,8 @@
 'use client'
 
-import { useChapterVideo, useGetVideoProgress, useUpdateVideoProgress } from '@/api/lectureDetailApi';
+import { useGetVideoProgress, useUpdateVideoProgress } from '@/api/lectureDetailApi';
 import Button from '@/components/Button';
-import { useVideoStore } from '@/store/useLectureStore';
+import { useLectureStore, useVideoStore } from '@/store/useLectureStore';
 import { useModalStore } from '@/store/useModalStore';
 import { throttle } from '@/utils/throttle';
 import { useRouter } from 'next/navigation';
@@ -11,12 +11,11 @@ import type ReactPlayerType from 'react-player';
 import ReactPlayer from 'react-player';
 import VideoContinueModal from './VideoContinueModal';
 import { AxiosError } from 'axios';
+import { useUpdateVideoUrl } from '@/hooks/useUpdateVideoUrl';
 
 type VideoPlayerProps = {
   videoUrl: string;
-  chapterVideoId: number | null;
   lectureId: number;
-  chapterId: number;
 }
 
 type ProgressState = {
@@ -26,22 +25,22 @@ type ProgressState = {
   loadedSeconds: number;
 };
 
-const VideoPlayer = ({ videoUrl, chapterVideoId, lectureId, chapterId }: VideoPlayerProps) => {
-  const [isWindow, setIsWindow] = useState(false)
+const VideoPlayer = ({ videoUrl, lectureId }: VideoPlayerProps) => {
+  const { selectedChapterId, selectedVideoId } = useLectureStore()
+  const { openModal, closeModal } = useModalStore();
+  const { playing, duration, currentUrl, isUpdatingUrl, setPlaying, setDuration, setCurrentUrl } = useVideoStore()
+  
+  const router = useRouter()
   const progressRef = useRef(0);
   const playerRef = useRef<ReactPlayerType | null>(null);
+  
+  const [isWindow, setIsWindow] = useState(false)
   const [hasPlayed, setHasPlayed] = useState(false)
-  const router = useRouter()
-  const [currentUrl, setCurrentUrl] = useState(videoUrl);
   const [pendingSeekTime, setPendingSeekTime] = useState<number | null>(null)
-  const [isUpdatingUrl, setIsUpdatingUrl] = useState(false);
-
-  const { openModal, closeModal } = useModalStore();
-  const { playing, duration, setPlaying, setDuration } = useVideoStore()
-
+  
+  const { updateVideoUrl } = useUpdateVideoUrl({ selectedVideoId })
   const updateProgress = useUpdateVideoProgress();
-  const { data: progressData, refetch, isLoading: getProgressLoading } = useGetVideoProgress(chapterVideoId)
-  const { refetch: videoUrlRefetch } = useChapterVideo(chapterVideoId)
+  const { data: progressData, refetch, isLoading: getProgressLoading } = useGetVideoProgress(selectedVideoId)
 
   useEffect(() => {
     setIsWindow(true)
@@ -52,26 +51,6 @@ const VideoPlayer = ({ videoUrl, chapterVideoId, lectureId, chapterId }: VideoPl
       setCurrentUrl(videoUrl);
     }
   }, [videoUrl]);
-
-  const updateVideoUrl = async (currentTime: number) => {
-    if (isUpdatingUrl) {
-      return; // 이미 갱신 중이면 중복 호출 방지
-    }
-    setIsUpdatingUrl(true);
-    try {
-      const { data: newVideo } = await videoUrlRefetch();
-      if (newVideo?.videoUrl) {
-        setCurrentUrl(newVideo.videoUrl);
-        setPendingSeekTime(currentTime)
-      } else {
-        console.error('Not receiving new video_url.')
-      }
-    } catch (error) {
-      console.error('Error updating video URL:', error)
-    } finally {
-      setIsUpdatingUrl(false)
-    }
-  };
 
   const handleError = async (error: AxiosError) => {
     console.log('handleError', error);
@@ -130,7 +109,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId, lectureId, chapterId }: VideoPl
   const handleEnded = () => {
     setPlaying(false);
     closeModal("continueVideo");
-    updateProgress.mutateAsync({ chapterVideoId, lastWatchedTime: duration, duration });
+    updateProgress.mutateAsync({ chapterVideoId: selectedVideoId, lastWatchedTime: duration, duration });
   };
 
   const handleProgress = useCallback(
@@ -141,15 +120,15 @@ const VideoPlayer = ({ videoUrl, chapterVideoId, lectureId, chapterId }: VideoPl
       const progressAsNumber = Number(progressData?.progress);
       const lastWatchedTime = (progressAsNumber / 100) * duration;
 
-      if (chapterVideoId && !progressData?.isCompleted && playedSeconds > (lastWatchedTime || 0)) {
+      if (selectedVideoId && !progressData?.isCompleted && playedSeconds > (lastWatchedTime || 0)) {
         updateProgress.mutate({
-          chapterVideoId,
+          chapterVideoId: selectedVideoId,
           lastWatchedTime: playedSeconds,
           duration,
         });
       }
     }, 3000),
-    [chapterVideoId, duration]
+    [selectedVideoId, duration]
   );
 
   const handleDuration = (totalDuration: number) => {
@@ -157,7 +136,7 @@ const VideoPlayer = ({ videoUrl, chapterVideoId, lectureId, chapterId }: VideoPl
   }
 
   const handleAssignment = () => {
-    router.push(`/classroom/assignment/${lectureId}?chapterId=${chapterId}&videoId=${chapterVideoId}`)
+    router.push(`/classroom/assignment/${lectureId}?chapterId=${selectedChapterId}&videoId=${selectedVideoId}`)
   }
 
   return (
