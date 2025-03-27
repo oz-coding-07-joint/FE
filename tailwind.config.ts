@@ -50,7 +50,7 @@ const config: Config = {
         }, //레드
       },
       fontFamily: {
-        Pretendard: ["var(--font-pretendard)", "sans-serif"],
+        pretendard: ["var(--font-pretendard)", "sans-serif"],
         potta: ["Potta One", "sans-serif"], // 'Potta One' 폰트 추가
       },
       backgroundImage: {

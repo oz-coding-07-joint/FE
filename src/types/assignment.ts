@@ -1,22 +1,29 @@
+// types/assignment.ts
 
-interface SAssignmentList {
+export interface DownloadInfo {
+    file_name: string;
+    object_key: string;
+    download_url: string;
+  }
+  
+  export interface SAssignmentList {
     lecture_chapter_id: number;
     assignment: SAssignment;
-}
-
-export interface AssignmentList {
+  }
+  
+  export interface AssignmentList {
     chapterId: number;
     assignment: Assignment;
-}
-
-export function transformAssignmentList(assignmentList: SAssignmentList): AssignmentList {
+  }
+  
+  export function transformAssignmentList(assignmentList: SAssignmentList): AssignmentList {
     return {
-        chapterId: assignmentList.lecture_chapter_id,
-        assignment: transformAssignment(assignmentList.assignment),
+      chapterId: assignmentList.lecture_chapter_id,
+      assignment: transformAssignment(assignmentList.assignment),
     };
-}
-
-export interface SAssignment {
+  }
+  
+  export interface SAssignment {
     id: number;
     chapter_video: number;
     title: string;
@@ -24,9 +31,10 @@ export interface SAssignment {
     file_url: string;
     created_at: Date;
     updated_at: Date;
-} 
-
-export interface Assignment {
+    download_info?: DownloadInfo;
+  }
+  
+  export interface Assignment {
     id: number;
     videoId: number;
     title: string;
@@ -34,51 +42,56 @@ export interface Assignment {
     fileUrl: string;
     createdAt: Date;
     updatedAt: Date;
-}
-
-export function transformAssignment(assignment: SAssignment): Assignment {
+    downloadInfo?: DownloadInfo;
+  }
+  
+  export function transformAssignment(assignment: SAssignment): Assignment {
     return {
-        id: assignment.id,
-        videoId: assignment.chapter_video,
-        title: assignment.title,
-        content: assignment.content,
-        fileUrl: assignment.file_url,
-        createdAt: assignment.created_at,
-        updatedAt: assignment.updated_at,
+      id: assignment.id,
+      videoId: assignment.chapter_video,
+      title: assignment.title,
+      content: assignment.content,
+      fileUrl: assignment.file_url,
+      createdAt: assignment.created_at,
+      updatedAt: assignment.updated_at,
+      downloadInfo: assignment.download_info,
     };
-}
-
-export interface SAssignmentComment {
+  }
+  
+  export interface SAssignmentComment {
     id: number;
-    parent_id?: number; // 피드백이면 parentId 있음
-    assignment_id: number; // 과제 ID 추가
+    parent?: number;
+    assignment: number;
     file_url: string;
     content: string;
     created_at: Date;
     nickname: string;
     replies?: SAssignmentComment[];
-}
-
-export interface AssignmentComment {
+    download_info?: DownloadInfo;
+  }
+  
+  export interface AssignmentComment {
     id: number;
-    parentId?: number | null; // 피드백이면 parentId 있음
-    assignmentId: number; // 과제 ID 추가
+    parentId?: number | null;
+    assignmentId: number;
     fileUrl: string;
     content: string;
     createdAt: Date;
     userNickname: string;
     replies?: AssignmentComment[];
-}
-
-export function transformAssignmentComment(comment: SAssignmentComment): AssignmentComment {
+    downloadInfo?: DownloadInfo;
+  }
+  
+  export function transformAssignmentComment(comment: SAssignmentComment): AssignmentComment {
     return {
-        id: comment.id,
-        parentId: comment.parent_id !== undefined ? comment.parent_id : null, // undefined이면 null로 처리
-        assignmentId: comment.assignment_id, // assignmentId 추가
-        fileUrl: comment.file_url,
-        content: comment.content,
-        createdAt: comment.created_at,
-        userNickname: comment.nickname,
-        replies: comment.replies.map(transformAssignmentComment), // replies에 transformAssignmentComment()를 apply
+      id: comment.id,
+      parentId: comment.parent ?? null,
+      assignmentId: comment.assignment,
+      fileUrl: comment.file_url,
+      content: comment.content,
+      createdAt: comment.created_at,
+      userNickname: comment.nickname,
+      replies: comment.replies?.map(transformAssignmentComment),
+      downloadInfo: comment.download_info,
     };
-}
+  }

@@ -1,25 +1,18 @@
 "use client";
 
 import { Assignment } from "@/types/assignment";
-import { getFileNameFromUrl } from "@/utils/fileurl";
 import { Paperclip } from "phosphor-react";
-import { downloadFileBlob } from "@/utils/downloadBlob";
+import { getFileNameFromUrl } from "@/utils/fileurl";
 
 interface AssignmentDetailProps {
   selectedAssignment: Assignment | null;
 }
 
 const AssignmentDetail = ({ selectedAssignment }: AssignmentDetailProps) => {
-  const fileUrl = selectedAssignment?.fileUrl || "";
-
-  const fileName = getFileNameFromUrl(fileUrl);
-  const displayName = fileName.split("_")[0] + "." + fileName.split(".").pop();
-
-  const handleDownload = () => {
-    if (fileUrl) {
-      downloadFileBlob(fileUrl, fileName); // 다운로드는 원래 이름으로
-    }
-  };
+  const fileUrl =
+    selectedAssignment?.downloadInfo?.download_url || selectedAssignment?.fileUrl || "";
+  const fileName =
+    selectedAssignment?.downloadInfo?.file_name || getFileNameFromUrl(fileUrl);
 
   return (
     <div className="bg-white rounded-md shadow-md overflow-hidden flex-1 h-[75vh] flex flex-col">
@@ -42,13 +35,15 @@ const AssignmentDetail = ({ selectedAssignment }: AssignmentDetailProps) => {
       {/* 첨부파일 */}
       <div className="p-4 border-t bg-white">
         {fileUrl ? (
-          <button
-            onClick={handleDownload}
+          <a
+            href={fileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex items-center text-sm text-blue-600 underline gap-1"
           >
             <Paperclip size={14} />
-            {displayName}
-          </button>
+            {fileName}
+          </a>
         ) : (
           <p className="text-gray-700">첨부 파일 없음</p>
         )}
