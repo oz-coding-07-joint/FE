@@ -4,7 +4,7 @@ export const isValidEmail = (email: string): boolean => {
     return emailRegex.test(email);
   };
   
-// 비밀번호 유효성 검사 (8자 이상, 숫자/문자 포함)
+// 비밀번호 유효성 검사 (8자 이상, 숫자/문자/특수문자 포함)
 export const isValidPassword = (password: string): boolean => {
   const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-])[A-Za-z\d!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]{8,}$/;
   return passwordRegex.test(password);
