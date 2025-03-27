@@ -1,3 +1,4 @@
+import Button from "@/components/Button";
 import Modal from "@/components/Modal";
 import { useModalStore } from "@/store/useModalStore";
 import { Term } from "@/types/auth";
@@ -21,12 +22,7 @@ const TermsModal = ({ term }: TermsModalProps) => {
         </p>
       </div>
       <div className="flex justify-center">
-        <button
-          className="mt-4 px-4 py-2 bg-gray-200 rounded-lg"
-          onClick={() => closeModal("termsModal")}
-        >
-          닫기
-        </button>
+        <Button label="닫기" onClick={() => closeModal("termsModal")} variant="outline" size="small" />
       </div>
     </Modal>
   );
