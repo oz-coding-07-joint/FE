@@ -42,7 +42,7 @@ body {
 @font-face {
   font-family: 'Pretendard';
   font-weight: 300;
-  src: url('../assets/fonts/Pretendard-light.woff2') format('woff2');
+  src: url('../assets/fonts/Pretendard-Light.woff2') format('woff2');
   font-display: swap;
 }
 @font-face {
