@@ -28,13 +28,10 @@ const LectureDetailPage = () => {
 
   const { data: chapters, isLoading: chaptersLoading } = useChapters(lectureId);
   const { data: chapterDetails, isLoading: videoLoading } = useChapterVideo(selectedVideoId);
-  console.log('chapterDetails', chapterDetails)
-  console.log('chapter', chapters)
 
   const currentChapter = chapters?.find((ch: ParamIdTitle) => ch.id === selectedChapterId)
   const {lectures, fetchLectures} = useLectureListStore()
   const selectedLecture = lectures.find((lecture) => lecture.id === lectureId);
-  console.log('selectedChapterId', selectedChapterId)
 
   useEffect(() => {
     if(!selectedLecture){
