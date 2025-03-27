@@ -63,7 +63,7 @@ const SignupPage = () => {
         break;
       case "password":
         setPassword(value);
-        if (!isValidPassword(value)) setErrors((prev) => ({ ...prev, password: "비밀번호는 8자 이상, 숫자와 문자를 포함해야 합니다." }));
+        if (!isValidPassword(value)) setErrors((prev) => ({ ...prev, password: "비밀번호는 8자 이상, 숫자,문자,특수문자를 포함해야 합니다." }));
         break;
       case "confirmPassword":
         setConfirmPassword(value);
