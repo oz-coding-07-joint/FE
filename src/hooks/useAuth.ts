@@ -170,7 +170,7 @@ export const useSignup = () => {
 
 // 소셜 로그인 후 유저정보 업데이트
 export const useSocialSignup = () => {
-  const { login } = useAuthStore()
+  const { login, restoreUser } = useAuthStore()
   const router = useRouter();
 
   return useMutation({
@@ -181,8 +181,8 @@ export const useSocialSignup = () => {
       if (currentUser) {
         login(currentUser);
         console.log("Zustand 상태 업데이트 완료:", currentUser);
-        //restoreUser();
         router.push("/");
+        restoreUser();
       }
     },
     onError: (error) => {
