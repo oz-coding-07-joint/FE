@@ -19,7 +19,7 @@ const ReviewCard = ({ name, description, content }: ReviewProps) => {
     <div className="flex flex-col items-center">
       {/* 리뷰 박스 */}
       <div className="flex flex-col justify-center items-center mb-0">
-        <div className="relative w-[440px] h-[240px] bg-[#303D58] rounded-md p-4 flex flex-col justify-center z-10">
+        <div className="relative w-[27.5rem] h-[15rem] bg-[#303D58] rounded-md p-4 flex flex-col justify-center z-10">
           <div className="text-primary-900 flex items-start">
             <p
               className={`${pottaOne.className} text-7xl leading-3 absolute top-10 left-5`}
