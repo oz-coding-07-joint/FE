@@ -3,7 +3,7 @@
 import { Assignment } from "@/types/assignment";
 import { getFileNameFromUrl } from "@/utils/fileurl";
 import { Paperclip } from "phosphor-react";
-import { forceDownload } from "@/utils/forceDownload"; // ✅ 다운로드 유틸 import
+import { downloadFileBlob } from "@/utils/downloadBlob";
 
 interface AssignmentDetailProps {
   selectedAssignment: Assignment | null;
@@ -11,11 +11,13 @@ interface AssignmentDetailProps {
 
 const AssignmentDetail = ({ selectedAssignment }: AssignmentDetailProps) => {
   const fileUrl = selectedAssignment?.fileUrl || "";
-  const fileName = fileUrl ? getFileNameFromUrl(fileUrl) : "";
+
+  const fileName = getFileNameFromUrl(fileUrl);
+  const displayName = fileName.split("_")[0] + "." + fileName.split(".").pop();
 
   const handleDownload = () => {
     if (fileUrl) {
-      forceDownload(fileUrl, fileName);
+      downloadFileBlob(fileUrl, fileName); // 다운로드는 원래 이름으로
     }
   };
 
@@ -45,7 +47,7 @@ const AssignmentDetail = ({ selectedAssignment }: AssignmentDetailProps) => {
             className="flex items-center text-sm text-blue-600 underline gap-1"
           >
             <Paperclip size={14} />
-            {fileName}
+            {displayName}
           </button>
         ) : (
           <p className="text-gray-700">첨부 파일 없음</p>
