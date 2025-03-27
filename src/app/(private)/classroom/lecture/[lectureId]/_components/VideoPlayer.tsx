@@ -28,17 +28,17 @@ type ProgressState = {
 const VideoPlayer = ({ videoUrl, lectureId }: VideoPlayerProps) => {
   const { selectedChapterId, selectedVideoId } = useLectureStore()
   const { openModal, closeModal } = useModalStore();
-  const { playing, duration, currentUrl, isUpdatingUrl, setPlaying, setDuration, setCurrentUrl, setIsUpdatingUrl } = useVideoStore()
-  const { updateVideoUrl } = useUpdateVideoUrl({ selectedVideoId })
-
+  const { playing, duration, currentUrl, isUpdatingUrl, setPlaying, setDuration, setCurrentUrl } = useVideoStore()
+  
   const router = useRouter()
   const progressRef = useRef(0);
-
+  
   const [isWindow, setIsWindow] = useState(false)
   const playerRef = useRef<ReactPlayerType | null>(null);
   const [hasPlayed, setHasPlayed] = useState(false)
   const [pendingSeekTime, setPendingSeekTime] = useState<number | null>(null)
-
+  
+  const { updateVideoUrl } = useUpdateVideoUrl({ selectedVideoId })
   const updateProgress = useUpdateVideoProgress();
   const { data: progressData, refetch, isLoading: getProgressLoading } = useGetVideoProgress(selectedVideoId)
 
