@@ -37,7 +37,6 @@ const AssignmentDetail = ({ selectedAssignment }: AssignmentDetailProps) => {
         {fileUrl ? (
           <a
             href={fileUrl}
-            target="_blank"
             rel="noopener noreferrer"
             className="flex items-center text-sm text-blue-600 underline gap-1"
           >

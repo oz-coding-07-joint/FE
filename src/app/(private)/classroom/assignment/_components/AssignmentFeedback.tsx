@@ -73,7 +73,6 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
           {fileUrl && (
             <a
               href={fileUrl}
-              target="_blank"
               rel="noopener noreferrer"
               className="flex items-center text-xs text-blue-600 underline mt-1"
             >
