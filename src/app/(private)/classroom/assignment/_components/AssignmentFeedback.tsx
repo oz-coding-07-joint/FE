@@ -55,7 +55,6 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
     const isReply = depth > 0;
     const fileUrl = comment.downloadInfo?.download_url || comment.fileUrl;
     const fileName = comment.downloadInfo?.file_name || getFileNameFromUrl(fileUrl || "");
-    const displayName = fileName.split("_")[0] + "." + fileName.split(".").pop();
 
     const parentComment = (
       <div
