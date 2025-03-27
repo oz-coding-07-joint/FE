@@ -130,17 +130,17 @@ const SignupPage = () => {
       
           setErrors((prev) => ({
             ...prev,
-            email: errorData.email ? (errorData.email[0]) : "",
-            name: errorData.name ? (errorData.name[0]) : "",
-            nickname: errorData.nickname ? (errorData.nickname[0]) : "",
-            password: errorData.password ? (errorData.password[0]) : "",
-            confirmPassword: errorData.confirmPassword ? (errorData.confirmPassword[0]) : "",
-            phoneNumber: errorData.phone_number ? (errorData.phone_number[0]) : "",
+            email: errorData.email?.[0] || "",
+            name: errorData.name?.[0] || "",
+            nickname: errorData.nickname?.[0] || "",
+            password: errorData.password?.[0] || "",
+            phoneNumber: errorData.phone_number?.[0] || "",
           }));
         } else {
           alert("회원가입에 실패했습니다. 다시 시도해주세요.");
         }
       },
+      
     });
   };
 
