@@ -25,6 +25,8 @@ type ProgressState = {
   loadedSeconds: number;
 };
 
+const SKIP_TIME = 60;
+
 const VideoPlayer = ({ videoUrl, lectureId }: VideoPlayerProps) => {
   const { selectedChapterId, selectedVideoId } = useLectureStore()
   const { openModal, closeModal } = useModalStore();
@@ -38,6 +40,7 @@ const VideoPlayer = ({ videoUrl, lectureId }: VideoPlayerProps) => {
   const [hasPlayed, setHasPlayed] = useState(false)
   const [pendingSeekTime, setPendingSeekTime] = useState<number | null>(null)
   const [isReady, setIsReady] = useState(false)
+  const [skipped, setSkipped] = useState(false);
   
   const { updateVideoUrl } = useUpdateVideoUrl({ selectedVideoId })
   const updateProgress = useUpdateVideoProgress();
@@ -67,7 +70,11 @@ const VideoPlayer = ({ videoUrl, lectureId }: VideoPlayerProps) => {
   };
 
   const handleSeek = (seekTime: number) => {
-    progressRef.current = seekTime; // 현재 재생 위치 업데이트
+    const prevTime = progressRef.current;
+    progressRef.current = seekTime;
+    if(seekTime - prevTime > SKIP_TIME) {
+      setSkipped(true);
+    }
     setPlaying(true); // 영상이 멈추지 않도록 유지
   };
 
@@ -87,6 +94,7 @@ const VideoPlayer = ({ videoUrl, lectureId }: VideoPlayerProps) => {
     setHasPlayed(false);
     setIsReady(false)
     setDuration(0)
+    setSkipped(false);
   }, [currentUrl, selectedVideoId, videoUrl]);
 
   // 모달
@@ -115,7 +123,12 @@ const VideoPlayer = ({ videoUrl, lectureId }: VideoPlayerProps) => {
   const handleEnded = () => {
     setPlaying(false);
     closeModal("continueVideo");
-    updateProgress.mutateAsync({ chapterVideoId: selectedVideoId, lastWatchedTime: duration, duration });
+    if(skipped) {
+      alert('학습을 위해 충분히 시청해주세요!')
+      setTimeout(() => setSkipped(false), 100);
+    } else {
+      updateProgress.mutateAsync({ chapterVideoId: selectedVideoId, lastWatchedTime: duration, duration });
+    }
   };
 
   const handleProgress = useCallback(
@@ -125,16 +138,17 @@ const VideoPlayer = ({ videoUrl, lectureId }: VideoPlayerProps) => {
 
       const progressAsNumber = Number(progressData?.progress);
       const lastWatchedTime = (progressAsNumber / 100) * duration;
-
-      if (selectedVideoId && !progressData?.isCompleted && playedSeconds > (lastWatchedTime || 0)) {
-        updateProgress.mutate({
-          chapterVideoId: selectedVideoId,
-          lastWatchedTime: playedSeconds,
-          duration,
-        });
+      if(!skipped) {
+        if (selectedVideoId && !progressData?.isCompleted && playedSeconds > (lastWatchedTime || 0)) {
+          updateProgress.mutate({
+            chapterVideoId: selectedVideoId,
+            lastWatchedTime: playedSeconds,
+            duration,
+          });
+        }
       }
     }, 3000),
-    [selectedVideoId, duration]
+    [selectedVideoId, duration, progressData?.isCompleted, skipped]
   );
 
   const handleDuration = (totalDuration: number) => {
@@ -162,6 +176,13 @@ const VideoPlayer = ({ videoUrl, lectureId }: VideoPlayerProps) => {
             onError={handleError}
             onSeek={handleSeek}
             onReady={handleReady}
+            config={{
+              file: {
+                attributes: {
+                  controlsList: 'nodownload'
+                }
+              }
+            }}
             width='100%'
             height='100%'
           />
