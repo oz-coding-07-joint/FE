@@ -21,7 +21,9 @@
     "paths": {
       "@/*": ["*"],
       "@assets/*": ["assets/*"]
-    }
+    },
+    "target": "ES2015",              // ✅ ES2015 이상
+    "downlevelIteration": true       // ✅ for...of 등 iterable 지원
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]

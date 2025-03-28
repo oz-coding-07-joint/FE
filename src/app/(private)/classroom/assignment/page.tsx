@@ -3,10 +3,14 @@
 import { useLectureListStore } from "@/store/useLectureListStore";
 import { Lecture } from "@/types/class";
 import LectureCard from "../../_components/ui/LectureCard";
+import { useEffect } from "react";
 
 export default function AssignmentsPage() {
+  const { lectures, fetchLectures } = useLectureListStore();
 
-  const { lectures } = useLectureListStore();
+  useEffect(() => {
+    fetchLectures();
+  }, [fetchLectures]);
 
   return (
     <div className="p-8">

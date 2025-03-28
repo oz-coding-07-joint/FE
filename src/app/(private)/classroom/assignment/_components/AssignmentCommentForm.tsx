@@ -1,27 +1,24 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { AssignmentComment } from "@/types/assignment";
 import Button from "@/components/Button";
-import { useAuthStore } from "@/store/useAuthStore";
 
 interface AssignmentCommentFormProps {
   assignmentId: number;
-  onSubmit: (comment: AssignmentComment, file: File | null) => void;
   parentId: number | null;
+  onSubmit: (assignmentId: number, formData: FormData) => void;
 }
 
 const AssignmentCommentForm: React.FC<AssignmentCommentFormProps> = ({
   assignmentId,
-  onSubmit,
   parentId,
+  onSubmit,
 }) => {
   const [content, setContent] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string>("");
-  const { user } = useAuthStore();
 
-  const fileInputRef = useRef<HTMLInputElement | null>(null); // ✅ ref 생성
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0] || null;
@@ -41,26 +38,29 @@ const AssignmentCommentForm: React.FC<AssignmentCommentFormProps> = ({
       alert("과제 내용을 작성해주세요.");
       return;
     }
-
-    const newComment: AssignmentComment = {
-      id: Date.now(), // 임시 ID
-      assignmentId,
-      parentId,
-      fileUrl: "",
-      content,
-      createdAt: new Date(),
-      userNickname: user.nickname,
-    };
-
-    onSubmit(newComment, file);
+  
+    const formData = new FormData();
+    formData.append("content", content);
+  
+    // parentId가 있을 때만 추가
+    if (parentId !== null) {
+      formData.append("parent", parentId.toString());
+    }
+  
+    if (file) {
+      formData.append("file_url", file);
+    }
+  
+    onSubmit(assignmentId, formData);
+  
+    // 초기화
     setContent("");
     setFile(null);
-
-    // ✅ 파일 input 초기화
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
+  
 
   return (
     <div className="space-y-1">
@@ -74,9 +74,8 @@ const AssignmentCommentForm: React.FC<AssignmentCommentFormProps> = ({
 
       <div className="flex items-center gap-2 mt-2 justify-between">
         <input
-          ref={fileInputRef} // ✅ ref 연결
+          ref={fileInputRef}
           type="file"
-          accept=".pdf,.midi,.mp3,.wav,.png,.jpg"
           onChange={handleFileChange}
           className="h-10 border p-1 py-2 rounded-sm text-xs flex-grow w-0 text-muted-400"
         />

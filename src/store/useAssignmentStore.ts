@@ -1,6 +1,10 @@
 import { create } from "zustand";
 import { Assignment, AssignmentComment } from "@/types/assignment";
-import { fetchAssignments, fetchAssignmentsComment, submitAssignmentComment } from "@/api/assignmentApi";
+import {
+  fetchAssignments,
+  fetchAssignmentsComment,
+  submitAssignmentComment,
+} from "@/api/assignmentApi";
 
 interface AssignmentStore {
   assignments: Assignment[];
@@ -8,7 +12,10 @@ interface AssignmentStore {
   isLoading: boolean;
   isCommentLoading: boolean;
   selectedAssignment: Assignment | null;
+  selectedComment: AssignmentComment | null;
+
   setSelectedAssignment: (assignment: Assignment | null) => void;
+  setSelectedComment: (comment: AssignmentComment | null) => void;
 
   fetchAssignments: (chapterId: number) => Promise<void>;
   fetchComments: (assignmentId: number) => Promise<void>;
@@ -21,7 +28,10 @@ export const useAssignmentStore = create<AssignmentStore>((set, get) => ({
   isLoading: false,
   isCommentLoading: false,
   selectedAssignment: null,
+  selectedComment: null,
+
   setSelectedAssignment: (assignment) => set({ selectedAssignment: assignment }),
+  setSelectedComment: (comment) => set({ selectedComment: comment }),
 
   fetchAssignments: async (chapterId: number) => {
     try {
@@ -29,7 +39,7 @@ export const useAssignmentStore = create<AssignmentStore>((set, get) => ({
       const data = await fetchAssignments(chapterId);
       set({ assignments: data });
     } catch (error) {
-      console.error("❌ 과제 불러오기 실패:", error);
+      console.error("과제 불러오기 실패:", error);
       set({ assignments: [] });
     } finally {
       set({ isLoading: false });
@@ -42,7 +52,7 @@ export const useAssignmentStore = create<AssignmentStore>((set, get) => ({
       const comments = await fetchAssignmentsComment(assignmentId);
       set({ comments });
     } catch (error) {
-      console.error("❌ 피드백 불러오기 실패:", error);
+      console.error("피드백 불러오기 실패:", error);
       set({ comments: [] });
     } finally {
       set({ isCommentLoading: false });
@@ -52,9 +62,9 @@ export const useAssignmentStore = create<AssignmentStore>((set, get) => ({
   addComment: async (assignmentId: number, formData: FormData) => {
     try {
       await submitAssignmentComment(assignmentId, formData);
-      await get().fetchComments(assignmentId); // 서버에서 다시 불러오기
+      await get().fetchComments(assignmentId);
     } catch (error) {
-      console.error("❌ 댓글 제출 실패:", error);
+      console.error("댓글 제출 실패:", error);
     }
   },
 }));

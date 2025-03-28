@@ -21,7 +21,7 @@ const Header = () => {
         <Link href="/classinfo/harmonics" className="hover:text-gray-400">
           강의소개
         </Link>
-        <Link href="/classroom/lecture" className="hover:text-gray-400">
+        <Link href={user?.instructorId ? "/classroom/assignment" : "/classroom/lecture"} className="hover:text-gray-400">
           강의실
         </Link>
         {/* 로그인 상태 확인 */}
