@@ -8,7 +8,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 const KakaoCallback = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { login } = useAuthStore();
+  const { login, restoreUser } = useAuthStore();
 
   useEffect(() => {
     console.log("카카오로그인시도");
@@ -38,6 +38,8 @@ const KakaoCallback = () => {
         const redirectPath = localStorage.getItem("redirect_after_login") || "/";
         localStorage.removeItem("redirect_after_login");
         router.replace(redirectPath);
+        restoreUser();
+      
       } catch (error) {
         console.error("카카오 로그인 중 오류 발생:", error);
         router.push("/");
