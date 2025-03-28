@@ -44,7 +44,7 @@ export const useGetVideoProgress = (chapterVideoId: number | null) => {
     queryFn: async () => {
       try {
         const response = await api.get(
-          `courses/chapter_video/${chapterVideoId}/state/`
+          `/courses/chapter_video/${chapterVideoId}/state/`
         );
         const transformedGetVideoProgress = transformVideo(response.data)
         return transformedGetVideoProgress;
@@ -150,7 +150,7 @@ export const useGetMultipleVideoProgress = (chapterItems: { id: number }[] = [])
         queryFn: async () => {
           try {
             const response = await api.get(
-              `courses/chapter_video/${item.id}/state/`
+              `/courses/chapter_video/${item.id}/state/`
             );
 
             const transformedGetVideoProgress = transformVideo(response.data)
