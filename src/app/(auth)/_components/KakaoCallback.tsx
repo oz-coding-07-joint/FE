@@ -22,14 +22,14 @@ const KakaoCallback = () => {
       }
 
       try {
-        const { user } = await postKakaoLogin(code);
+        const { user, require_additional_info } = await postKakaoLogin(code);
 
         //console.log(user)
         // 로그인 처리 (Zustand 스토어에 저장)
         login(user);
 
         // 추가 정보가 필요한 경우
-        if (!user.isActive) {
+        if (require_additional_info) {
           router.push("/social-signup");
           return;
         }
