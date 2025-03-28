@@ -67,7 +67,7 @@ const AssignmentCommentForm: React.FC<AssignmentCommentFormProps> = ({
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        placeholder="PDF, MIDI 파일 첨부 가능 (20MB 제한)"
+        placeholder="파일 첨부 가능 (20MB 제한)"
         rows={3}
         className="w-full border p-1 text-sm rounded-sm resize-none"
       />
