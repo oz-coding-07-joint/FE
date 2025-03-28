@@ -8,6 +8,7 @@ export interface SUser {
     access?: string;
     refresh?: string;
     is_active?: boolean;
+    instructor_id?: number;
 }
 
 export interface User {
@@ -20,6 +21,7 @@ export interface User {
     accessToken?: string;
     refreshToken?: string;
     isActive?: boolean;
+    instructorId?: number;
 
 }
 
@@ -34,6 +36,7 @@ export function transformUser(user: SUser): User {
         accessToken: user.access,
         refreshToken: user.refresh,
         isActive: user.is_active,
+        instructorId: user.instructor_id,
     };
 }
 
