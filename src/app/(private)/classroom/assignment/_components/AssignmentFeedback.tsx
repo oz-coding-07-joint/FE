@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   Assignment,
   AssignmentComment,
 } from "@/types/assignment";
 import AssignmentCommentForm from "./AssignmentCommentForm";
-import {  fetchAssignmentsComment } from "@/api/assignmentApi";
 import { ArrowElbowDownRight, Paperclip } from "phosphor-react";
 import { getFileNameFromUrl } from "@/utils/fileurl";
 import Button from "@/components/Button";
