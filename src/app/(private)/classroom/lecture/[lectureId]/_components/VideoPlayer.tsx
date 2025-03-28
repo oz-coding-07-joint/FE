@@ -37,6 +37,7 @@ const VideoPlayer = ({ videoUrl, lectureId }: VideoPlayerProps) => {
   const [isWindow, setIsWindow] = useState(false)
   const [hasPlayed, setHasPlayed] = useState(false)
   const [pendingSeekTime, setPendingSeekTime] = useState<number | null>(null)
+  const [isReady, setIsReady] = useState(false)
   
   const { updateVideoUrl } = useUpdateVideoUrl({ selectedVideoId })
   const updateProgress = useUpdateVideoProgress();
@@ -71,6 +72,7 @@ const VideoPlayer = ({ videoUrl, lectureId }: VideoPlayerProps) => {
   };
 
   const handleReady = () => {
+    setIsReady(true);
     if (pendingSeekTime !== null && playerRef.current) {
       playerRef.current.seekTo(pendingSeekTime, 'seconds');
       setPendingSeekTime(null); // 적용 후 초기화
@@ -83,18 +85,22 @@ const VideoPlayer = ({ videoUrl, lectureId }: VideoPlayerProps) => {
     progressRef.current = 0;
     setPlaying(false);
     setHasPlayed(false);
-  }, [currentUrl]);
+    setIsReady(false)
+    setDuration(0)
+  }, [currentUrl, selectedVideoId, videoUrl]);
 
   // 모달
   useEffect(() => {
-    if (progressData?.isCompleted === false) {
-      if (!playing && !hasPlayed && progressData?.progress !== '0.00' && duration > 0) {
-        openModal('continueVideo')
-        setPlaying(false);
-        setHasPlayed(true);
+    if(isReady){
+      if (progressData?.isCompleted === false && duration > 0) {
+        if (!playing && !hasPlayed && progressData?.progress !== '0.00') {
+          openModal('continueVideo')
+          setPlaying(false);
+          setHasPlayed(true);
+        }
       }
     }
-  }, [videoUrl]);
+  }, [isReady]);
 
   const handlePlay = async () => {
     if (getProgressLoading) return;
