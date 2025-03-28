@@ -162,6 +162,13 @@ const VideoPlayer = ({ videoUrl, lectureId }: VideoPlayerProps) => {
             onError={handleError}
             onSeek={handleSeek}
             onReady={handleReady}
+            config={{
+              file: {
+                attributes: {
+                  controlsList: 'nodownload'
+                }
+              }
+            }}
             width='100%'
             height='100%'
           />
