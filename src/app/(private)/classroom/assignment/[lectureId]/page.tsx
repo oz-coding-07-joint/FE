@@ -8,6 +8,7 @@ import api from "@/api/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Assignment } from "@/types/assignment";
 import { useParams, useSearchParams } from "next/navigation";
+import AssignmentFeedbackModal from "../_components/AssignmentFeedbackModal";
 
 
 interface LectureDetail {
@@ -93,6 +94,7 @@ const AssignmentPage = () => {
         {/* 과제 피드백 */}
         <AssignmentFeedback selectedAssignment={selectedAssignment} />
       </div>
+      <AssignmentFeedbackModal />
     </div>
   );
 };

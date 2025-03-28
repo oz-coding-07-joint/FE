@@ -6,14 +6,12 @@ import {
   AssignmentComment,
 } from "@/types/assignment";
 import AssignmentCommentForm from "./AssignmentCommentForm";
-import {
-  fetchAssignmentsComment,
-  submitAssignmentComment,
-} from "@/api/assignmentApi";
+import {  fetchAssignmentsComment } from "@/api/assignmentApi";
 import { ArrowElbowDownRight, Paperclip } from "phosphor-react";
 import { getFileNameFromUrl } from "@/utils/fileurl";
 import Button from "@/components/Button";
 import { useModalStore } from "@/store/useModalStore";
+import { useAssignmentStore } from "@/store/useAssignmentStore";
 import { useAuthStore } from "@/store/useAuthStore";
 
 interface AssignmentFeedbackProps {
@@ -22,39 +20,15 @@ interface AssignmentFeedbackProps {
 
 const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => {
   const { openModal } = useModalStore();
-  const [comments, setComments] = useState<AssignmentComment[]>([]);
+  const { comments, setSelectedComment, setSelectedAssignment, fetchComments, addComment } = useAssignmentStore();
   const { user } = useAuthStore();
 
-  const loadComments = async (assignmentId: number) => {
-    const updated = await fetchAssignmentsComment(assignmentId);
-    setComments(updated);
-  };
 
   useEffect(() => {
     if (selectedAssignment) {
-      loadComments(selectedAssignment.id);
+      fetchComments(selectedAssignment.id);
     }
   }, [selectedAssignment]);
-
-  const submitComment = async (newComment: AssignmentComment, file: File | null) => {
-    if (!selectedAssignment) return;
-
-    try {
-      const formData = new FormData();
-      formData.append("content", newComment.content);
-      formData.append("parent", newComment.parentId?.toString() || "");
-      formData.append("assignmentId", selectedAssignment.id.toString());
-
-      if (file) {
-        formData.append("file_url", file);
-      }
-
-      await submitAssignmentComment(selectedAssignment.id, formData);
-      await loadComments(selectedAssignment.id);
-    } catch (err) {
-      console.error("❌ 과제 제출 실패:", err);
-    }
-  };
 
   const renderComment = (comment: AssignmentComment, depth = 0): JSX.Element[] => {
     const isReply = depth > 0;
@@ -73,15 +47,19 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
             <span className="text-muted-300 text-xs">
               {new Date(comment.createdAt).toLocaleString()}
             </span>
-            {!isReply && user.instructorId && (
+            {!isReply && user?.instructorId && (
               <span className="ml-auto">
                 <Button label="피드백" size="mini" variant="outline"
-                  onClick={() => openModal("feedback")}
+                  onClick={() => {
+                    setSelectedComment(comment);
+                    setSelectedAssignment(selectedAssignment);
+                    openModal("assignmentFeedback");
+                  }}
                 />
               </span>
             )}
           </div>
-          <p className="text-muted-500 mt-1">{comment.content}</p>
+          <p className="text-muted-500 mt-1 break-words">{comment.content}</p>
           {fileUrl && (
             <a
               href={fileUrl}
@@ -100,6 +78,18 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
   
     return [parentComment, ...replyComments];
   };
+
+  const handleSubmitComment = async (assignmentId: number, formData: FormData) => {
+    try {
+      await addComment(assignmentId, formData);
+      alert("제출이 완료되었습니다.");
+      await fetchComments(assignmentId); // 새로고침
+    } catch (err) {
+      console.error("❌ 댓글 제출 실패:", err);
+      alert("제출에 실패했습니다.");
+    }
+  };
+  
   
 
   return selectedAssignment ? (
@@ -116,7 +106,7 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
       </div>
       <div className="p-4 bg-white">
         <AssignmentCommentForm
-          onSubmit={submitComment}
+          onSubmit={handleSubmitComment}
           assignmentId={selectedAssignment.id}
           parentId={null}
         />
