@@ -170,20 +170,14 @@ export const useSignup = () => {
 
 // 소셜 로그인 후 유저정보 업데이트
 export const useSocialSignup = () => {
-  const { login, restoreUser } = useAuthStore()
+  const { restoreUser } = useAuthStore()
   const router = useRouter();
 
   return useMutation({
     mutationFn: postSocialSignup,
-    onSuccess: () => {
-      const currentUser = useAuthStore.getState().user;
-    
-      if (currentUser) {
-        login(currentUser);
-        //console.log("Zustand 상태 업데이트 완료:", currentUser);
-        router.push("/");
-        restoreUser();
-      }
+    onSuccess: () => {    
+      router.push("/");
+      restoreUser();
     },
     onError: (error) => {
       console.error("소셜 회원가입:", error);
