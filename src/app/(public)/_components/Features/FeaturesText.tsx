@@ -26,9 +26,7 @@ const FeatureText = ({
       <span className="text-accent-500 text-2xl font-semibold pt-5">
         {title}
       </span>
-      <p className="whitespace-pre-line leading-relaxed max-w-2xl">
-        {description}
-      </p>
+      <p className="whitespace-pre-line leading-relaxed">{description}</p>
     </div>
   );
 };

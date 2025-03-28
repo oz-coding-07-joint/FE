@@ -21,6 +21,7 @@ export default function RegistrationModal() {
           <li>계좌명 : 소리상상</li>
           <li>결제금액 : 330,000원</li>
         </div>
+        {/* 주의사항 */}
         <div className="flex flex-col justify-start p-6 border-t">
           <span className="font-medium text-lg mb-2">주의사항</span>
           <div>
