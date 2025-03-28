@@ -125,7 +125,7 @@ const VideoPlayer = ({ videoUrl, lectureId }: VideoPlayerProps) => {
 
       const progressAsNumber = Number(progressData?.progress);
       const lastWatchedTime = (progressAsNumber / 100) * duration;
-
+      
       if (selectedVideoId && !progressData?.isCompleted && playedSeconds > (lastWatchedTime || 0)) {
         updateProgress.mutate({
           chapterVideoId: selectedVideoId,
@@ -134,7 +134,7 @@ const VideoPlayer = ({ videoUrl, lectureId }: VideoPlayerProps) => {
         });
       }
     }, 3000),
-    [selectedVideoId, duration]
+    [selectedVideoId, duration, progressData?.isCompleted]
   );
 
   const handleDuration = (totalDuration: number) => {
