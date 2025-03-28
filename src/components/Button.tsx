@@ -1,7 +1,7 @@
 interface CustomButtonProps {
   label?: string;
   onClick?: () => void;
-  size?: "large" | "medium" | "small" | "full";
+  size?: "large" | "medium" | "small" | "full" | "mini";
   variant?: "primary" | "secondary" | "outline" | "danger";
   disabled?: boolean;
   type?: "button" | "submit";
@@ -23,6 +23,7 @@ export default function Button({
     large: "h-[50px] text-lg px-10 font-pretendard font-semibold",
     medium: "h-[46px] px-5 font-pretendard font-medium",
     small: "h-9 text-sm px-4 font-pretendard font-medium",
+    mini: "h-5 text-xs px-2 font-pretendard"
   };
 
   // 버튼 스타일 설정

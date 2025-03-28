@@ -12,13 +12,18 @@ import {
 } from "@/api/assignmentApi";
 import { ArrowElbowDownRight, Paperclip } from "phosphor-react";
 import { getFileNameFromUrl } from "@/utils/fileurl";
+import Button from "@/components/Button";
+import { useModalStore } from "@/store/useModalStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface AssignmentFeedbackProps {
   selectedAssignment: Assignment | null;
 }
 
 const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => {
+  const { openModal } = useModalStore();
   const [comments, setComments] = useState<AssignmentComment[]>([]);
+  const { user } = useAuthStore();
 
   const loadComments = async (assignmentId: number) => {
     const updated = await fetchAssignmentsComment(assignmentId);
@@ -55,7 +60,7 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
     const isReply = depth > 0;
     const fileUrl = comment.downloadInfo?.download_url || comment.fileUrl;
     const fileName = comment.downloadInfo?.file_name || getFileNameFromUrl(fileUrl || "");
-
+  
     const parentComment = (
       <div
         key={`comment-${comment.id}`}
@@ -68,6 +73,13 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
             <span className="text-muted-300 text-xs">
               {new Date(comment.createdAt).toLocaleString()}
             </span>
+            {!isReply && user.instructorId && (
+              <span className="ml-auto">
+                <Button label="피드백" size="mini" variant="outline"
+                  onClick={() => openModal("feedback")}
+                />
+              </span>
+            )}
           </div>
           <p className="text-muted-500 mt-1">{comment.content}</p>
           {fileUrl && (
@@ -83,11 +95,12 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
         </div>
       </div>
     );
-
+  
     const replyComments = comment.replies?.flatMap((reply) => renderComment(reply, depth + 1)) || [];
-
+  
     return [parentComment, ...replyComments];
   };
+  
 
   return selectedAssignment ? (
     <div className="bg-white rounded-md shadow-md overflow-hidden w-1/4 h-[75vh] flex flex-col">

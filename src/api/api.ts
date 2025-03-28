@@ -34,7 +34,7 @@ api.interceptors.response.use(
     const originalRequest = error.config;
     
     // 401 에러 처리: 리프레시 토큰을 사용해 재시도
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
       originalRequest._retry = true; // 무한 루프 방지
 
       try {
