@@ -14,6 +14,7 @@ import { ArrowElbowDownRight, Paperclip } from "phosphor-react";
 import { getFileNameFromUrl } from "@/utils/fileurl";
 import Button from "@/components/Button";
 import { useModalStore } from "@/store/useModalStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface AssignmentFeedbackProps {
   selectedAssignment: Assignment | null;
@@ -22,6 +23,7 @@ interface AssignmentFeedbackProps {
 const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => {
   const { openModal } = useModalStore();
   const [comments, setComments] = useState<AssignmentComment[]>([]);
+  const { user } = useAuthStore();
 
   const loadComments = async (assignmentId: number) => {
     const updated = await fetchAssignmentsComment(assignmentId);
@@ -71,7 +73,7 @@ const AssignmentFeedback = ({ selectedAssignment }: AssignmentFeedbackProps) => 
             <span className="text-muted-300 text-xs">
               {new Date(comment.createdAt).toLocaleString()}
             </span>
-            {!isReply && (
+            {!isReply && user.instructorId && (
               <span className="ml-auto">
                 <Button label="피드백" size="mini" variant="outline"
                   onClick={() => openModal("feedback")}
