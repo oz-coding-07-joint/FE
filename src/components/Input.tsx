@@ -10,6 +10,7 @@ interface CustomInputProps {
   button?: React.ReactElement<typeof Button>;
   error?: boolean;
   onEnterPress?: () => void;
+  maxLength?: number;
 }
 
 export default function Input({
@@ -21,6 +22,7 @@ export default function Input({
   button,
   error = false,
   onEnterPress,
+  maxLength = 100,
 }: CustomInputProps) {
   const [hasError, setHasError] = useState<boolean>(false);
 
@@ -47,6 +49,7 @@ export default function Input({
         onChange={handleChange}
         onKeyPress={handleKeyPress}
         disabled={disabled}
+        maxLength={maxLength}
         className={`w-full h-12 px-2.5 text-muted-400 placeholder-muted-300 border rounded-sm focus:outline-none focus:ring-2 transition-all ${
           disabled
             ? "bg-[#f1f1f1] text-muted-300 border-muted-200 cursor-not-allowed opacity-50"

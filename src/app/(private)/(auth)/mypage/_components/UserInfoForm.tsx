@@ -39,6 +39,7 @@ const UserInfoForm = ({
           type="text"
           value={name}
           onChange={(e) => onChange("name", e.target.value)}
+          maxLength={20}
         />
         {errors.name && <p className="text-secondary-500 text-xs">{errors.name}</p>}
       </div>

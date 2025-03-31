@@ -39,6 +39,7 @@ const SignupForm = ({
           placeholder="이름을 입력하세요."
           value={name}
           onChange={(e) => onChange("name", e.target.value)}
+          maxLength={20}
         />
         {errors.name && <p className="text-secondary-500 text-xs">{errors.name}</p>}
       </div>
@@ -54,6 +55,7 @@ const SignupForm = ({
           placeholder="닉네임을 입력하세요."
           value={nickname}
           onChange={(e) => onChange("nickname", e.target.value)}
+          maxLength={17}
         />
         {errors.nickname && <p className="text-secondary-500 text-xs">{errors.nickname}</p>}
       </div>
