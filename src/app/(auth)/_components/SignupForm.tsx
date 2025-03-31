@@ -98,6 +98,7 @@ const SignupForm = ({
           placeholder="01012345678"
           value={phoneNumber}
           onChange={(e) => onChange("phoneNumber", e.target.value)}
+          maxLength={17}
         />
         {errors.phoneNumber && <p className="text-secondary-500 text-xs">{errors.phoneNumber}</p>}
       </div>
