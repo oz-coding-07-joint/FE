@@ -1,4 +1,4 @@
-# BE
+# FE
 소리상상
 
 ## 📖 프로젝트 소개
@@ -135,29 +135,26 @@
 
 
 ### Branch Strategy
-> - main / dev 브랜치 기본 생성 
-> - main과 직접 push 제한
-> - PR 전 최소 1인 이상 승인 필수
+| 종류      | 설명        | 예시               |
+| ------- | --------- | ---------------- |
+| Main    | 배포 브랜치    | `main`           |
+| Develop | 통합 개발 브랜치 | `develop`        |
+| Feature | 기능 개발 브랜치 | `feature/signin` |
+| Fix     | 버그 수정 브랜치 | `fix/signin`     |
+
 
 ### Git Convention
 > 1. 적절한 커밋 접두사 작성
 > 2. 커밋 메시지 내용 작성
 > 3. 내용 뒤에 이슈 (#이슈 번호)와 같이 작성하여 이슈 연결
 
-> | 접두사        | 설명                  |
-> | ------------- | --------------------- |
-> | Feat :     | 새로운 기능 추가           |
-> | Fix :      | 버그 수정              |
-> | recycle :      | 리팩토링             |
-> | Design :     | CSS 및 사용자 UI 디자인 변경 |
-> | Style :    | 코드 포맷팅, 세미콜론 누락, 코드 변경이 없는 경우        |
-> | Test : | 테스트(테스트 코드 추가, 수정, 삭제) |
-> | bulb :     | 기타 변경사항 (빌드 스크립트 수정, 패키지 매니저 등)            |
-> | Init :   | 프로젝트 초기 생성              |
-> | Rename :     | 파일 혹은 폴더명 수정 또는 이동   |
-> | Remove :     | 파일을 삭제하는 작업만 수행한 경우      |
-> | green_heart :    | CI 빌드 수정            | 
-> | pencil2 :    | 단순 오타 수정            | 
+| Type  | 설명            |
+| ----- | ------------- |
+| feat  | 새로운 기능 추가     |
+| fix   | 버그 및 오류 수정    |
+| chore | 사소한 변경 (포맷 등) |
+| style | CSS 관련 스타일 수정 |
+
 
 
 > ### PR Type
@@ -172,20 +169,11 @@
 
 ### Code Convention
 **BE**
-- 패키지명: 모두 소문자
-  - ex) apps.players, apps.teams, apps.users
-- 클래스/인터페이스: CamelCase, 명사 사용
-  - ex) Player, Team, User, PlayerController, TeamService
-- 상수: SNAKE_CASE
-  - ex) MAX_LENGTH, DEFAULT_NATIONALITY
-- 계층별 접미사: 
-  - Controller: PlayerController 
-  - Service: PlayerService (메서드명: createPlayer, findPlayer, updatePlayer, deletePlayer)
-  - DTO: PlayerDto
-  - Repository: PlayerRepository
-  - Mapper: PlayerMapper
-- 테스트 클래스: Test 접미사 사용
-  - ex) PlayerControllerTest
+- 변수명: camelCase, 반드시 명사
+- 함수명: camelCase, 반드시 동사
+- 컴포넌트명: PascalCase, 반드시 명사
+- 타입: PascalCase, 반드시 명사
+- 백엔드에서 받은 데이터는 camelCase로 변환 후 사용
 
 
 
